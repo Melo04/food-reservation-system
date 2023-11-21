@@ -1,0 +1,33 @@
+{% extends "base.html" %} {% block title %}Canteen Worker Login{% endblock %} 
+{% block content %}
+<form method="POST">
+  <h3 align="center">Canteen Worker Login</h3>
+  <div class="form-group">
+    <label for="email">Email Address</label>
+    <input
+      type="email"
+      class="form-control"
+      id="email"
+      name="email"
+      placeholder="Enter email"
+    />
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input
+      type="password"
+      class="form-control"
+      id="password"
+      name="password"
+      placeholder="Enter password"
+    />
+  </div>
+  <br/>
+  <div class="text-center">
+    <button type="submit" class="btn btn-primary">Login</button>
+    <br/>
+    <br/>
+    <p>Not Registered yet? <a href="/worker_signup">Register here</a></p>
+  </div>
+</form>
+{% endblock %}
