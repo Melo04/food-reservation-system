@@ -6,6 +6,12 @@
 3. Type in ```.venv\Scripts\activate``` to activate the virtual environment
 4. Type in ```pip install -r requirements.txt``` to install all the required packages
 5. Type in ```flask run --debug``` to run the web app
+6. Type in ```touch .env``` to create a .env file
+7. In .env file, add in these 2 lines
+```
+MAIL_USERNAME='abcd'
+MAIL_PASSWORD='abcd'
+```
 
 ## __Credentials__
 1. Parent <br>
