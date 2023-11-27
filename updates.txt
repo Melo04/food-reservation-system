@@ -3,4 +3,5 @@ Updates
 1. 20/11/2023 Melody
    - added signup and login authentication for parents, children, admin and canteen worker
 
-2. 
+2. 27/11/2023 Melody
+   - restructure codebase and added tailwindcss design for home, login and profile page

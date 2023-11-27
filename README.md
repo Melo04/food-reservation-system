@@ -9,17 +9,17 @@
 
 ## __Credentials__
 1. Parent <br>
-   Email: parent1@gmail.com <br>
-   Password: parent123456
+    id: parent1, parent2, parent3 <br>
+    Password: parent123
 2. Canteen Worker <br>
-   Email: canteen1@gmail.com <br>
-   Password: canteen123456
+    id: worker1, worker2, worker3 <br>
+    Password: canteen123
 3. Student <br>
-   Student ID: student1 <br>
-   Password: student123456
+   id: student1, student2, student3 <br>
+   Password: student123
 4. Admin <br>
-   Username: admin1 <br>
-   Password: admin123456
+   id: admin1, admin2, admin3 <br>
+    Password: admin123
 
 ## __Group Members__
 1. Melody Koh Si Jie

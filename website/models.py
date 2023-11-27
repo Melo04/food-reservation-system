@@ -1,37 +1,37 @@
-from . import db
+from datetime import datetime
+from website import db, login_manager, app
 from flask_login import UserMixin
-from sqlalchemy.sql import func
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
-class Parent(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True) 
-    email = db.Column(db.String(150), unique=True)
-    password = db.Column(db.String(150))
-    firstName = db.Column(db.String(150))
-    lastName = db.Column(db.String(150))
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
-class Worker(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True) 
-    email = db.Column(db.String(150), unique=True)
-    password = db.Column(db.String(150))
-    firstName = db.Column(db.String(150))
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    name = db.Column(db.String(20), unique=True, nullable=False)
+    phone = db.Column(db.String(20), unique=True, nullable=False)
+    image_file = db.Column(db.String(20), nullable=False, default='default.png')
+    password = db.Column(db.String(60), nullable=False)
+    role = db.Column(db.String(20), nullable=False)
+    status = db.Column(db.String(20))
+    parent_id = db.Column(db.Integer)
+    student_id = db.Column(db.Integer)
 
-class Student(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True) 
-    studentid = db.Column(db.Integer, unique=True) 
-    email = db.Column(db.String(150), unique=True)
-    password = db.Column(db.String(150))
-    firstName = db.Column(db.String(150))
-    lastName = db.Column(db.String(150))
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+    
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
-class Admin(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True) 
-    username = db.Column(db.String(150), unique=True)
-    password = db.Column(db.String(150))
-    name = db.Column(db.String(150))
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}', '{self.name}', '{self.phone}', '{self.image_file}', '{self.role}', '{self.status}', '{self.parent_id}', '{self.student_id}')"

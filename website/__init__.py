@@ -1,62 +1,26 @@
-from flask import Flask, redirect, url_for, request
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from os import path
-from flask_login import LoginManager, current_user
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
+from flask_mail import Mail
+import os
 
-db = SQLAlchemy()
-DB_NAME = "database.db"
+app = Flask(__name__)
+app.config['SECRET_KEY'] = '397a6521b760efeb6144b9705bf7fabc'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+db = SQLAlchemy(app)
+with app.app_context():
+    db.create_all()
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+login_manager.login_message_category='info'
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = os.environ['MAIL_USERNAME']
+app.config['MAIL_PASSWORD'] = os.environ['MAIL_PASSWORD']
+mail = Mail(app)
 
-def create_app():
-    app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'food recommendation system'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
-    db.init_app(app)
-
-    from .views import views
-    from .auth import auth
-
-    app.register_blueprint(views, url_prefix='/')
-    app.register_blueprint(auth, url_prefix='/')
-
-    from .models import Parent, Worker, Student
-
-    with app.app_context():
-        db.create_all()
-
-    login_manager = LoginManager()
-    login_manager.init_app(app)
-
-    @login_manager.user_loader
-    def load_user(id):
-        parent = Parent.query.get(int(id))
-        worker = Worker.query.get(int(id))
-        student = Student.query.get(int(id))
-        admin = Student.query.get(int(id))
-        if parent:
-            return parent
-        elif worker:
-            return worker
-        elif student:
-            return student
-        elif admin:
-            return admin
-        else:
-            return None
-        
-    @login_manager.unauthorized_handler
-    def unauthorized():
-        if request.path == '/parent' or request.path == '/parent_profile':
-            return redirect(url_for('auth.parent_login'))
-        elif request.path == '/worker' or request.path == '/worker_profile':
-            return redirect(url_for('auth.worker_login'))
-        elif request.path == '/student' or request.path == '/student_profile':
-            return redirect(url_for('auth.student_login'))
-        elif request.path == '/admin' or request.path == '/admin_profile':
-            return redirect(url_for('auth.admin_login'))
-    
-    return app
-
-def create_database(app):
-    if not path.exists('website/' + DB_NAME):
-        db.create_all(app=app)
-        print('Created Database!')
+from website import routes
