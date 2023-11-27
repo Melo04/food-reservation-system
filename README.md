@@ -19,7 +19,7 @@ MAIL_PASSWORD='abcd'
     Password: parent123
 2. Canteen Worker <br>
     id: worker1, worker2, worker3 <br>
-    Password: canteen123
+    Password: worker123
 3. Student <br>
    id: student1, student2, student3 <br>
    Password: student123
