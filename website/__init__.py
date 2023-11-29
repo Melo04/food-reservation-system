@@ -23,4 +23,6 @@ app.config['MAIL_USERNAME'] = os.environ['MAIL_USERNAME']
 app.config['MAIL_PASSWORD'] = os.environ['MAIL_PASSWORD']
 mail = Mail(app)
 
+
 from website import routes
+from .menu import routes

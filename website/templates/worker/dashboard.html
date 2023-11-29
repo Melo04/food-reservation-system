@@ -1,7 +1,51 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock title %}
 {% block content %}
-  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto">
-    <h1 class="text-white">Canteen Worker Dashboard</h1>
+
+<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto">
+  <h1 class="text-white">Canteen Worker Dashboard</h1>
+</div>
+
+<nav class="bg-gray-800 p-4">
+  <div class="container mx-auto flex items-center justify-between">
+    <a href="{{ url_for('addmenu') }}" class="text-white">Add Menu</a>
   </div>
+</nav>
+
+<div class="container mx-auto mt-8 flex justify-center">
+  <table class="table table-sm table-condensed text-white bg-gray-800 w-full border">
+    <thead>
+      <th class="border">No</th>
+      <th class="border">Menu</th>
+      <th class="border">Price</th>
+      <th class="border">Type</th>
+      <th class="border">Description</th>
+      <th class="border">Image</th>
+      <th class="border">Edit</th>
+      <th class="border">Delete</th>
+    </thead>
+    <tbody>
+      {% for menu in menus %}
+      <tr>
+        <td class="border">{{loop.index}}</td>
+        <td class="border">{{menu.name}}</td>
+        <td class="border">{{menu.price}}</td>
+        <td class="border">{{menu.type}}</td>
+        <td class="border">{{menu.desc}}</td>
+        <td class="border">
+          <img src="{{ url_for('static', filename='menu_pics/' + menu.image_file) }}" alt="{{ menu.name }} Image"
+            class="img-thumbnail" style="width: 100px; height: 100px;">
+        </td>
+        <td class="border"><a href="{{url_for('updatemenu',id=menu.id)}}" class="btn btn-info btn-sm">Edit</a></td>
+        <td class="border">
+          <form action="{{url_for('deletemenu',id=menu.id)}}" method="post">
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
 {% endblock content %}

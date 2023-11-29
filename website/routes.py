@@ -8,6 +8,7 @@ from flask_mail import Message
 import secrets
 import os
 from PIL import Image
+from website.menu.models import Addmenu
 
 with app.app_context():
     db.create_all()
@@ -54,7 +55,8 @@ def student_dashboard():
 @app.route("/dashboard/worker", methods=['GET', 'POST'])
 @login_required(role="worker")
 def worker_dashboard():
-    return render_template('worker/dashboard.html')
+    menus = Addmenu.query.all()
+    return render_template('worker/dashboard.html',menus=menus)
 
 @app.route("/dashboard/admin", methods=['GET', 'POST'])
 @login_required(role="admin")
