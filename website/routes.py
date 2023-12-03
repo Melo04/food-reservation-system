@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import render_template, url_for, flash, redirect, request, current_app
 from website import app, db, bcrypt, mail
-from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, RequestResetForm, ResetPasswordForm
+from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, RequestResetForm, ResetPasswordForm, AdminUpdateProfileForm
 from website.models import User
 from flask_login import login_user, current_user, logout_user
 from flask_mail import Message
@@ -61,7 +61,22 @@ def worker_dashboard():
 @app.route("/dashboard/admin", methods=['GET', 'POST'])
 @login_required(role="admin")
 def admin_dashboard():
-    return render_template('admin/dashboard.html')
+    users = User.query.all()
+    page = request.args.get('page', 1, type=int)
+    per_page = 5
+    start_index = (page - 1) * per_page
+    end_index = start_index + per_page
+    paginated_users = users[start_index:end_index]
+
+    form = AdminUpdateProfileForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        user.username = form.username.data
+        user.status = form.status.data
+        db.session.commit()
+        flash('User profile has been updated!', 'success')
+        return redirect(url_for('admin_dashboard'))
+    return render_template('admin/dashboard.html', form=form, users=paginated_users, page=page, per_page=per_page, total_users=len(users), title='Admin Dashboard')
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -69,7 +84,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, name=form.name.data, phone=form.phone.data, role=form.role.data, status=form.status.data, password=hashed_password, parent_id=form.parent_id.data, student_id=form.student_id.data)
+        user = User(username=form.username.data, email=form.email.data, firstname=form.firstname.data, lastname=form.lastname.data, phone=form.phone.data, role=form.role.data, status=form.status.data, password=hashed_password, parent_id=form.parent_id.data)
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
@@ -124,7 +139,8 @@ def profile():
             current_user.image_file = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
-        current_user.name = form.name.data
+        current_user.firstname = form.firstname.data
+        current_user.lastname = form.lastname.data
         current_user.phone = form.phone.data
         db.session.commit()
         flash('Your profile has been updated!', 'success')
@@ -132,28 +148,22 @@ def profile():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
-        form.name.data = current_user.name
+        form.firstname.data = current_user.firstname
+        form.lastname.data = current_user.lastname
         form.phone.data = current_user.phone
         image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
         if current_user.role == 'parent':
-            if isinstance(current_user.student_id, int):
-                student = User.query.filter_by(id=form.username.student_id).first()
-                return render_template('profile.html', title='Profile', image_file=image_file, form=form, student=student)        
-            else:
-                student_ids = [int(id.strip()) for id in current_user.student_id.split(',')]
-                students = User.query.filter(User.id.in_(student_ids)).all()
-                return render_template('profile.html', title='Profile', image_file=image_file, form=form, students=students) 
+            students = User.query.filter(User.parent_id.contains(str(current_user.id))).all()
+            return render_template('profile.html', title='Profile', image_file=image_file, form=form, students=students)
         elif current_user.role == 'student':
             if isinstance(current_user.parent_id, int):
-                parent = User.query.filter_by(id=current_user.parent_id).first()
-                return render_template('profile.html', title='Profile', image_file=image_file, form=form, parent=parent)
+                parent_ids = [current_user.parent_id]
             else:
                 parent_ids = [int(id.strip()) for id in current_user.parent_id.split(',')]
-                parents = User.query.filter(User.id.in_(parent_ids)).all()
-                return render_template('profile.html', title='Profile', image_file=image_file, form=form, parents=parents)
+            parents = User.query.filter(User.id.in_(parent_ids)).all()
+            return render_template('profile.html', title='Profile', image_file=image_file, form=form, parents=parents)
         elif current_user.role == 'worker' or current_user.role == 'admin':
             return render_template('profile.html', title='Profile', image_file=image_file, form=form)
-            
 
 def send_reset_email(user):
     token = user.get_reset_token()

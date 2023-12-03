@@ -55,17 +55,31 @@
                         {% endif %}
                     </div>
                     <div class="mb-4">
-                        {{ form.name.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {{ form.firstname.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
                         
-                        {% if form.name.errors %}
-                            {{ form.name(class="bg-gray-50 border-2 border-red-600 text-red-600 sm:text-sm rounded-lg focus:ring-red-900 focus:border-red-600 block w-full p-2.5") }}
+                        {% if form.firstname.errors %}
+                            {{ form.firstname(class="bg-gray-50 border-2 border-red-600 text-red-600 sm:text-sm rounded-lg focus:ring-red-900 focus:border-red-600 block w-full p-2.5") }}
                             <div class="text-red-600 mt-2">
-                                {% for error in form.name.errors %}
+                                {% for error in form.firstname.errors %}
                                     <span>{{ error }}</span>
                                 {% endfor %}
                             </div>
                         {% else %}
-                            {{ form.name(class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}
+                            {{ form.firstname(class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}
+                        {% endif %}
+                    </div>
+                    <div class="mb-4">
+                        {{ form.lastname.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        
+                        {% if form.lastname.errors %}
+                            {{ form.lastname(class="bg-gray-50 border-2 border-red-600 text-red-600 sm:text-sm rounded-lg focus:ring-red-900 focus:border-red-600 block w-full p-2.5") }}
+                            <div class="text-red-600 mt-2">
+                                {% for error in form.lastname.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.lastname(class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}
                         {% endif %}
                     </div>
                     <div class="mb-4">
@@ -108,20 +122,6 @@
                             </div>
                         {% else %}
                             {{ form.parent_id(class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}
-                        {% endif %}
-                    </div>
-                    <div class="mb-4">
-                        {{ form.student_id.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
-                        
-                        {% if form.student_id.errors %}
-                            {{ form.student_id(class="bg-gray-50 border-2 border-red-600 text-red-600 sm:text-sm rounded-lg focus:ring-red-900 focus:border-red-600 block w-full p-2.5") }}
-                            <div class="text-red-600 mt-2">
-                                {% for error in form.student_id.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.student_id(class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}
                         {% endif %}
                     </div>
                     <div class="mb-4">

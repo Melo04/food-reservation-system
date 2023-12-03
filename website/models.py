@@ -12,14 +12,14 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    name = db.Column(db.String(20), unique=True, nullable=False)
+    firstname = db.Column(db.String(20), unique=True, nullable=False)
+    lastname = db.Column(db.String(20))
     phone = db.Column(db.String(20), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.png')
     password = db.Column(db.String(60), nullable=False)
     role = db.Column(db.String(20), nullable=False)
     status = db.Column(db.String(20))
-    parent_id = db.Column(db.Integer)
-    student_id = db.Column(db.Integer)
+    parent_id = db.Column(db.String(20))
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
@@ -35,4 +35,4 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.name}', '{self.phone}', '{self.image_file}', '{self.role}', '{self.status}', '{self.parent_id}', '{self.student_id}')"
+        return f"User('{self.username}', '{self.email}', '{self.firstname}', '{self.lastname}', '{self.phone}', '{self.image_file}', '{self.role}', '{self.status}', '{self.parent_id}')"

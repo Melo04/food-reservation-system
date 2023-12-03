@@ -8,3 +8,6 @@ Updates
 
 3. 29/11/2023 Shi Yi
    - added manage menu function for canteen worker (image part still not done)
+
+4. 4/12/2023 Melody
+   - added view user details and update user status in admin dashboard

@@ -1,7 +1,388 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock title %}
 {% block content %}
-  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto">
-    <h1 class="text-white">Admin Dashboard</h1>
-  </div>
+<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+    <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <h3 class="text-xl font-bold dark:text-white text-center my-8">User Details</h3>
+        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+                <div class="w-full md:w-1/2">
+                    <form>   
+                        <label for="search-dropdown" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                </svg>
+                            </div>
+                            <input type="search" id="search-dropdown" class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Username, Email, Name ..." required>
+                        </div>
+                    </form>
+                </div>
+                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                    <div class="flex items-center space-x-3 w-full md:w-auto">
+                        <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                            </svg>
+                            Filter Roles
+                            <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </button>
+                        <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Roles</h6>
+                            <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
+                                <li class="flex items-center">
+                                    <input id="parent" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="parent" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Parents</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="student" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="student" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Students</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="worker" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="worker" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Canteen Workers</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="admin" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="admin" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Admin</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table id="usersTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-4 py-4">ID</th>
+                            <th scope="col" class="px-4 py-3">Username</th>
+                            <th scope="col" class="px-4 py-3">Email</th>
+                            <th scope="col" class="px-4 py-3">First Name</th>
+                            <th scope="col" class="px-4 py-3">Last Name</th>
+                            <th scope="col" class="px-4 py-3">Phone No.</th>
+                            <th scope="col" class="px-4 py-3">Role</th>
+                            <th scope="col" class="px-4 py-3">Status</th>
+                            <th scope="col" class="px-4 py-3">Parent ID</th>
+                            <th scope="col" class="px-4 py-3">
+                                <span class="sr-only">Actions</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      {% for user in users %}
+                        <tr class="border-b dark:border-gray-700">
+                            <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ user.id }}</th>
+                            <td class="px-4 py-3">{{ user.username }}</td>
+                            <td class="px-4 py-3">{{ user.email }}</td>
+                            <td class="px-4 py-3 max-w-[12rem] truncate">{{ user.firstname }}</td>
+                            <td class="px-4 py-3 max-w-[12rem] truncate">{{ user.lastname }}</td>
+                            <td class="px-4 py-3">{{ user.phone }}</td>
+                            <td class="px-4 py-3">{{ user.role }}</td>
+                            <td class="px-4 py-3">{{ user.status }}</td>
+                            <td class="px-4 py-3">{{ user.parent_id }}</td>
+                            <td class="px-4 py-3 flex items-center justify-end">
+                                <button id="{{ user.id }}-dropdown-button" data-dropdown-toggle="{{ user.id }}-dropdown" class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
+                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                    </svg>
+                                </button>
+                                <div id="{{ user.id }}-dropdown" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                    <ul class="py-1 text-sm" aria-labelledby="{{ user.id }}-dropdown-button">
+                                        <li>
+                                            <button type="button" data-modal-target="updateProductModal" data-modal-toggle="updateProductModal" data-user-username="{{ user.username }}" data-user-status="{{ user.status }}" class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                                                </svg>
+                                                Edit
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" data-modal-target="readProductModal" data-modal-toggle="readProductModal" data-user-id="{{ user.id }}" data-user-username="{{ user.username }}" data-user-email="{{ user.email }}" data-user-firstname="{{ user.firstname }}" data-user-lastname="{{ user.lastname }}" data-user-phone="{{ user.phone }}" data-user-role="{{ user.role }}" data-user-status="{{ user.status }}" class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
+                                                <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                </svg>
+                                                Preview
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                    Showing
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ (page - 1) * per_page + 1 }}</span>
+                    to
+                    {% if total_users < 10 %}
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ total_users }}</span>
+                    {% else %}
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ page * per_page }}</span>
+                    {% endif %}
+                    of
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ total_users }}</span>
+                </span>
+                <ul class="inline-flex items-stretch -space-x-px">
+                    <li>
+                        {% if page > 1 %}
+                        <a href="{{ url_for('admin_dashboard', page=page - 1) }}" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        {% else %}
+                        <span class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-300 bg-white rounded-l-lg border border-gray-300">
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        {% endif %}
+                    </li>
+                    {% for p in range(1, (total_users // per_page) + 2) %}
+                    <li>
+                        <a href="{{ url_for('admin_dashboard', page=p) }}" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ p }}</a>
+                    </li>
+                    {% endfor %}
+                    <li>
+                        {% if page < (total_users // per_page) + 1 %}
+                        <a href="{{ url_for('admin_dashboard', page=page + 1) }}" id="prevButton" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span class="sr-only">Next</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        {% else %}
+                        <span id="nextButton" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-300 bg-white rounded-r-lg border border-gray-300">
+                            <span class="sr-only">Next</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+<!-- End block -->
+<!-- Update modal -->
+<div id="updateProductModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+            <!-- Modal header -->
+            <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Update User Status</h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="updateProductModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form action="" method="post">
+                {{ form.hidden_tag() }}
+                <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                    <div>
+                        {{ form.username.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }} 
+                        {{ form.username(class="bg-gray-100 border-none text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-900 dark:text-white", readonly="readonly") }}
+                    </div>
+                    <div>
+                        {{ form.status.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }} {% if form.status.errors %}
+                        {{ form.status(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in form.status.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ form.status(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    {{ form.submit(class="text-blue-600 inline-flex items-center hover:text-white border border-blue-600 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-900") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Read modal -->
+<div id="readProductModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+            <!-- Modal header -->
+            <div class="flex justify-center mb-4 rounded-t sm:mb-5">
+                <div class="text-lg text-gray-900 md:text-xl dark:text-white text-center">
+                    <div>
+                        <span class="font-semibold text-blue-200 inline-block">Username: </span>
+                        <h6 class="font-semibold inline-block">Apple iMac 27”</h3>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-blue-200 inline-block">Email: </span>
+                        <h5 class="font-semibold inline-block">$2999</h2>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-blue-200 inline-block">First Name: </span>
+                        <h4 class="font-semibold inline-block">$2999</h4>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-blue-200 inline-block">Last Name: </span>
+                        <h3 class="font-semibold inline-block">$2999</h4>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-blue-200 inline-block">Phone No: </span>
+                        <h2 class="font-semibold inline-block">$2999</h4>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-blue-200 inline-block">Role: </span>
+                        <h1 class="font-semibold inline-block">$2999</h4>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-blue-200 inline-block">Status: </span>
+                        <p class="font-semibold inline-block">$2999</p>
+                    </div>
+                </div>
+                <div class="">
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="readProductModal">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const table = document.getElementById("usersTable");
+        const rows = table.getElementsByTagName("tr");
+        const searchInput = document.getElementById("search-dropdown");
+        const modals = document.querySelectorAll('[data-modal-target]');
+        var updateButton = document.querySelectorAll('[data-modal-toggle="updateProductModal"]');
+        var previewButton = document.querySelectorAll('[data-modal-toggle="readProductModal"]');
+        const prevButton = document.getElementById("prevButton");
+        const nextButton = document.getElementById("nextButton");
+        const page = parseInt("{{ page }}");
+        const per_page = parseInt("{{ per_page }}");
+        const total_users = parseInt("{{ total_users }}");
+
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+                let checkboxChecked = false;
+
+                checkboxes.forEach(function (checkbox) {
+                    const role = checkbox.id;
+                    const isChecked = checkbox.checked;
+ 
+                    if(isChecked) {
+                        checkboxChecked = true;
+                    }
+
+                    for (let i = 1; i < rows.length; i++) {
+                        const row = rows[i];
+                        const cell = row.cells[6];
+
+                        if (cell.textContent.trim() === role) {
+                            console.log("found");
+                            row.style.display = isChecked ? "" : "none";
+                        }
+                    }
+                });
+
+                if(!checkboxChecked) {
+                    for (let i=1; i<rows.length; i++) {
+                        const row = rows[i];
+                        row.style.display = "";
+                    }
+                }
+            });
+        });
+        
+        searchInput.addEventListener("keyup", function () {
+            const value = searchInput.value.toLowerCase();
+
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const username = row.cells[2].textContent.toLowerCase();
+                const email = row.cells[3].textContent.toLowerCase();
+                const name = row.cells[4].textContent.toLowerCase();
+                const phone = row.cells[5].textContent.toLowerCase();
+
+                if (username.includes(value) || email.includes(value) || name.includes(value) || phone.includes(value)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        });
+
+        updateButton.forEach(button => {
+            button.addEventListener("click", () => {
+                const username = button.getAttribute("data-user-username");
+                const status = button.getAttribute("data-user-status");
+
+                var updateModal = document.getElementById("updateProductModal");
+                updateModal.querySelector('#username').value = username;
+                updateModal.querySelector('#status').value = status;
+            });
+        });
+
+        previewButton.forEach(button => {
+            button.addEventListener("click", () => {
+                const id = button.getAttribute("data-user-id");
+                const username = button.getAttribute("data-user-username");
+                const email = button.getAttribute("data-user-email");
+                const firstname = button.getAttribute("data-user-firstname");
+                const lastname = button.getAttribute("data-user-firstname");
+                const phone = button.getAttribute("data-user-phone");
+                const role = button.getAttribute("data-user-role");
+                const status = button.getAttribute("data-user-status");
+
+                var readModal = document.getElementById("readProductModal");
+                readModal.querySelector('h6').textContent = username;
+                readModal.querySelector('h5').textContent = email;
+                readModal.querySelector('h4').textContent = firstname;
+                readModal.querySelector('h3').textContent = lastname;
+                readModal.querySelector('h2').textContent = phone;
+                readModal.querySelector('h1').textContent = role;
+                readModal.querySelector('p').textContent = status;
+            });
+        });
+    
+        prevButton.addEventListener("click", function () {
+            const total_pages = Math.ceil(total_users / per_page);
+            if (page > 1) {
+                window.location.href = "/dashboard/admin?page=" + (page - 1);
+            }
+        });
+
+        nextButton.addEventListener("click", function () {
+            const total_pages = Math.ceil(total_users / per_page);
+            if (page < total_pages) {
+                window.location.href = "/dashboard/admin?page=" + (page + 1);
+            }
+        });
+
+
+        
+    });
+</script>
 {% endblock content %}
