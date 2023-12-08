@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
+{% block title %}Manage Menu{% endblock title %}
 {% block content %}
 {% include '_messages.html' %}
 
 
 <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto bg-gray-800 text-white">
-    <h1 class="text-white">Update Menu</h1>
+    <h1 class="text-white">Menu</h1>
 </div>
 
 <div class="container mx-auto mt-8">
     <div class="flex justify-center">
-        <div class="w-1/5 bg-white rounded-md shadow-md p-8 border border-gray-800">
+        <div class="w-1/4 bg-white rounded-md shadow-md p-8 border border-gray-800">
             {% from "_formhelpers.html" import render_field %}
             <form class="space-y-2 md:space-y-2" method="POST" enctype="multipart/form-data">
                 {{ render_field(form.name, class="w-full form-control bg-gray-50 rounded-md border border-gray-100",
@@ -22,15 +23,18 @@
                 placeholder="Add menu type") }}
                 <br>
                 {{ render_field(form.desc, class="w-full form-control bg-gray-50 rounded-md border border-gray-100",
-                placeholder="Add menu details", rows="10") }}
+                placeholder="Add menu description", rows="10") }}
                 <br>
+                {{ form.main_course.label.text }}
+                {{ form.main_course(class="w-full form-control bg-gray-50 rounded-md border border-gray-100") }}
+                <br><br>
+                {{ form.beverage.label.text }}
+                {{ form.beverage(class="w-full form-control bg-gray-50 rounded-md border border-gray-100") }}
+                <br><br>
                 {{ render_field(form.picture, class="w-full form-control bg-gray-50 rounded-md border border-gray-100",
-                placeholder="Update menu image") }}
-
-                <div class="mt-4 bg-blue-500">
-                    <input type="submit" value="Update menu"
-                        class="btn-outline-info">
-                </div>
+                ) }}
+                <br>
+                {{ form.submit(class="bg-blue-500 text-white rounded-md px-4 py-2") }}
             </form>
         </div>
     </div>

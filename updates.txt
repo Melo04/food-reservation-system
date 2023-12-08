@@ -11,3 +11,6 @@ Updates
 
 4. 4/12/2023 Melody
    - added view user details and update user status in admin dashboard
+
+5. 8/12/2023 Shi Yi
+   - added manage food item function for canteen worker (menu image part still not done)

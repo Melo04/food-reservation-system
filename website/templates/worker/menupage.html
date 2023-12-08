@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Menu Page{% endblock title %}
+{% block content %}
+<h3 class="text-xl font-bold text-white text-center my-8">Menu Page</h3>
+<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+    <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <h3 class="text-xl font-bold dark:text-white text-center my-8">Manage Main Course</h3>
+        <div class="overflow-x-auto">
+            <button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"><a href="{{ url_for('addmain') }}" class="text-white">Add Main Course</a></button>
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-4 py-4">No</th>
+                        <th scope="col" class="px-4 py-3">Food Item</th>
+                        <th scope="col" class="px-4 py-3">Quantity</th>
+                        <th scope="col" class="px-4 py-3">Remarks</th>
+                        <th scope="col" class="px-4 py-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for main_course in main_courses %}
+                    <tr class="border-b dark:border-gray-700">
+                        <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                            loop.index }}</th>
+                        <td class="px-4 py-3">{{ main_course.name }}</td>
+                        <td class="px-4 py-3">{{ main_course.quantity }}</td>
+                        <td class="px-4 py-3 max-w-[12rem] truncate">{{ main_course.remarks }}</td>
+                        <td class="px-4 py-3"><a href="{{ url_for('updatemain', id=main_course.id) }}"
+                                class="btn btn-info btn-sm">Edit</a></td>
+                        <td class="px-4 py-3">
+                            <form action="{{ url_for('deletemain', id=main_course.id) }}" method="post">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+</section>
+
+<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+    <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <h3 class="text-xl font-bold dark:text-white text-center my-8">Manage Beverages</h3>
+        <div class="overflow-x-auto">
+            <button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"><a href="{{ url_for('add_beverage') }}" class="text-white ml-4">Add Beverage</a></button>
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-4 py-4">No</th>
+                        <th scope="col" class="px-4 py-3">Food Item</th>
+                        <th scope="col" class="px-4 py-3">Quantity</th>
+                        <th scope="col" class="px-4 py-3">Remarks</th>
+                        <th scope="col" class="px-4 py-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for beverage in beverages %}
+                    <tr class="border-b dark:border-gray-700">
+                        <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                            loop.index }}</th>
+                        <td class="px-4 py-3">{{ beverage.name }}</td>
+                        <td class="px-4 py-3">{{ beverage.quantity }}</td>
+                        <td class="px-4 py-3 max-w-[12rem] truncate">{{ beverage.remarks }}</td>
+                        <td class="px-4 py-3"><a href="{{ url_for('update_beverage', id=beverage.id) }}"
+                                class="btn btn-info btn-sm">Edit</a></td>
+                        <td class="px-4 py-3">
+                            <form action="{{ url_for('delete_beverage', id=beverage.id) }}" method="post">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+</section>
+
+<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+    <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <h3 class="text-xl font-bold dark:text-white text-center my-8">Manage Menu</h3>
+        <div class="overflow-x-auto">
+            <button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"><a href="{{ url_for('addmenu') }}" class="text-white"> Add Menu</a></button>
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-4 py-4">No</th>
+                        <th scope="col" class="px-4 py-3">Menu</th>
+                        <th scope="col" class="px-4 py-3">Price</th>
+                        <th scope="col" class="px-4 py-3">Type</th>
+                        <th scope="col" class="px-4 py-3">Description</th>
+                        <th scope="col" class="px-4 py-3">Main Course</th>
+                        <th scope="col" class="px-4 py-3">Beverage</th>
+                        <th scope="col" class="px-4 py-3">Image</th>
+                        <th scope="col" class="px-4 py-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for menu in menus %}
+                    <tr class="border-b dark:border-gray-700">
+                        <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                            loop.index }}</th>
+                        <td class="px-4 py-3">{{menu.name}}</td>
+                        <td class="px-4 py-3">{{menu.price}}</td>
+                        <td class="px-4 py-3">{{menu.type}}</td>
+                        <td class="px-4 py-3 max-w-[12rem] truncate">{{menu.desc}}</td>
+                        <td class="px-4 py-3">{{menu.main_course.name}}</td>
+                        <td class="px-4 py-3">{{menu.beverage.name}}</td>
+                        <td class="px-4 py-3"><img
+                                src="{{ url_for('static', filename='menu_pics/' + menu.image_file) }}"
+                                alt="{{ menu.name }} Image" class="img-thumbnail" style="width: 100px; height: 100px;">
+                        </td>
+                        <td class="px-4 py-3"><a href="{{url_for('updatemenu',id=menu.id)}}"
+                                class="btn btn-info btn-sm">Edit</a></td>
+                        <td class="px-4 py-3">
+                            <form action="{{url_for('deletemenu',id=menu.id)}}" method="post">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+</section>
+{% endblock content %}
