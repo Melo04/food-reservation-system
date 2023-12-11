@@ -138,7 +138,7 @@ class Menus(FlaskForm):
     desc = TextAreaField('Description', validators=[DataRequired()])
     main_course=SelectField('Main Course',coerce=int, validators=[DataRequired()])
     beverage=SelectField('Beverage',coerce=int, validators=[DataRequired()])
-    visibility=SelectField('Visibility',choices=[('public','public'),('private','private'),('pending','pending')])
+    visibility=SelectField('Visibility',choices=[('private','private'),('pending','set to public')])
     picture = FileField('Menu Image File', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Add Menu',validators=[DataRequired()])
 
@@ -150,6 +150,6 @@ class UpdateMenus(FlaskForm):
     desc = TextAreaField('Description', validators=[DataRequired()])
     main_course=SelectField('Main Course',coerce=int, validators=[DataRequired()])
     beverage=SelectField('Beverage',coerce=int, validators=[DataRequired()])
-    visibility=SelectField('Visibility',choices=[('public','public'),('private','private'),('pending','pending')])
+    visibility=SelectField('Visibility',choices=[('private','private'),('pending','set to public')])
     picture = FileField('Menu Image File', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Update Menu',validators=[DataRequired()])

@@ -44,7 +44,8 @@ def home():
 @app.route("/dashboard/parent", methods=['GET', 'POST'])
 @login_required(role="parent")
 def parent_dashboard():
-    return render_template('parent/dashboard.html')
+    menus = Menu.query.all()
+    return render_template('parent/dashboard.html', menus=menus)
 
 @app.route("/dashboard/student", methods=['GET', 'POST'])
 @login_required(role="student")
@@ -72,7 +73,6 @@ def save_menupic(form_picture):
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path, 'static/menu_pics', picture_fn)
-    print("I am here=====================================================================================")
     output_size = (125,125)
     i = Image.open(form_picture)
     i.thumbnail(output_size)
@@ -97,6 +97,7 @@ def worker_menupage():
     menuupdateform.main_course.choices = [(main_course.id, main_course.name) for main_course in MainCourse.query.all()]
     menuupdateform.beverage.choices = [(beverage.id, beverage.name) for beverage in Beverage.query.all()]
 
+    # Add Main Course
     if mainform.submit.data and request.method == 'POST':
         name = mainform.name.data
         quantity = mainform.quantity.data
@@ -108,6 +109,7 @@ def worker_menupage():
         flash(f'{name} has been added to your database', 'success')
         return redirect(url_for('worker_menupage'))
     
+    # Update Main Course
     elif mainupdateform.submit.data and request.method == 'POST':
         main_course = MainCourse.query.filter_by(id=mainupdateform.id.data).first()
         main_course.id = mainupdateform.id.data
@@ -118,6 +120,7 @@ def worker_menupage():
         flash(f'{main_course.name} has been updated','success')
         return redirect(url_for('worker_menupage'))
         
+    # Add Beverage
     elif beverageform.submit.data and request.method == 'POST':
         name = beverageform.name.data
         quantity = beverageform.quantity.data
@@ -129,6 +132,7 @@ def worker_menupage():
         flash(f'{name} has been added to your database', 'success')
         return redirect(url_for('worker_menupage'))
     
+    # Update Beverage
     elif beverageupdateform.submit.data and request.method == 'POST':
         beverage = Beverage.query.filter_by(id=beverageupdateform.id.data).first()
         beverage.id = beverageupdateform.id.data
@@ -139,6 +143,7 @@ def worker_menupage():
         flash(f'{beverage.name} has been updated','success')
         return redirect(url_for('worker_menupage'))
     
+    # Add Menu
     elif menuform.submit.data and request.method == 'POST':
         name = menuform.name.data
         price = menuform.price.data
@@ -155,11 +160,6 @@ def worker_menupage():
         print("========================++==========================")
         print(menuform.picture.data)
         print("=========================++=========================")
-        # if menuform.picture.data:
-        #     picture_file = save_menupic(menuform.picture.data)
-        #     image_file = picture_file
-        # else:
-        #     image_file = 'default.jpg'
         addmenu = Menu(name=name, price=price, type=type, desc=desc, image_file=image_file, main_course_id=main_course_id, beverage_id=beverage_id, visibility=visibility)
         with app.app_context():
             db.session.add(addmenu)
@@ -167,6 +167,7 @@ def worker_menupage():
         flash(f'The menu {name} has been added to your database', 'success')
         return redirect(url_for('worker_menupage'))
     
+    # Update Menu
     elif menuupdateform.submit.data and request.method == 'POST':
         menu = Menu.query.filter_by(id=menuupdateform.id.data).first()
         menu.id = menuupdateform.id.data

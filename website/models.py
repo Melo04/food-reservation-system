@@ -73,3 +73,58 @@ class Menu(db.Model):
 
     def __repr__(self):
         return f"Menu('{self.name},'{self.price}','{self.type}','{self.desc}', '{self.image_file}', '{self.visibility}')"
+    
+class Transaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
+    amount = db.Column(db.Numeric(10, 2), nullable=False)
+    date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    parent_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    parent = db.relationship('User', backref='transaction')
+
+    def __repr__(self):
+        return f"Transaction('{self.amount},'{self.date_time}')"
+    
+class Reload(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
+    amount = db.Column(db.Numeric(10, 2), nullable=False)
+    date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    parent_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    parent = db.relationship('User', backref='reload')
+
+    def __repr__(self):
+        return f"Reload('{self.amount},'{self.date_time}')"
+    
+class Payout(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
+    amount = db.Column(db.Numeric(10, 2), nullable=False)
+    date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    admin_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    admin = db.relationship('User', backref='payout')
+
+    def __repr__(self):
+        return f"Payout('{self.amount},'{self.date_time}')"
+    
+# class Order(db.Model):
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
+#     order_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+#     order_quantity = db.Column(db.Integer, nullable=False)
+#     order_remarks = db.Column(db.Text, nullable=False)
+#     redemption = db.Column(db.Boolean, nullable=False, default=False)
+
+#     menu_id = db.Column(db.Integer, db.ForeignKey('menu.id'), nullable=False)
+#     menu = db.relationship('Menu', backref='order') 
+
+#     parent_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+#     parent = db.relationship('User', backref='parent_orders', foreign_keys=[parent_id])
+
+#     student_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+#     student = db.relationship('User', backref='student_orders', foreign_keys=[student_id])
+
+#     transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=False)
+#     transaction = db.relationship('Transaction', backref='order')
+
+#     def __repr__(self):
+#         return f"Order('{self.order_date},'{self.order_quantity}','{self.order_remarks}','{self.redemption}')"
