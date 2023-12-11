@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock title %}
 {% block content %}
+<!-- User Details -->
 <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
         <h3 class="text-xl font-bold dark:text-white text-center my-8">User Details</h3>
@@ -35,15 +36,15 @@
                             <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
                                 <li class="flex items-center">
                                     <input id="parent" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                    <label for="parent" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Parents</label>
+                                    <label for="parent" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Parent</label>
                                 </li>
                                 <li class="flex items-center">
                                     <input id="student" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                    <label for="student" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Students</label>
+                                    <label for="student" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Student</label>
                                 </li>
                                 <li class="flex items-center">
                                     <input id="worker" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                    <label for="worker" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Canteen Workers</label>
+                                    <label for="worker" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Canteen Worker</label>
                                 </li>
                                 <li class="flex items-center">
                                     <input id="admin" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
@@ -67,9 +68,7 @@
                             <th scope="col" class="px-4 py-3">Role</th>
                             <th scope="col" class="px-4 py-3">Status</th>
                             <th scope="col" class="px-4 py-3">Parent ID</th>
-                            <th scope="col" class="px-4 py-3">
-                                <span class="sr-only">Actions</span>
-                            </th>
+                            <th scope="col" class="px-4 py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -84,33 +83,22 @@
                             <td class="px-4 py-3">{{ user.role }}</td>
                             <td class="px-4 py-3">{{ user.status }}</td>
                             <td class="px-4 py-3">{{ user.parent_id }}</td>
-                            <td class="px-4 py-3 flex items-center justify-end">
-                                <button id="{{ user.id }}-dropdown-button" data-dropdown-toggle="{{ user.id }}-dropdown" class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
-                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                    </svg>
-                                </button>
-                                <div id="{{ user.id }}-dropdown" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                    <ul class="py-1 text-sm" aria-labelledby="{{ user.id }}-dropdown-button">
-                                        <li>
-                                            <button type="button" data-modal-target="updateProductModal" data-modal-toggle="updateProductModal" data-user-username="{{ user.username }}" data-user-status="{{ user.status }}" class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                    <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                                </svg>
-                                                Edit
-                                            </button>
-                                        </li>
-                                        <li>
-                                            <button type="button" data-modal-target="readProductModal" data-modal-toggle="readProductModal" data-user-id="{{ user.id }}" data-user-username="{{ user.username }}" data-user-email="{{ user.email }}" data-user-firstname="{{ user.firstname }}" data-user-lastname="{{ user.lastname }}" data-user-phone="{{ user.phone }}" data-user-role="{{ user.role }}" data-user-status="{{ user.status }}" class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                </svg>
-                                                Preview
-                                            </button>
-                                        </li>
-                                    </ul>
+                            <td class="px-4 py-3 font-medium">
+                                <div class="flex items-center space-x-7">
+                                    <button type="button" data-modal-target="updateProductModal" data-modal-toggle="updateProductModal" data-user-username="{{ user.username }}" data-user-status="{{ user.status }}" class="py-2 px-6 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-blue-600 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                            <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                                        </svg>
+                                        Edit
+                                    </button>
+                                    <button type="button" data-modal-target="readProductModal" data-modal-toggle="readProductModal" data-user-id="{{ user.id }}" data-user-username="{{ user.username }}" data-user-email="{{ user.email }}" data-user-firstname="{{ user.firstname }}" data-user-lastname="{{ user.lastname }}" data-user-phone="{{ user.phone }}" data-user-role="{{ user.role }}" data-user-status="{{ user.status }}" class="py-2 px-6 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-green-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-green-700 focus:ring-green-200 dark:bg-green-600 dark:text-white dark:border-green-600 dark:hover:text-green-600 dark:hover:bg-transparent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                            <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                                        </svg>
+                                        Preview
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -176,8 +164,192 @@
         </div>
     </div>
 </section>
-<!-- End block -->
-<!-- Update modal -->
+
+<!-- Menu Details -->
+<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+    <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <h3 class="text-xl font-bold dark:text-white text-center my-8">Food Menu</h3>
+        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+                <div class="w-full md:w-1/2">
+                    <form>   
+                        <label for="menu-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                </svg>
+                            </div>
+                            <input type="search" id="menu-search" class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Food Menu ..." required>
+                        </div>
+                    </form>
+                </div>
+                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                    <div class="flex items-center space-x-3 w-full md:w-auto">
+                        <button id="filterVisibilityDropdown" data-dropdown-toggle="filterVisibility" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                            </svg>
+                            Filter Visibility
+                            <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </button>
+                        <div id="filterVisibility" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Visibility</h6>
+                            <ul class="space-y-2 text-sm" aria-labelledby="filterVisibilityDropdown">
+                                <li class="flex items-center">
+                                    <input id="public" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="public" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Public</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="private" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="private" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Private</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="pending" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="pending" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Pending</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table id="menuTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-4 py-4">ID</th>
+                            <th scope="col" class="px-4 py-3">Menu</th>
+                            <th scope="col" class="px-4 py-3">Price</th>
+                            <th scope="col" class="px-4 py-3">Type</th>
+                            <th scope="col" class="px-4 py-3">Description</th>
+                            <th scope="col" class="px-4 py-3">Main Course</th>
+                            <th scope="col" class="px-4 py-3">Beverage</th>
+                            <th scope="col" class="px-4 py-3">Visibility</th>
+                            <th scope="col" class="px-4 py-3">Image</th>
+                            <th scope="col" class="px-4 py-3">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      {% for menu in menus %}
+                        <tr class="border-b dark:border-gray-700">
+                            <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                            loop.index }}</th>
+                            <td class="px-4 py-3">{{ menu.name }}</td>
+                            <td class="px-4 py-3">{{ menu.price }}</td>
+                            <td class="px-4 py-3">{{ menu.type }}</td>
+                            <td class="px-4 py-3 truncate">{{ menu.desc }}</td>
+                            <td class="px-4 py-3">{{ menu.main_course.name }}</td>
+                            <td class="px-4 py-3">{{ menu.beverage.name }}</td>
+                            <td class="px-4 py-3">{{ menu.visibility }}</td>
+                            <td class="px-4 py-3">
+                                <img class="w-20 h-20" src="{{ menu.image_file }}" alt="{{ menu.name }} image">
+                            </td>
+                            <td class="px-4 py-3 font-medium">
+                                <div class="flex items-center space-x-7">
+                                    <button type="button" data-modal-target="updateMenuModal" data-modal-toggle="updateMenuModal" data-menu-id="{{ menu.id }}" data-menu-name="{{ menu.name }}" data-menu-visibility="{{ menu.visibility }}" class="py-2 px-6 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                            <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                                        </svg>
+                                        Edit
+                                    </button>
+                                    <button type="button" data-modal-target="{{menu.id}}-deleteMenuModal" data-modal-toggle="{{menu.id}}-deleteMenuModal" class="py-2 px-6 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-red-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-red-200 dark:bg-red-600 dark:text-white dark:border-red-600 dark:hover:text-red-600 dark:hover:bg-transparent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        </svg>
+                                        Delete
+                                    </button>
+                                    <div id="{{menu.id}}-deleteMenuModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                        <div class="relative p-4 w-full max-w-md max-h-full">
+                                            <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                                                <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="{{menu.id}}-deleteMenuModal">
+                                                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                    </svg>
+                                                    <span class="sr-only">Close modal</span>
+                                                </button>
+                                                <svg class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                </svg>
+                                                <p class="mb-4 text-gray-500 dark:text-gray-300">Are you sure you want to delete this item?</p>
+                                                <div class="flex justify-center items-center space-x-4">
+                                                    <button data-modal-toggle="{{menu.id}}-deleteMenuModal" type="button" class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
+                                                    <form action="{{ url_for('deletemenu', id=menu.id) }}" method="post">
+                                                        <button type="submit" class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">Yes, I'm sure</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                    Showing
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ (menupage - 1) * per_page + 1 }}</span>
+                    to
+                    {% if total_menus < 10 %}
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ total_menus }}</span>
+                    {% else %}
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ menupage * per_page }}</span>
+                    {% endif %}
+                    of
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ total_menus }}</span>
+                </span>
+                <ul class="inline-flex items-stretch -space-x-px">
+                    <li>
+                        {% if menupage > 1 %}
+                        <a href="{{ url_for('admin_dashboard', menupage=menupage - 1) }}" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        {% else %}
+                        <span class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-300 bg-white rounded-l-lg border border-gray-300">
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        {% endif %}
+                    </li>
+                    {% for p in range(1, (total_menus // per_page) + 2) %}
+                    <li>
+                        <a href="{{ url_for('admin_dashboard', menupage=p) }}" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ p }}</a>
+                    </li>
+                    {% endfor %}
+                    <li>
+                        {% if menupage < (total_menus // per_page) + 1 %}
+                        <a href="{{ url_for('admin_dashboard', page=menupage + 1) }}" id="prevMenuButton" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span class="sr-only">Next</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        {% else %}
+                        <span id="nextMenuButton" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-300 bg-white rounded-r-lg border border-gray-300">
+                            <span class="sr-only">Next</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<!-- UpdateUser Status modal -->
 <div id="updateProductModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-2xl max-h-full">
         <!-- Modal content -->
@@ -220,7 +392,7 @@
         </div>
     </div>
 </div>
-<!-- Read modal -->
+<!-- Read User Details modal -->
 <div id="readProductModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-xl max-h-full">
         <!-- Modal content -->
@@ -269,9 +441,56 @@
         </div>
     </div>
 </div>
+
+<!-- Update Menu Visibility modal -->
+<div id="updateMenuModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+            <!-- Modal header -->
+            <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Update Menu Visibility</h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="updateMenuModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form action="" method="post">
+                {{ menuform.hidden_tag() }}
+                <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                    <div>
+                        {{ menuform.name.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }} 
+                        {{ menuform.name(class="bg-gray-100 border-none text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-900 dark:text-white", readonly="readonly") }}
+                    </div>
+                    <div>
+                        {{ menuform.visibility.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }} {% if menuform.visibility.errors %}
+                        {{ menuform.visibility(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuform.visibility.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuform.visibility(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    {{ menuform.submit(class="text-blue-600 inline-flex items-center hover:text-white border border-blue-600 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-900") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const page = parseInt("{{ page }}");
+        // User Details Table
+        const roleCheckboxes = document.querySelectorAll('#filterDropdown input[type="checkbox"]');
         const table = document.getElementById("usersTable");
         const rows = table.getElementsByTagName("tr");
         const searchInput = document.getElementById("search-dropdown");
@@ -280,28 +499,33 @@
         var previewButton = document.querySelectorAll('[data-modal-toggle="readProductModal"]');
         const prevButton = document.getElementById("prevButton");
         const nextButton = document.getElementById("nextButton");
-        const page = parseInt("{{ page }}");
         const per_page = parseInt("{{ per_page }}");
         const total_users = parseInt("{{ total_users }}");
+        
+        // Food Menu Table
+        const visibilityCheckboxes = document.querySelectorAll('#filterVisibility input[type="checkbox"]');
+        const menutable = document.getElementById("menuTable");
+        const menurows = menutable.getElementsByTagName("tr");
+        const menuSearch = document.getElementById("menu-search");
+        const prevMenuButton = document.getElementById("prevMenuButton");
+        const nextMenuButton = document.getElementById("nextMenuButton");
+        const menupage = parseInt("{{ menupage }}");
+        const total_menus = parseInt("{{ total_menus }}");
+        var updateMenuButton = document.querySelectorAll('[data-modal-toggle="updateMenuModal"]');
 
-        checkboxes.forEach(function (checkbox) {
+        roleCheckboxes.forEach(function (checkbox) {
             checkbox.addEventListener("change", function () {
                 let checkboxChecked = false;
-
-                checkboxes.forEach(function (checkbox) {
+                roleCheckboxes.forEach(function (checkbox) {
                     const role = checkbox.id;
                     const isChecked = checkbox.checked;
  
                     if(isChecked) {
                         checkboxChecked = true;
                     }
-
                     for (let i = 1; i < rows.length; i++) {
                         const row = rows[i];
-                        const cell = row.cells[6];
-
-                        if (cell.textContent.trim() === role) {
-                            console.log("found");
+                        if (row.cells[6].textContent.trim() === role) {
                             row.style.display = isChecked ? "" : "none";
                         }
                     }
@@ -309,8 +533,33 @@
 
                 if(!checkboxChecked) {
                     for (let i=1; i<rows.length; i++) {
-                        const row = rows[i];
-                        row.style.display = "";
+                        rows[i].style.display = "";
+                    }
+                }
+            });
+        });
+
+        visibilityCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+                let checkboxChecked = false;
+                visibilityCheckboxes.forEach(function (checkbox) {
+                    const visible = checkbox.id;
+                    const isChecked = checkbox.checked;
+ 
+                    if(isChecked) {
+                        checkboxChecked = true;
+                    }
+                    for (let i = 1; i < menurows.length; i++) {
+                        const row = menurows[i];
+                        if (row.cells[7].textContent.trim() === visible) {
+                            row.style.display = isChecked ? "" : "none";
+                        }
+                    }
+                });
+
+                if(!checkboxChecked) {
+                    for (let i=1; i<menurows.length; i++) {
+                        menurows[i].style.display = "";
                     }
                 }
             });
@@ -334,6 +583,24 @@
             }
         });
 
+        menuSearch.addEventListener("keyup", function () {
+            const value = menuSearch.value.toLowerCase();
+
+            for (let i=1; i<menurows.length; i++) {
+                const row = menurows[i];
+                const name = row.cells[1].textContent.toLowerCase();
+                const type = row.cells[3].textContent.toLowerCase();
+                const main = row.cells[5].textContent.toLowerCase();
+                const beverage = row.cells[6].textContent.toLowerCase();
+                const visibility = row.cells[7].textContent.toLowerCase();
+                if (name.includes(value) || type.includes(value) || main.includes(value) || beverage.includes(value) || visibility.includes(value)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        });
+
         updateButton.forEach(button => {
             button.addEventListener("click", () => {
                 const username = button.getAttribute("data-user-username");
@@ -342,6 +609,17 @@
                 var updateModal = document.getElementById("updateProductModal");
                 updateModal.querySelector('#username').value = username;
                 updateModal.querySelector('#status').value = status;
+            });
+        });
+
+        updateMenuButton.forEach(button => {
+            button.addEventListener("click", () => {
+                const name = button.getAttribute("data-menu-name");
+                const visibility = button.getAttribute("data-menu-visibility");
+
+                var updateModal = document.getElementById("updateMenuModal");
+                updateModal.querySelector('#name').value = name;
+                updateModal.querySelector('#visibility').value = visibility;
             });
         });
 
@@ -381,8 +659,21 @@
             }
         });
 
+        prevMenuButton.addEventListener("click", function () {
+            const total_pages = Math.ceil(total_menus / per_page);
+            if (menupage > 1) {
+                window.location.href = "/dashboard/admin?menupage=" + (menupage - 1);
+            }
+        });
 
+        nextMenuButton.addEventListener("click", function () {
+            const total_pages = Math.ceil(total_menus / per_page);
+            if (menupage < total_pages) {
+                window.location.href = "/dashboard/admin?menupage=" + (menupage + 1);
+            }
+        });
         
+
     });
 </script>
 {% endblock content %}

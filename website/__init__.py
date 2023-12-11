@@ -25,4 +25,3 @@ mail = Mail(app)
 
 
 from website import routes
-from .menu import routes

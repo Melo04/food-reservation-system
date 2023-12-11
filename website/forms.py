@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, FloatField, TextAreaField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from website.models import User
 from website import bcrypt
@@ -84,6 +84,11 @@ class AdminUpdateProfileForm(FlaskForm):
     status = SelectField('Status', choices=[('active', 'active'), ('inactive', 'inactive')])
     submit = SubmitField('Update User')
 
+class AdminUpdateMenuForm(FlaskForm):
+    name = StringField('Menu', validators=[DataRequired()])
+    visibility = SelectField('Visibility', choices=[('public', 'public'), ('private', 'private'), ('pending', 'pending')])
+    submit = SubmitField('Update Menu')
+
 class RequestResetForm(FlaskForm):
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
@@ -99,3 +104,52 @@ class ResetPasswordForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
+
+class MainCourses(FlaskForm):
+    name = StringField('MainCourse', validators=[DataRequired()])
+    quantity = IntegerField('Quantity',validators=[DataRequired()])
+    remarks = StringField('Remarks', validators=[DataRequired()])
+    submit = SubmitField('Add Main Course',validators=[DataRequired()])
+
+class UpdateMainCourses(FlaskForm):
+    id = IntegerField('Id', validators=[DataRequired()])
+    name = StringField('MainCourse', validators=[DataRequired()])
+    quantity = IntegerField('Quantity',validators=[DataRequired()])
+    remarks = StringField('Remarks', validators=[DataRequired()])
+    submit = SubmitField('Update Main Course',validators=[DataRequired()])
+
+class Beverages(FlaskForm):
+    name = StringField('Beverage', validators=[DataRequired()])
+    quantity = IntegerField('Quantity',validators=[DataRequired()])
+    remarks = StringField('Remarks', validators=[DataRequired()])
+    submit = SubmitField('Add Beverage',validators=[DataRequired()])
+
+class UpdateBeverages(FlaskForm):
+    id = IntegerField('Id', validators=[DataRequired()])
+    name = StringField('Beverage', validators=[DataRequired()])
+    quantity = IntegerField('Quantity',validators=[DataRequired()])
+    remarks = StringField('Remarks', validators=[DataRequired()])
+    submit = SubmitField('Update Beverage',validators=[DataRequired()])
+
+class Menus(FlaskForm):
+    name = StringField('Menu', validators=[DataRequired()])
+    price = FloatField('Price', validators=[DataRequired()])
+    type = StringField('Type', validators=[DataRequired()])
+    desc = TextAreaField('Description', validators=[DataRequired()])
+    main_course=SelectField('Main Course',coerce=int, validators=[DataRequired()])
+    beverage=SelectField('Beverage',coerce=int, validators=[DataRequired()])
+    visibility=SelectField('Visibility',choices=[('public','public'),('private','private'),('pending','pending')])
+    picture = FileField('Menu Image File', validators=[FileAllowed(['jpg', 'png'])])
+    submit = SubmitField('Add Menu',validators=[DataRequired()])
+
+class UpdateMenus(FlaskForm):
+    id = IntegerField('Id', validators=[DataRequired()])
+    name = StringField('Menu', validators=[DataRequired()])
+    price = FloatField('Price', validators=[DataRequired()])
+    type = StringField('Type', validators=[DataRequired()])
+    desc = TextAreaField('Description', validators=[DataRequired()])
+    main_course=SelectField('Main Course',coerce=int, validators=[DataRequired()])
+    beverage=SelectField('Beverage',coerce=int, validators=[DataRequired()])
+    visibility=SelectField('Visibility',choices=[('public','public'),('private','private'),('pending','pending')])
+    picture = FileField('Menu Image File', validators=[FileAllowed(['jpg', 'png'])])
+    submit = SubmitField('Update Menu',validators=[DataRequired()])

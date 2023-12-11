@@ -14,3 +14,6 @@ Updates
 
 5. 8/12/2023 Shi Yi
    - added manage food item function for canteen worker (menu image part still not done)
+
+6. Melody
+   - restructure codebase for canteen worker and add view menu in admin dashboard
