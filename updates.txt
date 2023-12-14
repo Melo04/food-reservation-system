@@ -20,3 +20,7 @@ Updates
    - add view and update menu in admin dashboard
    - add view menu (public) in parents dashboard
    - initialize database in models.py
+
+7. 15/12/2023 Melody
+   - reinitialize database in models.py
+   - add food item table in worker dashboard

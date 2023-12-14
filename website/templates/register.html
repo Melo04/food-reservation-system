@@ -111,17 +111,31 @@
                         {% endif %}
                     </div>
                     <div class="mb-4">
-                        {{ form.parent_id.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {{ form.parent1_id.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
                         
-                        {% if form.parent_id.errors %}
-                            {{ form.parent_id(class="bg-gray-50 border-2 border-red-600 text-red-600 sm:text-sm rounded-lg focus:ring-red-900 focus:border-red-600 block w-full p-2.5") }}
+                        {% if form.parent1_id.errors %}
+                            {{ form.parent1_id(class="bg-gray-50 border-2 border-red-600 text-red-600 sm:text-sm rounded-lg focus:ring-red-900 focus:border-red-600 block w-full p-2.5") }}
                             <div class="text-red-600 mt-2">
-                                {% for error in form.parent_id.errors %}
+                                {% for error in form.parent1_id.errors %}
                                     <span>{{ error }}</span>
                                 {% endfor %}
                             </div>
                         {% else %}
-                            {{ form.parent_id(class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}
+                            {{ form.parent1_id(class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}
+                        {% endif %}
+                    </div>
+                    <div class="mb-4">
+                        {{ form.parent2_id.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        
+                        {% if form.parent2_id.errors %}
+                            {{ form.parent2_id(class="bg-gray-50 border-2 border-red-600 text-red-600 sm:text-sm rounded-lg focus:ring-red-900 focus:border-red-600 block w-full p-2.5") }}
+                            <div class="text-red-600 mt-2">
+                                {% for error in form.parent2_id.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.parent2_id(class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}
                         {% endif %}
                     </div>
                     <div class="mb-4">

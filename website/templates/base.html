@@ -43,28 +43,34 @@
         {% if current_user.is_authenticated %}
         <div id="mobile-navbar" class="items-center hidden w-full md:flex md:w-auto md:-ml-16">
           <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-4 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white md:dark:bg-gray-800 dark:border-gray-700">
-            {% if current_user.role == 'parent' %}
+            {% if current_user.ROLE == 'parent' %}
             <li>
-              <a href="{{ url_for('parent_dashboard') }}" class="block py-2 px-3 md:py-2 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
-            </li>
-            {% elif current_user.role == 'student' %}
-            <li>
-              <a href="{{ url_for('student_dashboard') }}" class="block py-2 px-3 md:py-2 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
-            </li>
-            {% elif current_user.role == 'worker' %}
-            <li>
-              <a href="{{ url_for('worker_dashboard') }}" class="block py-2 px-3 md:py-2 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
+              <a href="{{ url_for('parent_dashboard') }}" class="block py-2 px-3 md:py-2 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
             </li>
             <li>
-              <a href="{{ url_for('worker_menupage') }}" class="block py-2 px-3 md:py-2 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Food Menu</a>
+              <a href="{{ url_for('parent_menu') }}" class="block py-2 px-3 md:py-2 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Food Menu</a>
             </li>
-            {% elif current_user.role == 'admin' %}
             <li>
-              <a href="{{ url_for('admin_dashboard') }}" class="block py-2 px-3 md:py-2 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
+              <a href="{{ url_for('parent_cart') }}" class="block py-2 px-3 md:py-2 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Cart</a>
+            </li>
+            <li>
+              <a href="{{ url_for('parent_reload') }}" class="block py-2 px-3 md:py-2 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Reload</a>
+            </li>
+            {% elif current_user.ROLE == 'student' %}
+            <li>
+              <a href="{{ url_for('student_dashboard') }}" class="block py-2 px-3 md:py-2 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
+            </li>
+            {% elif current_user.ROLE == 'worker' %}
+            <li>
+              <a href="{{ url_for('worker_dashboard') }}" class="block py-2 px-3 md:py-2 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
+            </li>
+            {% elif current_user.ROLE == 'admin' %}
+            <li>
+              <a href="{{ url_for('admin_dashboard') }}" class="block py-2 px-3 md:py-2 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
             </li>
             {% endif %}
             <li>
-              <a href="{{ url_for('profile') }}" class="block py-2 px-3 md:px-4 my-2 md:my-0 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Profile</a>
+              <a href="{{ url_for('profile') }}" class="block py-2 px-3 md:px-4 sm:my-1 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Profile</a>
             </li>
           </ul>
         </div>

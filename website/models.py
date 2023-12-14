@@ -9,17 +9,15 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    firstname = db.Column(db.String(20), unique=True, nullable=False)
-    lastname = db.Column(db.String(20))
-    phone = db.Column(db.String(20), unique=True, nullable=False)
-    image_file = db.Column(db.String(20), nullable=False, default='default.png')
-    password = db.Column(db.String(60), nullable=False)
-    role = db.Column(db.String(20), nullable=False)
-    status = db.Column(db.String(20))
-    parent_id = db.Column(db.String(20))
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    USERNAME = db.Column(db.String(20), unique=True, nullable=False)
+    FIRST_NAME = db.Column(db.String(20), unique=True, nullable=False)
+    LAST_NAME = db.Column(db.String(20))
+    EMAIL = db.Column(db.String(120), unique=True, nullable=False)
+    PASSWORD = db.Column(db.String(60), nullable=False)
+    PHONE = db.Column(db.String(20), nullable=False)
+    ROLE = db.Column(db.String(20), nullable=False)
+    IMAGE = db.Column(db.String(20), nullable=False, default='default.png')
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
@@ -29,102 +27,120 @@ class User(db.Model, UserMixin):
     def verify_reset_token(token):
         s = Serializer(app.config['SECRET_KEY'])
         try:
-            user_id = s.loads(token)['user_id']
+            USER_ID = s.loads(token)['user_id']
         except:
             return None
-        return User.query.get(user_id)
+        return User.query.get(USER_ID)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.firstname}', '{self.lastname}', '{self.phone}', '{self.image_file}', '{self.role}', '{self.status}', '{self.parent_id}')"
+        return f"User('{self.USERNAME}', '{self.EMAIL}', '{self.FIRST_NAME}', '{self.LAST_NAME}', '{self.PHONE}', '{self.IMAGE}', '{self.ROLE}')"
     
-class MainCourse(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=True, nullable=False)
-    quantity = db.Column(db.Integer,nullable=False)
-    remarks=db.Column(db.Text, nullable=False)
+class Student(User):
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    STATUS = db.Column(db.String(20), nullable=False)
+    PARENT1_ID = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    PARENT2_ID = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    __mapper_args__ = {
+        'inherit_condition': (id == User.id)
+    }
 
     def __repr__(self):
-        return f"Main Course('{self.name},'{self.quantity}','{self.remarks}')"
-
-class Beverage(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-    quantity = db.Column(db.Integer,nullable=False)
-    remarks=db.Column(db.Text, nullable=False)
+        return f"Student('{self.USERNAME}', '{self.EMAIL}', '{self.FIRST_NAME}', '{self.LAST_NAME}', '{self.PHONE}', '{self.IMAGE}', '{self.ROLE}', '{self.STATUS}', '{self.PARENT1_ID}', '{self.PARENT2_ID}')"
+    
+class Parent(User):
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    EWALLET_BALANCE = db.Column(db.Numeric(10, 2), nullable=False)
 
     def __repr__(self):
-        return f"Beverage('{self.name},'{self.quantity}','{self.remarks}')"
+        return f"Parent('{self.USERNAME}', '{self.EMAIL}', '{self.FIRST_NAME}', '{self.LAST_NAME}', '{self.PHONE}', '{self.IMAGE}', '{self.ROLE}', '{self.EWALLET_BALANCE}')"
 
-class Menu(db.Model):
-    __searchable__ = ['name', 'desc']
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-    price = db.Column(db.Numeric(10, 2), nullable=False)
-    type = db.Column(db.Text, nullable=False)
-    desc = db.Column(db.Text, nullable=False)
-    image_file = db.Column(db.String(30), default='default_menu.jpg')
-    visibility = db.Column(db.String(20), nullable=False, default='public')
-
-    main_course_id = db.Column(db.Integer, db.ForeignKey('main_course.id'), nullable=False)
-    main_course = db.relationship('MainCourse', backref='menu') 
-
-    beverage_id = db.Column(db.Integer, db.ForeignKey('beverage.id'), nullable=False)
-    beverage = db.relationship('Beverage', backref='menu')
+class Worker(User):
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True , nullable=False)
 
     def __repr__(self):
-        return f"Menu('{self.name},'{self.price}','{self.type}','{self.desc}', '{self.image_file}', '{self.visibility}')"
+        return f"Worker('{self.USERNAME}', '{self.EMAIL}', '{self.FIRST_NAME}', '{self.LAST_NAME}', '{self.PHONE}', '{self.IMAGE}', '{self.ROLE}')"
+
+class Admin(User):
+    id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+
+    def __repr__(self):
+        return f"Admin('{self.USERNAME}', '{self.EMAIL}', '{self.FIRST_NAME}', '{self.LAST_NAME}', '{self.PHONE}', '{self.IMAGE}', '{self.ROLE}')"
+    
+class FoodItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    NAME = db.Column(db.String(20), unique=True, nullable=False)
+    TYPE = db.Column(db.String(20), nullable=False)
+    QUANTITY = db.Column(db.Integer,nullable=False)
+    REMARKS = db.Column(db.Text, nullable=False)
+
+    def __repr__(self):
+        return f"FoodItem('{self.NAME},'{self.TYPE}','{self.QUANTITY}','{self.REMARKS}')"
+
+class FoodMenu(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    SET = db.Column(db.String(20), nullable=False)
+    PRICE = db.Column(db.Numeric(10, 2), nullable=False)
+    TYPE = db.Column(db.String(20), nullable=False)
+    DESCRIPTION = db.Column(db.Text, nullable=False)
+    VISIBILITY = db.Column(db.String(20), nullable=False, default='private')
+    IMAGE = db.Column(db.String(30), default='default_menu.jpg')
+    MAIN_COURSE_ID = db.Column(db.Integer, db.ForeignKey('food_item.id'), nullable=False)
+    MAIN_COURSE = db.relationship('FoodItem', foreign_keys=[MAIN_COURSE_ID])
+    BEVERAGE_ID = db.Column(db.Integer, db.ForeignKey('food_item.id'), nullable=False)
+    BEVERAGE = db.relationship('FoodItem', foreign_keys=[BEVERAGE_ID])
+
+    def __repr__(self):
+        return f"FoodMenu('{self.SET},'{self.PRICE}','{self.TYPE}','{self.DESCRIPTION}','{self.VISIBILITY}','{self.IMAGE}', '{self.MAIN_COURSE_ID}', '{self.BEVERAGE_ID}')"
+    
+class FoodOrder(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
+    ORDER_DAY = db.Column(db.String(20), nullable=False)
+    REDEMPTION = db.Column(db.Boolean, nullable=False, default=False)
+    MENU_ID = db.Column(db.Integer, db.ForeignKey('food_menu.id'), nullable=False)
+    PARENT_ID = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    STUDENT_ID = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
+    TRANSACTION_ID = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=False)
+
+    menu = db.relationship('FoodMenu', backref='order')
+    parent = db.relationship('Parent', backref='parent_orders', foreign_keys=[PARENT_ID])
+    student = db.relationship('Student', backref='student_orders', foreign_keys=[STUDENT_ID])
+    transaction = db.relationship('Transaction', backref='order')
+
+    def __repr__(self):
+        return f"FoodOrder('{self.ORDER_DAY},'{self.REDEMPTION}','{self.MENU_ID}','{self.PARENT_ID}','{self.STUDENT_ID}','{self.TRANSACTION_ID}')"
     
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
-    amount = db.Column(db.Numeric(10, 2), nullable=False)
-    date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    parent_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    parent = db.relationship('User', backref='transaction')
+    PARENT_ID = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    AMOUNT = db.Column(db.Numeric(10, 2), nullable=False)
+    DATE_TIME = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"Transaction('{self.amount},'{self.date_time}')"
+        return f"Transaction('{self.PARENT_ID},'{self.AMOUNT}','{self.DATE_TIME}')"
     
 class Reload(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
-    amount = db.Column(db.Numeric(10, 2), nullable=False)
-    date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    parent_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    parent = db.relationship('User', backref='reload')
+    PARENT_ID = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    AMOUNT = db.Column(db.Numeric(10, 2), nullable=False)
+    DATE_TIME = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"Reload('{self.amount},'{self.date_time}')"
+        return f"Reload('{self.PARENT_ID},'{self.AMOUNT}','{self.DATE_TIME}')"
     
 class Payout(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
-    amount = db.Column(db.Numeric(10, 2), nullable=False)
-    date_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    admin_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    admin = db.relationship('User', backref='payout')
+    ADMIN_ID = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    AMOUNT = db.Column(db.Numeric(10, 2), nullable=False)
+    DATE_TIME = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"Payout('{self.amount},'{self.date_time}')"
+        return f"Payout('{self.ADMIN_ID},'{self.AMOUNT}','{self.DATE_TIME}')"
     
-# class Order(db.Model):
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
-#     order_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-#     order_quantity = db.Column(db.Integer, nullable=False)
-#     order_remarks = db.Column(db.Text, nullable=False)
-#     redemption = db.Column(db.Boolean, nullable=False, default=False)
+class CartItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
+    PARENT_ID = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    MENU_ID = db.Column(db.Integer, db.ForeignKey('food_menu.id'), nullable=False)
 
-#     menu_id = db.Column(db.Integer, db.ForeignKey('menu.id'), nullable=False)
-#     menu = db.relationship('Menu', backref='order') 
-
-#     parent_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-#     parent = db.relationship('User', backref='parent_orders', foreign_keys=[parent_id])
-
-#     student_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-#     student = db.relationship('User', backref='student_orders', foreign_keys=[student_id])
-
-#     transaction_id = db.Column(db.Integer, db.ForeignKey('transaction.id'), nullable=False)
-#     transaction = db.relationship('Transaction', backref='order')
-
-#     def __repr__(self):
-#         return f"Order('{self.order_date},'{self.order_quantity}','{self.order_remarks}','{self.redemption}')"
+    def __repr__(self):
+        return f"Payout('{self.PARENT_ID},'{self.MENU_ID}')"

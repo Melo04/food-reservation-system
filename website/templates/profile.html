@@ -118,6 +118,23 @@
             dark:focus:ring-blue-500 dark:focus:border-blue-500") }} {% endif
             %}
           </div>
+          {% if current_user.ROLE == 'parent' %}
+          <div class="mb-4">
+            {{ form.ewallet_balance.label(class="block mb-2 text-md font-medium
+            text-gray-900 dark:text-white") }} 
+            {{ form.ewallet_balance(class="bg-gray-50
+            text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700
+            dark:border-gray-600 dark:placeholder-gray-400 dark:text-white", readonly="readonly") }}
+          </div>
+          {% elif current_user.ROLE == 'student' %}
+          <div class="mb-4">
+            {{ form.status.label(class="block mb-2 text-md font-medium
+            text-gray-900 dark:text-white") }} 
+            {{ form.status(class="bg-gray-50
+            text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700
+            dark:border-gray-600 dark:placeholder-gray-400 dark:text-white", readonly="readonly") }}
+          </div>
+          {% endif %}
           <div class="mb-4">
             {{ form.picture.label(class="block mt-2 mb-2 text-md font-medium
             text-gray-900 dark:text-white") }} 
@@ -127,16 +144,16 @@
             <span class="text-red-600 mt-2">{{ error }}</span><br />
             {% endfor %} {% endif %}
           </div>
-          {% if current_user.role == 'student' %}
+          {% if current_user.ROLE == 'student' %}
           <div class="relative overflow-x-auto my-10">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead class="text-xs text-white uppercase bg-blue-700">
                 <tr>
                   <th scope="col" class="px-6 py-3">
-                    Parent name
+                    Parent's first name
                   </th>
                   <th scope="col" class="px-6 py-3">
-                    Status
+                    Parent's last name
                   </th>
                 </tr>
               </thead>
@@ -144,10 +161,10 @@
                   {% for parent in parents %}
                   <tr class="bg-white text-blue-700 border-b">
                     <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                      {{ parent.firstname }} {{ parent.lastname }}
+                      {{ parent.FIRST_NAME }} 
                     </th>
                     <td class="px-6 py-4 font-medium">
-                      {{ parent.status }}
+                      {{ parent.LAST_NAME }}
                     </td>
                   </tr>
                   {% endfor %}
@@ -155,7 +172,7 @@
               </tbody>
             </table>
           </div>
-          {% elif current_user.role == 'parent' %}
+          {% elif current_user.ROLE == 'parent' %}
           <div class="relative overflow-x-auto my-10">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead class="text-xs text-white uppercase bg-blue-700">
@@ -172,10 +189,10 @@
                 {% for student in students %}
                   <tr class="bg-white text-blue-700 border-b">
                     <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                      {{ student.firstname }} {{ student.lastname }}
+                      {{ student.FIRST_NAME }} {{ student.LAST_NAME }}
                     </th>
                     <td class="px-6 py-4 font-medium">
-                      {{ student.status }}
+                      {{ student.STATUS }}
                     </td>
                   </tr>
                 {% endfor %}

@@ -1,7 +1,859 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock title %}
 {% block content %}
-  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto">
-    <h1 class="text-white">Canteen Worker Dashboard</h1>
-  </div>
+<!-- Manage Food Item  -->
+<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+    <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <h3 class="text-xl font-bold dark:text-white text-center my-8">Manage Food Item</h3>
+        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+                <div class="w-full md:w-1/2">
+                    <form>   
+                        <label for="item-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                </svg>
+                            </div>
+                            <input type="search" id="item-search" class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Food Item ..." required>
+                        </div>
+                    </form>
+                </div>
+                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                    <div class="flex items-center space-x-3 w-full md:w-auto">
+                        <button id="filterTypeDropdown" data-dropdown-toggle="filterType" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                            </svg>
+                            Filter Type
+                            <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </button>
+                        <div id="filterType" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Item Type</h6>
+                            <ul class="space-y-2 text-sm" aria-labelledby="filterTypeDropdown">
+                                <li class="flex items-center">
+                                    <input id="Main Course" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="Main Course" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Main Course</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="Beverage" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="Beverage" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Beverage</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button type="button" id="createItemButton" data-modal-target="createItemModal" data-modal-toggle="createItemModal" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                        <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                        </svg>
+                        Add Food Item
+                    </button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table id="itemTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-4 py-4">ID</th>
+                            <th scope="col" class="px-4 py-3">Food Item</th>
+                            <th scope="col" class="px-4 py-3">Type</th>
+                            <th scope="col" class="px-4 py-3">Quantity</th>
+                            <th scope="col" class="px-4 py-3">Remarks</th>
+                            <th scope="col" class="px-4 py-3">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in fooditem %}
+                        <tr class="border-b dark:border-gray-700">
+                            <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                            loop.index }}</th>
+                            <td class="px-4 py-3 min-w-[12rem]">{{ item.NAME }}</td>
+                            <td class="px-4 py-3 min-w-[12rem]">{{ item.TYPE }}</td>
+                            <td class="px-4 py-3 min-w-[10rem]">{{ item.QUANTITY }}</td>
+                            <td class="px-4 py-3 min-w-[8rem] truncate">{{ item.REMARKS }}</td>
+                            <td class="px-4 py-3 font-medium">
+                                <div class="flex items-center space-x-7">
+                                    <button type="button" data-modal-target="updateItemModal" data-modal-toggle="updateItemModal" data-item-id="{{ item.id }}" data-item-name="{{ item.NAME }}" data-item-type="{{ item.TYPE }}" data-item-quantity="{{ item.QUANTITY }}" data-item-remarks="{{ item.REMARKS }}" class="py-2 px-6 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                            <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                                        </svg>
+                                        Edit
+                                    </button>
+                                    <button type="button" data-modal-target="{{item.id}}-deleteMainModal" data-modal-toggle="{{item.id}}-deleteMainModal" class="py-2 px-6 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-red-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-red-200 dark:bg-red-600 dark:text-white dark:border-red-600 dark:hover:text-red-600 dark:hover:bg-transparent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        </svg>
+                                        Delete
+                                    </button>
+                                    <div id="{{item.id}}-deleteMainModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                        <div class="relative p-4 w-full max-w-md max-h-full">
+                                            <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                                                <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="{{item.id}}-deleteMainModal">
+                                                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                    </svg>
+                                                    <span class="sr-only">Close modal</span>
+                                                </button>
+                                                <svg class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                </svg>
+                                                <p class="mb-4 text-gray-500 dark:text-gray-300">Are you sure you want to delete this item?</p>
+                                                <div class="flex justify-center items-center space-x-4">
+                                                    <button data-modal-toggle="{{item.id}}-deleteMainModal" type="button" class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
+                                                    <form action="{{ url_for('deleteitem', id=item.id) }}" method="post">
+                                                        <button type="submit" class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">Yes, I'm sure</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</section>
+
+<!-- Manage Food Menu  -->
+<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+    <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <h3 class="text-xl font-bold dark:text-white text-center my-8">Manage Food Menu</h3>
+        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+                <div class="w-full md:w-1/2">
+                    <form>   
+                        <label for="menu-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                </svg>
+                            </div>
+                            <input type="search" id="menu-search" class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Food Menu ..." required>
+                        </div>
+                    </form>
+                </div>
+                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                    <button type="button" id="createMenuModalButton" data-modal-target="createMenuModal" data-modal-toggle="createMenuModal" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                        <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                        </svg>
+                        Add Food Menu
+                    </button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table id="menuTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-4 py-4">ID</th>
+                            <th scope="col" class="px-4 py-3">Menu</th>
+                            <th scope="col" class="px-4 py-3">Price</th>
+                            <th scope="col" class="px-4 py-3">Type</th>
+                            <th scope="col" class="px-4 py-3">Description</th>
+                            <th scope="col" class="px-4 py-3">Main Course</th>
+                            <th scope="col" class="px-4 py-3">Beverage</th>
+                            <th scope="col" class="px-4 py-3">Visibility</th>
+                            <th scope="col" class="px-4 py-3">Image</th>
+                            <th scope="col" class="px-4 py-3">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for menu in foodmenu %}
+                        <tr class="border-b dark:border-gray-700">
+                            <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                            loop.index }}</th>
+                            <td class="px-4 py-3">{{ menu.SET }}</td>
+                            <td class="px-4 py-3">{{ menu.PRICE }}</td>
+                            <td class="px-4 py-3">{{ menu.TYPE }}</td>
+                            <td class="px-4 py-3 truncate">{{ menu.DESCRIPTION }}</td>
+                            <td class="px-4 py-3">{{ menu.MAIN_COURSE.NAME }}</td>
+                            <td class="px-4 py-3">{{ menu.BEVERAGE.NAME }}</td>
+                            <td class="px-4 py-3">{{ menu.VISIBILITY }}</td>
+                            <td class="px-4 py-3">
+                                <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
+                            </td>
+                            <td class="px-4 py-3 font-medium">
+                                <div class="flex items-center space-x-7">
+                                    <button type="button" data-modal-target="updateMenuModal" data-modal-toggle="updateMenuModal" data-menu-id="{{ menu.id }}" data-menu-set="{{ menu.SET }}" data-menu-price="{{ menu.PRICE }}" data-menu-visibility="{{ menu.VISIBILITY }}" data-menu-type="{{ menu.TYPE }}" data-menu-desc="{{ menu.DESCRIPTION }}" data-menu-main_course="{{ menu.MAIN_COURSE.id }}" data-menu-beverage="{{ menu.BEVERAGE.id }}" data-menu-picture="{{ menu.IMAGE }}" class="py-2 px-6 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                            <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                                        </svg>
+                                        Edit
+                                    </button>
+                                    <button type="button" data-modal-target="{{menu.id}}-deleteMenuModal" data-modal-toggle="{{menu.id}}-deleteMenuModal" class="py-2 px-6 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-red-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-red-200 dark:bg-red-600 dark:text-white dark:border-red-600 dark:hover:text-red-600 dark:hover:bg-transparent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        </svg>
+                                        Delete
+                                    </button>
+                                    <div id="{{menu.id}}-deleteMenuModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                        <div class="relative p-4 w-full max-w-md max-h-full">
+                                            <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                                                <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="{{menu.id}}-deleteMenuModal">
+                                                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                    </svg>
+                                                    <span class="sr-only">Close modal</span>
+                                                </button>
+                                                <svg class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                </svg>
+                                                <p class="mb-4 text-gray-500 dark:text-gray-300">Are you sure you want to delete this item?</p>
+                                                <div class="flex justify-center items-center space-x-4">
+                                                    <button data-modal-toggle="{{menu.id}}-deleteMenuModal" type="button" class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
+                                                    <form action="{{ url_for('deletemenu', id=menu.id) }}" method="post">
+                                                        <button type="submit" class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">Yes, I'm sure</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</section>
+
+<!-- Food Order List -->
+<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+    <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <h3 class="text-xl font-bold dark:text-white text-center my-8">Food Order List</h3>
+        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+                <div class="w-full md:w-1/2">
+                    <form>   
+                        <label for="order-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                        <div class="relative w-full">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                </svg>
+                            </div>
+                            <input type="search" id="order-search" class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Food Order ..." required>
+                        </div>
+                    </form>
+                </div>
+                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                    <div class="flex items-center space-x-3 w-full md:w-auto">
+                        <button id="filterRedemptionDropdown" data-dropdown-toggle="filterRedemption" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                            </svg>
+                            Last 7 days
+                            <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </button>
+                        <div id="filterRedemption" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Order History</h6>
+                            <ul class="space-y-2 text-sm" aria-labelledby="filterRedemptionDropdown">
+                                <li class="flex items-center">
+                                    <input id="sevendays" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="sevendays" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Last 14 days</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="thirtydays" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="thirtydays" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Last 30 days</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="month" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="month" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Last month</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table id="orderTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-4 py-3">Order Day</th>
+                            <th scope="col" class="px-4 py-3">Redemption</th>
+                            <th scope="col" class="px-4 py-3">Menu Set</th>
+                            <th scope="col" class="px-4 py-3">Type</th>
+                            <th scope="col" class="px-4 py-3">Description</th>
+                            <th scope="col" class="px-4 py-3">Main Course</th>
+                            <th scope="col" class="px-4 py-3">Beverage</th>
+                            <th scope="col" class="px-4 py-3">Image</th>
+                            <th scope="col" class="px-4 py-3">Student ID</th>
+                            <th scope="col" class="px-4 py-3">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      {% for order in orders %}
+                          <tr class="border-b dark:border-gray-700">
+                              <td class="px-4 py-3">{{ order.ORDER_DAY }}</td>
+                              <td class="px-4 py-3">{{ order.REDEMPTION }}</td>
+                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
+                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
+                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
+                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
+                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
+                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
+                              <td class="px-4 py-3">
+                                  <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
+                              </td>
+                          </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add Food Item modal -->
+<div id="createItemModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+            <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Add Food Item</h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-target="createItemModal" data-modal-toggle="createItemModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <form action="" method="post">
+                {{ itemform.hidden_tag() }}
+                <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                    <div>
+                        {{ itemform.name.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white")}}
+                        {% if itemform.name.errors %}
+                        {{ itemform.name(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in itemform.name.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ itemform.name(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ itemform.type.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white")}}
+                        {% if itemform.type.errors %}
+                        {{ itemform.type(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in itemform.type.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ itemform.type(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ itemform.quantity.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if itemform.quantity.errors %}
+                        {{ itemform.quantity(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in itemform.quantity.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ itemform.quantity(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ itemform.remarks.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if itemform.remarks.errors %}
+                        {{ itemform.remarks(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in itemform.remarks.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ itemform.remarks(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    {{ itemform.submit(class="cursor-pointer text-white inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Food Menu modal -->
+<div id="createMenuModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+            <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Add Food Menu Package</h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-target="createMenuModal" data-modal-toggle="createMenuModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data">
+                {{ menuform.hidden_tag() }}
+                <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                    <div>
+                        {{ menuform.set.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white")}}
+                        {% if menuform.set.errors %}
+                        {{ menuform.set(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuform.set.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuform.set(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ menuform.price.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if menuform.price.errors %}
+                        {{ menuform.price(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuform.price.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuform.price(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ menuform.main_course.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white")}}
+                        {% if menuform.main_course.errors %}
+                        {{ menuform.main_course(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuform.main_course.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuform.main_course(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ menuform.beverage.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if menuform.beverage.errors %}
+                        {{ menuform.beverage(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuform.beverage.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuform.beverage(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ menuform.type.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if menuform.type.errors %}
+                        {{ menuform.type(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuform.type.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuform.type(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ menuform.visibility.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if menuform.visibility.errors %}
+                        {{ menuform.visibility(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuform.visibility.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuform.visibility(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div class="sm:col-span-2">
+                        {{ menuform.desc.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if menuform.desc.errors %}
+                        {{ menuform.desc(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuform.desc.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuform.desc(class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ menuform.picture.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {{ menuform.picture(class="block mb-2 bg-blue-700 text-sm font-medium text-gray-900 dark:text-white") }} 
+                        {% if menuform.picture.errors %}
+                            {% for error in menuform.picture.errors %}
+                            <span class="text-red-600 mt-2">{{ error }}</span><br />
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    {{ menuform.submit(class="cursor-pointer text-white inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Update Food Item modal -->
+<div id="updateItemModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+            <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Update Food Item</h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="updateItemModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <form action="" method="post">
+                {{ itemupdateform.hidden_tag() }}
+                <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                    <div>
+                        {{ itemupdateform.id.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }} 
+                        {{ itemupdateform.id(class="bg-gray-100 border-none text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-900 dark:text-white", readonly="readonly") }}
+                    </div>
+                    <div>
+                        {{ itemupdateform.name.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white")}}
+                        {% if itemupdateform.name.errors %}
+                        {{ itemupdateform.name(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in itemupdateform.name.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ itemupdateform.name(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ itemupdateform.type.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white")}}
+                        {% if itemupdateform.type.errors %}
+                        {{ itemupdateform.type(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in itemupdateform.type.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ itemupdateform.type(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ itemupdateform.quantity.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if itemupdateform.quantity.errors %}
+                        {{ itemupdateform.quantity(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in itemupdateform.quantity.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ itemupdateform.quantity(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ itemupdateform.remarks.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if itemupdateform.remarks.errors %}
+                        {{ itemupdateform.remarks(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in itemupdateform.remarks.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ itemupdateform.remarks(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    {{ itemupdateform.submit(class="cursor-pointer py-2.5 px-5 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Update Food Menu modal -->
+<div id="updateMenuModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+            <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Update Food Menu</h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="updateMenuModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <form action="" method="post">
+                {{ menuupdateform.hidden_tag() }}
+                <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                    <div>
+                        {{ menuupdateform.id.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }} 
+                        {{ menuupdateform.id(class="bg-gray-100 border-none text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-900 dark:text-white", readonly="readonly") }}
+                    </div>
+                    <div>
+                        {{ menuupdateform.set.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white")}}
+                        {% if menuupdateform.set.errors %}
+                        {{ menuupdateform.set(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuupdateform.set.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuupdateform.set(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ menuupdateform.price.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if menuupdateform.price.errors %}
+                        {{ menuupdateform.price(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuupdateform.price.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuupdateform.price(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ menuupdateform.main_course.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if menuupdateform.main_course.errors %}
+                        {{ menuupdateform.main_course(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuupdateform.main_course.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuupdateform.main_course(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ menuupdateform.beverage.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if menuupdateform.beverage.errors %}
+                        {{ menuupdateform.beverage(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuupdateform.beverage.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuupdateform.beverage(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ menuupdateform.type.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if menuupdateform.type.errors %}
+                        {{ menuupdateform.type(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuupdateform.type.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuupdateform.type(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ menuupdateform.visibility.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if menuupdateform.visibility.errors %}
+                        {{ menuupdateform.visibility(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuupdateform.visibility.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuupdateform.visibility(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ menuupdateform.desc.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if menuupdateform.desc.errors %}
+                        {{ menuupdateform.desc(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in menuupdateform.desc.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ menuupdateform.desc(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ menuupdateform.picture.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {{ menuupdateform.picture(class="block mb-2 bg-blue-700 text-sm font-medium text-gray-900 dark:text-white") }} 
+                        {% if menuupdateform.picture.errors %}
+                            {% for error in menuupdateform.picture.errors %}
+                            <span class="text-red-600 mt-2">{{ error }}</span><br />
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    {{ menuupdateform.submit(class="cursor-pointer py-2.5 px-5 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const typeCheckboxes = document.querySelectorAll('#filterType input[type="checkbox"]');
+        const itemSearch = document.getElementById("item-search");
+        const menuSearch = document.getElementById("menu-search");
+        const itemtable = document.getElementById("itemTable");
+        const itemrows = itemtable.getElementsByTagName("tr");
+        const menutable = document.getElementById("menuTable");
+        const menurows = menutable.getElementsByTagName("tr");
+        var updateItemButton = document.querySelectorAll('[data-modal-toggle="updateItemModal"]');
+        var updateMenuButton = document.querySelectorAll('[data-modal-toggle="updateMenuModal"]');
+
+        typeCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+                let checkboxChecked = false;
+                typeCheckboxes.forEach(function (checkbox) {
+                    const type = checkbox.id;
+                    const isChecked = checkbox.checked;
+ 
+                    if(isChecked) {
+                        checkboxChecked = true;
+                    }
+                    for (let i = 1; i < itemrows.length; i++) {
+                        const row = itemrows[i];
+                        if (row.cells[2].textContent.trim() === type) {
+                            row.style.display = isChecked ? "" : "none";
+                        }
+                    }
+                });
+
+                if(!checkboxChecked) {
+                    for (let i=1; i<itemrows.length; i++) {
+                        itemrows[i].style.display = "";
+                    }
+                }
+            });
+        });
+
+        itemSearch.addEventListener("keyup", function () {
+            const value = itemSearch.value.toLowerCase();
+            for (let i = 1; i < itemrows.length; i++) {
+                const row = itemrows[i];
+                let rowContainsValue = false;
+
+                for (let j = 1; j <= 4; j++) {
+                    const cellContent = row.cells[j].textContent.toLowerCase();
+                    if (cellContent.includes(value)) {
+                        rowContainsValue = true;
+                        break;
+                    }
+                }
+
+                if (rowContainsValue) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        });
+
+        menuSearch.addEventListener("keyup", function () {
+            const value = menuSearch.value.toLowerCase();
+
+            for (let i = 1; i < menurows.length; i++) {
+                const row = menurows[i];
+                let rowContainsValue = false;
+
+                for (let j = 1; j <= 7; j++) {
+                    const cellContent = row.cells[j].textContent.toLowerCase();
+                    if (cellContent.includes(value)) {
+                        rowContainsValue = true;
+                        break;
+                    }
+                }
+
+                if (rowContainsValue) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        });
+
+        updateItemButton.forEach(button => {
+            button.addEventListener("click", () => {
+                const id = button.getAttribute("data-item-id");
+                const name = button.getAttribute("data-item-name");
+                const type = button.getAttribute("data-item-type");
+                const quantity = button.getAttribute("data-item-quantity");
+                const remarks = button.getAttribute("data-item-remarks");
+
+                var updateModal = document.getElementById("updateItemModal");
+                updateModal.querySelector('#itemupdateform-id').value = id;
+                updateModal.querySelector('#itemupdateform-name').value = name;
+                updateModal.querySelector('#itemupdateform-type').value = type;
+                updateModal.querySelector('#itemupdateform-quantity').value = quantity;
+                updateModal.querySelector('#itemupdateform-remarks').value = remarks;
+            });
+        });
+
+        updateMenuButton.forEach(button => {
+            button.addEventListener("click", () => {
+                const id = button.getAttribute("data-menu-id");
+                const set = button.getAttribute("data-menu-set");
+                const price = button.getAttribute("data-menu-price");
+                const type = button.getAttribute("data-menu-type");
+                const desc = button.getAttribute("data-menu-desc");
+                const main_course = button.getAttribute("data-menu-main_course");
+                const beverage = button.getAttribute("data-menu-beverage");
+                const visibility = button.getAttribute("data-menu-visibility");
+                const picture = button.getAttribute("data-menu-picture");
+
+                var updateModal = document.getElementById("updateMenuModal");
+                updateModal.querySelector('#menuupdateform-id').value = id;
+                updateModal.querySelector('#menuupdateform-set').value = set;
+                updateModal.querySelector('#menuupdateform-price').value = price;
+                updateModal.querySelector('#menuupdateform-type').value = type;
+                updateModal.querySelector('#menuupdateform-desc').value = desc;
+                updateModal.querySelector('#menuupdateform-main_course').value = main_course;
+                updateModal.querySelector('#menuupdateform-beverage').value = beverage;
+                updateModal.querySelector('#menuupdateform-visibility').value = visibility;
+                updateModal.querySelector('#menuupdateform-picture').value = picture;
+            });
+        });
+
+    });
+</script>
+
 {% endblock content %}
