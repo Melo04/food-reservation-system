@@ -3,7 +3,7 @@ from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, FloatField, TextAreaField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from website.models import User
+from website.models import USER
 from website import bcrypt
 
 class RegistrationForm(FlaskForm):
@@ -24,12 +24,12 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
-        user = User.query.filter_by(USERNAME=username.data).first()
+        user = USER.query.filter_by(USERNAME=username.data).first()
         if user:
             raise ValidationError('That username is taken. Please choose a different one.')
 
     def validate_email(self, email):
-        user = User.query.filter_by(EMAIL=email.data).first()
+        user = USER.query.filter_by(EMAIL=email.data).first()
         if user:
             raise ValidationError('That email is taken. Please choose a different one.')
 
@@ -41,12 +41,12 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
     def validate_username(self, username):
-        user = User.query.filter_by(USERNAME=username.data).first()
+        user = USER.query.filter_by(USERNAME=username.data).first()
         if not user:
             raise ValidationError('That username does not exist. Please choose a different one.')
         
     def validate_password(self, password):
-        user = User.query.filter_by(USERNAME=self.username.data).first()
+        user = USER.query.filter_by(USERNAME=self.username.data).first()
         if user and not bcrypt.check_password_hash(user.PASSWORD, password.data):
             raise ValidationError('Incorrect password. Please try again.')
 
@@ -66,19 +66,19 @@ class UpdateProfileForm(FlaskForm):
 
     def validate_username(self, username):
         if username.data != current_user.USERNAME:
-            user = User.query.filter_by(USERNAME=username.data).first()
+            user = USER.query.filter_by(USERNAME=username.data).first()
             if user:
                 raise ValidationError('That username is taken. Please choose a different one.')
 
     def validate_email(self, email):
         if email.data != current_user.EMAIL:
-            user = User.query.filter_by(EMAIL=email.data).first()
+            user = USER.query.filter_by(EMAIL=email.data).first()
             if user:
                 raise ValidationError('That email is taken. Please choose a different one.')
             
     def validate_phone(self, phone):
         if phone.data != current_user.PHONE:
-            user = User.query.filter_by(PHONE=phone.data).first()
+            user = USER.query.filter_by(PHONE=phone.data).first()
             if user:
                 raise ValidationError('That phone is taken. Please choose a different one.')
 
@@ -98,7 +98,7 @@ class RequestResetForm(FlaskForm):
     submit = SubmitField('Request Password Reset')
 
     def validate_email(self, email):
-        user = User.query.filter_by(EMAIL=email.data).first()
+        user = USER.query.filter_by(EMAIL=email.data).first()
         if user is None:
             raise ValidationError('There is no account with that email. You must register first.')
         

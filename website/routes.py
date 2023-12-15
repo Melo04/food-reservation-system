@@ -2,7 +2,7 @@ from functools import wraps
 from flask import render_template, url_for, flash, redirect, request, current_app
 from website import app, db, bcrypt, mail
 from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, RequestResetForm, ResetPasswordForm, AdminUpdateProfileForm, AdminUpdateMenuForm, ItemForm, UpdateItemForm, MenuForm, UpdateMenuForm
-from website.models import User, FoodItem, FoodMenu, Student, Parent, FoodOrder, Transaction, Reload
+from website.models import USER, FOOD_ITEM, FOOD_MENU, STUDENT, PARENT, FOOD_ORDER, TRANSACTION, RELOAD
 from flask_login import login_user, current_user, logout_user
 from flask_mail import Message
 import secrets
@@ -44,15 +44,15 @@ def home():
 @app.route("/dashboard/parent", methods=['GET', 'POST'])
 @login_required(role="parent")
 def parent_dashboard():
-    orders = FoodOrder.query.filter_by(PARENT_ID=current_user.id).all()
-    transactions = Transaction.query.filter_by(PARENT_ID=current_user.id).all()
-    reloads = Reload.query.filter_by(PARENT_ID=current_user.id).all()
+    orders = FOOD_ORDER.query.filter_by(PARENT_ID=current_user.id).all()
+    transactions = TRANSACTION.query.filter_by(PARENT_ID=current_user.id).all()
+    reloads = RELOAD.query.filter_by(PARENT_ID=current_user.id).all()
     return render_template('parent/dashboard.html', orders=orders, transactions=transactions, reloads=reloads)
 
 @app.route("/foodmenu", methods=['GET', 'POST'])
 @login_required(role="parent")
 def parent_menu():
-    menus = FoodMenu.query.all()
+    menus = FOOD_MENU.query.all()
     return render_template('parent/foodmenu.html', menus=menus)
 
 @app.route("/cart", methods=['GET', 'POST'])
@@ -68,24 +68,24 @@ def parent_reload():
 @app.route("/dashboard/student", methods=['GET', 'POST'])
 @login_required(role="student")
 def student_dashboard():
-    orders = FoodOrder.query.filter_by(PARENT_ID=current_user.id).all()
+    orders = FOOD_ORDER.query.filter_by(PARENT_ID=current_user.id).all()
     return render_template('student/dashboard.html', orders=orders)
 
 @app.route("/dashboard/worker", methods=['GET', 'POST'])
 @login_required(role="worker")
 def worker_dashboard():
-    fooditem = FoodItem.query.all()
-    foodmenu = FoodMenu.query.all()
-    orders = FoodOrder.query.all()
+    fooditem = FOOD_ITEM.query.all()
+    foodmenu = FOOD_MENU.query.all()
+    orders = FOOD_ORDER.query.all()
 
     itemform = ItemForm(request.form, prefix="itemform")
     itemupdateform = UpdateItemForm(request.form, prefix="itemupdateform")
     menuform = MenuForm(request.form, prefix="menuform")
-    menuform.main_course.choices = [(item.id, item.NAME) for item in FoodItem.query.filter_by(TYPE='Main Course').all()]
-    menuform.beverage.choices = [(item.id, item.NAME) for item in FoodItem.query.filter_by(TYPE='Beverage').all()]
+    menuform.main_course.choices = [(item.id, item.NAME) for item in FOOD_ITEM.query.filter_by(TYPE='Main Course').all()]
+    menuform.beverage.choices = [(item.id, item.NAME) for item in FOOD_ITEM.query.filter_by(TYPE='Beverage').all()]
     menuupdateform = UpdateMenuForm(request.form, prefix="menuupdateform")
-    menuupdateform.main_course.choices = [(item.id, item.NAME) for item in FoodItem.query.filter_by(TYPE='Main Course').all()]
-    menuupdateform.beverage.choices = [(item.id, item.NAME) for item in FoodItem.query.filter_by(TYPE='Beverage').all()]
+    menuupdateform.main_course.choices = [(item.id, item.NAME) for item in FOOD_ITEM.query.filter_by(TYPE='Main Course').all()]
+    menuupdateform.beverage.choices = [(item.id, item.NAME) for item in FOOD_ITEM.query.filter_by(TYPE='Beverage').all()]
         
     # Add Food Item
     if itemform.submit.data and request.method == 'POST':
@@ -93,7 +93,7 @@ def worker_dashboard():
         type = itemform.type.data
         quantity = itemform.quantity.data
         remarks = itemform.remarks.data
-        add_item = FoodItem(NAME=name, TYPE=type, QUANTITY=quantity,REMARKS=remarks)
+        add_item = FOOD_ITEM(NAME=name, TYPE=type, QUANTITY=quantity,REMARKS=remarks)
         with app.app_context():
             db.session.add(add_item)
             db.session.commit()
@@ -102,7 +102,7 @@ def worker_dashboard():
     
     # Update Food Item
     elif itemupdateform.submit.data and request.method == 'POST':
-        item = FoodItem.query.filter_by(id=itemupdateform.id.data).first()
+        item = FOOD_ITEM.query.filter_by(id=itemupdateform.id.data).first()
         item.id = itemupdateform.id.data
         item.NAME = itemupdateform.name.data
         item.TYPE = itemupdateform.type.data
@@ -129,7 +129,7 @@ def worker_dashboard():
         print("========================++==========================")
         print(menuform.picture.data)
         print("=========================++=========================")
-        addmenu = FoodMenu(SET=set, PRICE=price, TYPE=type, DESCRIPTION=desc, IMAGE=image_file, VISIBILITY=visibility, MAIN_COURSE_ID=main_course_id, BEVERAGE_ID=beverage_id)
+        addmenu = FOOD_MENU(SET=set, PRICE=price, TYPE=type, DESCRIPTION=desc, IMAGE=image_file, VISIBILITY=visibility, MAIN_COURSE_ID=main_course_id, BEVERAGE_ID=beverage_id)
         with app.app_context():
             db.session.add(addmenu)
             db.session.commit()
@@ -138,7 +138,7 @@ def worker_dashboard():
     
     # Update Menu
     elif menuupdateform.submit.data and request.method == 'POST':
-        menu = FoodMenu.query.filter_by(id=menuupdateform.id.data).first()
+        menu = FOOD_MENU.query.filter_by(id=menuupdateform.id.data).first()
         menu.id = menuupdateform.id.data
         menu.SET = menuupdateform.set.data
         menu.PRICE = menuupdateform.price.data
@@ -182,26 +182,26 @@ def save_menupic(form_picture):
 @login_required(role="admin")
 def admin_dashboard():
     per_page = 5
-    users = User.query.all()
+    users = USER.query.all()
     page = request.args.get('page', 1, type=int)
     start_index = (page - 1) * per_page
     end_index = start_index + per_page
     paginated_users = users[start_index:end_index]
 
-    menus = FoodMenu.query.all()
+    menus = FOOD_MENU.query.all()
     menupage = request.args.get('menupage', 1, type=int)
     start_menu_index = (menupage - 1) * per_page
     end_menu_index = start_index + per_page
     paginated_menus = menus[start_menu_index:end_menu_index]
-    students = Student.query.all()
+    students = STUDENT.query.all()
 
     # Update User Status
     form = AdminUpdateProfileForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(USERNAME=form.username.data).first()
+        user = USER.query.filter_by(USERNAME=form.username.data).first()
         user.USERNAME = form.username.data
         if user.ROLE == 'student':
-            student = Student.query.filter_by(id=user.id).first()
+            student = STUDENT.query.filter_by(id=user.id).first()
             student.STATUS = form.status.data
         db.session.commit()
         flash('User profile has been updated!', 'success')
@@ -210,7 +210,7 @@ def admin_dashboard():
     # Update Menu Visibility
     menuform = AdminUpdateMenuForm()
     if menuform.validate_on_submit():
-        menu = FoodMenu.query.filter_by(SET=menuform.set.data).first()
+        menu = FOOD_MENU.query.filter_by(SET=menuform.set.data).first()
         menu.SET = menuform.set.data
         menu.VISIBILITY = menuform.visibility.data
         db.session.commit()
@@ -218,9 +218,9 @@ def admin_dashboard():
         return redirect(url_for('admin_dashboard'))
     
     profileform = UpdateProfileForm()
-    orders = FoodOrder.query.all()
-    transactions = Transaction.query.all()
-    reloads = Reload.query.all()
+    orders = FOOD_ORDER.query.all()
+    transactions = TRANSACTION.query.all()
+    reloads = RELOAD.query.all()
     return render_template('admin/dashboard.html', form=form, profileform=profileform, students=students, menuform=menuform, menus=paginated_menus, users=paginated_users, page=page, menupage=menupage, per_page=per_page, total_menus=len(menus), total_users=len(users), title='Admin Dashboard', orders=orders, transactions=transactions, reloads=reloads)
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -230,15 +230,15 @@ def register():
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8') 
         if form.role.data == 'parent':
-            parent = Parent(USERNAME=form.username.data, EMAIL=form.email.data, FIRST_NAME=form.firstname.data, LAST_NAME=form.lastname.data, PHONE=form.phone.data, ROLE=form.role.data, PASSWORD=hashed_password, EWALLET_BALANCE=0)
+            parent = PARENT(USERNAME=form.username.data, EMAIL=form.email.data, FIRST_NAME=form.firstname.data, LAST_NAME=form.lastname.data, PHONE=form.phone.data, ROLE=form.role.data, PASSWORD=hashed_password, EWALLET_BALANCE=0)
             db.session.add(parent)
             db.session.commit()
         elif form.role.data == 'student':
-            student = Student(USERNAME=form.username.data, EMAIL=form.email.data, FIRST_NAME=form.firstname.data, LAST_NAME=form.lastname.data, PHONE=form.phone.data, ROLE=form.role.data, PASSWORD=hashed_password, STATUS='active', PARENT1_ID=form.parent1_id.data, PARENT2_ID=form.parent2_id.data)
+            student = STUDENT(USERNAME=form.username.data, EMAIL=form.email.data, FIRST_NAME=form.firstname.data, LAST_NAME=form.lastname.data, PHONE=form.phone.data, ROLE=form.role.data, PASSWORD=hashed_password, STATUS='active', PARENT1_ID=form.parent1_id.data, PARENT2_ID=form.parent2_id.data)
             db.session.add(student)
             db.session.commit()
         else:
-            user = User(USERNAME=form.username.data, EMAIL=form.email.data, FIRST_NAME=form.firstname.data, LAST_NAME=form.lastname.data, PHONE=form.phone.data, ROLE=form.role.data, PASSWORD=hashed_password)
+            user = USER(USERNAME=form.username.data, EMAIL=form.email.data, FIRST_NAME=form.firstname.data, LAST_NAME=form.lastname.data, PHONE=form.phone.data, ROLE=form.role.data, PASSWORD=hashed_password)
             db.session.add(user)
             db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
@@ -252,7 +252,7 @@ def login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(USERNAME=form.username.data).first()
+        user = USER.query.filter_by(USERNAME=form.username.data).first()
         if user and bcrypt.check_password_hash(user.PASSWORD, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
@@ -298,14 +298,14 @@ def profile():
         form.phone.data = current_user.PHONE
         image_file = url_for('static', filename='profile_pics/' + current_user.IMAGE)
         if current_user.ROLE == 'parent':
-            current_parent = Parent.query.filter_by(id=current_user.id).first()
+            current_parent = PARENT.query.filter_by(id=current_user.id).first()
             form.ewallet_balance.data = current_parent.EWALLET_BALANCE
-            students = Student.query.filter_by(PARENT1_ID=current_user.id).all() + Student.query.filter_by(PARENT2_ID=current_user.id).all()
+            students = STUDENT.query.filter_by(PARENT1_ID=current_user.id).all() + STUDENT.query.filter_by(PARENT2_ID=current_user.id).all()
             return render_template('profile.html', title='Profile', image_file=image_file, form=form, students=students)
         elif current_user.ROLE == 'student':
-            current_student = Student.query.filter_by(id=current_user.id).first()
+            current_student = STUDENT.query.filter_by(id=current_user.id).first()
             form.status.data = current_student.STATUS
-            parents = User.query.filter(User.id.in_([current_student.PARENT1_ID, current_student.PARENT2_ID])).all()
+            parents = USER.query.filter(USER.id.in_([current_student.PARENT1_ID, current_student.PARENT2_ID])).all()
             return render_template('profile.html', title='Profile', image_file=image_file, form=form, parents=parents)
         elif current_user.ROLE == 'worker' or current_user.ROLE == 'admin':
             return render_template('profile.html', title='Profile', image_file=image_file, form=form)
@@ -325,7 +325,7 @@ def reset_request():
     check_role()
     form = RequestResetForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(EMAIL=form.email.data).first()
+        user = USER.query.filter_by(EMAIL=form.email.data).first()
         send_reset_email(user)
         flash('An email has been sent with instructions to reset your password.', 'info')
         return redirect(url_for('login'))
@@ -334,7 +334,7 @@ def reset_request():
 @app.route("/reset_password/<token>", methods=['GET', 'POST'])
 def reset_token(token):
     check_role()
-    user = User.verify_reset_token(token)
+    user = USER.verify_reset_token(token)
     if user is None:
         flash('That is an invalid token or expired token', 'warning')
         return redirect(url_for('reset_request'))
@@ -351,7 +351,7 @@ def reset_token(token):
 
 @app.route('/dashboard/worker/deleteitem/<int:id>',methods=['POST'])
 def deleteitem(id):
-    item=FoodItem.query.get_or_404(id)
+    item=FOOD_ITEM.query.get_or_404(id)
     if request.method=='POST':
         db.session.delete(item)
         db.session.commit()
@@ -361,7 +361,7 @@ def deleteitem(id):
 
 @app.route('/dashboard/worker/deletemenu/<int:id>',methods=['POST'])
 def deletemenu(id):
-    menu=FoodMenu.query.get_or_404(id)
+    menu=FOOD_MENU.query.get_or_404(id)
     if request.method=='POST':
         db.session.delete(menu)
         db.session.commit()
