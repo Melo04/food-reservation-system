@@ -84,7 +84,7 @@ class FOOD_MENU(db.Model):
     TYPE = db.Column(db.String(20), nullable=False)
     DESCRIPTION = db.Column(db.Text, nullable=False)
     VISIBILITY = db.Column(db.String(20), nullable=False, default='private')
-    IMAGE = db.Column(db.String(30), default='default_menu.jpg')
+    IMAGE = db.Column(db.String(30), default='default.jpg')
     MAIN_COURSE_ID = db.Column(db.Integer, db.ForeignKey('food_item.id'), nullable=False)
     MAIN_COURSE = db.relationship('FOOD_ITEM', foreign_keys=[MAIN_COURSE_ID])
     BEVERAGE_ID = db.Column(db.Integer, db.ForeignKey('food_item.id'), nullable=False)

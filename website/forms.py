@@ -131,7 +131,7 @@ class MenuForm(FlaskForm):
     visibility=SelectField('Visibility',choices=[('private','private'),('pending','set to public')])
     main_course = SelectField('Main Course', coerce=int, validators=[DataRequired()])
     beverage = SelectField('Beverage', coerce=int, validators=[DataRequired()])
-    picture = FileField('Menu Image File', validators=[FileAllowed(['jpg', 'png'])])
+    picture = FileField('Menu Picture', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Add Menu',validators=[DataRequired()])
 
 class UpdateMenuForm(FlaskForm):
@@ -143,5 +143,5 @@ class UpdateMenuForm(FlaskForm):
     visibility=SelectField('Visibility',choices=[('private','private'),('pending','set to public')])
     main_course = SelectField('Main Course', coerce=int, validators=[DataRequired()])
     beverage = SelectField('Beverage',coerce=int, validators=[DataRequired()])
-    picture = FileField('Menu Image File', validators=[FileAllowed(['jpg', 'png'])])
+    picture = FileField('Update Menu Picture', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Update Menu',validators=[DataRequired()])

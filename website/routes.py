@@ -78,9 +78,9 @@ def worker_dashboard():
     foodmenu = FOOD_MENU.query.all()
     orders = FOOD_ORDER.query.all()
 
-    itemform = ItemForm(request.form, prefix="itemform")
-    itemupdateform = UpdateItemForm(request.form, prefix="itemupdateform")
-    menuform = MenuForm(request.form, prefix="menuform")
+    itemform = ItemForm(prefix="itemform")
+    itemupdateform = UpdateItemForm(prefix="itemupdateform")
+    menuform = MenuForm(prefix="menuform")
     menuform.main_course.choices = [(item.id, item.NAME) for item in FOOD_ITEM.query.filter_by(TYPE='Main Course').all()]
     menuform.beverage.choices = [(item.id, item.NAME) for item in FOOD_ITEM.query.filter_by(TYPE='Beverage').all()]
     menuupdateform = UpdateMenuForm(request.form, prefix="menuupdateform")
@@ -88,7 +88,7 @@ def worker_dashboard():
     menuupdateform.beverage.choices = [(item.id, item.NAME) for item in FOOD_ITEM.query.filter_by(TYPE='Beverage').all()]
         
     # Add Food Item
-    if itemform.submit.data and request.method == 'POST':
+    if itemform.submit.data and itemform.validate_on_submit:
         name = itemform.name.data
         type = itemform.type.data
         quantity = itemform.quantity.data
@@ -101,7 +101,7 @@ def worker_dashboard():
         return redirect(url_for('worker_dashboard'))
     
     # Update Food Item
-    elif itemupdateform.submit.data and request.method == 'POST':
+    elif itemupdateform.submit.data and itemupdateform.validate_on_submit:
         item = FOOD_ITEM.query.filter_by(id=itemupdateform.id.data).first()
         item.id = itemupdateform.id.data
         item.NAME = itemupdateform.name.data
@@ -113,7 +113,7 @@ def worker_dashboard():
         return redirect(url_for('worker_dashboard'))
     
     # Add Menu
-    elif menuform.submit.data and request.method == 'POST':
+    elif menuform.submit.data and menuform.validate_on_submit:
         set = menuform.set.data
         price = menuform.price.data
         type = menuform.type.data
@@ -121,14 +121,10 @@ def worker_dashboard():
         main_course_id=menuform.main_course.data
         beverage_id=menuform.beverage.data
         visibility=menuform.visibility.data
-        image_file = 'default.jpg'
         if menuform.picture.data:
             image_file = save_menupic(menuform.picture.data)
         else:
-            image_file = url_for('static', filename='menu_pics/' + image_file)
-        print("========================++==========================")
-        print(menuform.picture.data)
-        print("=========================++=========================")
+            image_file = 'default.jpg'
         addmenu = FOOD_MENU(SET=set, PRICE=price, TYPE=type, DESCRIPTION=desc, IMAGE=image_file, VISIBILITY=visibility, MAIN_COURSE_ID=main_course_id, BEVERAGE_ID=beverage_id)
         with app.app_context():
             db.session.add(addmenu)
