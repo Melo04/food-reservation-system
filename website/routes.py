@@ -88,7 +88,7 @@ def worker_dashboard():
     menuupdateform.beverage.choices = [(item.id, item.NAME) for item in FOOD_ITEM.query.filter_by(TYPE='Beverage').all()]
         
     # Add Food Item
-    if itemform.submit.data and itemform.validate_on_submit:
+    if itemform.submit.data and itemform.validate_on_submit():
         name = itemform.name.data
         type = itemform.type.data
         quantity = itemform.quantity.data
@@ -101,7 +101,7 @@ def worker_dashboard():
         return redirect(url_for('worker_dashboard'))
     
     # Update Food Item
-    elif itemupdateform.submit.data and itemupdateform.validate_on_submit:
+    elif itemupdateform.submit.data and itemupdateform.validate_on_submit():
         item = FOOD_ITEM.query.filter_by(id=itemupdateform.id.data).first()
         item.id = itemupdateform.id.data
         item.NAME = itemupdateform.name.data
@@ -113,7 +113,7 @@ def worker_dashboard():
         return redirect(url_for('worker_dashboard'))
     
     # Add Menu
-    elif menuform.submit.data and menuform.validate_on_submit:
+    elif menuform.submit.data and menuform.validate_on_submit():
         set = menuform.set.data
         price = menuform.price.data
         type = menuform.type.data
