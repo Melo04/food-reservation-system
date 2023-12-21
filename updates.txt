@@ -24,3 +24,6 @@ Updates
 7. 15/12/2023 Melody
    - reinitialize database in models.py
    - add food item table in worker dashboard
+
+8. 21/12/2023 Shi Yi
+   - add image successfully (update image still cannot)
