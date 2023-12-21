@@ -263,7 +263,7 @@
                             <td class="px-4 py-3">{{ menu.BEVERAGE.NAME }}</td>
                             <td class="px-4 py-3">{{ menu.VISIBILITY }}</td>
                             <td class="px-4 py-3">
-                                <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
+                                <img class="w-20 h-20" src="{{ url_for('static', filename='menu_pics/' + menu.IMAGE) }}" alt="{{ menu.SET }} image">
                             </td>
                             <td class="px-4 py-3 font-medium">
                                 <div class="flex items-center space-x-7">
