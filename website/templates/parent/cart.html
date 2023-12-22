@@ -21,6 +21,7 @@
                             <th scope="col" class="px-4 py-3">Main Course</th>
                             <th scope="col" class="px-4 py-3">Beverage</th>
                             <th scope="col" class="px-4 py-3">Image</th>
+                            <th scope="col" class="px-4 py-3">Student ID</th>
                             <th scope="col" class="px-4 py-3">Action</th>
                         </tr>
                     </thead>
@@ -44,8 +45,8 @@
                                     <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
                                 </td>
                                 {% endif %}
-                                
                                 {% endfor %}
+                                <td class="px-4 py-3">{{ cart.STUDENT_ID }}</td>
                             </tr>
                         {% endfor %}
                         </tr>

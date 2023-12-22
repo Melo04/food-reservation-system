@@ -69,7 +69,6 @@ def parent_cart():
         menu_id = request.form.get('menu_id')
         day = request.form.get('day')
         student_id = request.form.get('StudentID')
-        # parent_id = request.form.get('parent_id')
         
         print("Selected Day:", day)
         print("Menu ID received:", menu_id)

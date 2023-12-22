@@ -48,14 +48,17 @@
                             {{ form.hidden_tag() }}
                         {% for menu in menus %}
                         {% if menu.VISIBILITY == 'public' %}
-                        <form method="post" action="{{ url_for('parent_cart') }}">
+                        <form method="post" action="{{ url_for('parent_cart') }}" id="cartForm">
                            
                         <tr class="border-b dark:border-gray-700">
                             <th scope="row" data-menu-id="{{ menu.id }}"
                                 class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
                                 loop.index }}
-                                <input type="hidden" id="menu_id" name="menu_id" value="{{ menu.id }}">                            </th>     
+                                <input type="hidden" id="menu_id" name="menu_id" value="{{ menu.id }}">                                 
+                            </th>
+                                                      
                                 <td scope="px-4 py-3">
+
                                 <select id="Day" name="Day">
                                     <option value="Monday">Monday</option>
                                     <option value="Tuesday">Tuesday</option>
@@ -65,15 +68,8 @@
                                 </select>
 
                             </td>
-
-
-                            <td class="px-4 py-3">
-                                <label for="menu.SET">{{ menu.SET }}</label><br>
-                            </td>
-
-
+                            <td class="px-4 py-3">{{ menu.SET }}</td>
                             <td class="px-4 py-3">{{ menu.PRICE }}</td>
-
                             <td class="px-4 py-3">{{ menu.TYPE }}</td>
                             <td class="px-4 py-3">{{ menu.DESCRIPTION }}</td>
                             <td class="px-4 py-3">{{ menu.MAIN_COURSE.NAME }}</td>
@@ -90,16 +86,14 @@
                                     {% endfor %}
                                 </select>
                             </td>
-
                             <td class="px-4 py-3">
                                     <input type="hidden" name="parent_id" value="{{ parent_id }}">
                                     <input type="hidden" name="day" id="day" value="">
                                     <button type="submit" onclick="setMenuIdAndDay('{{ menu.id }}', '{{ menu.DAY }}') "
                                         class="py-4 px-3 flex items-center text-sm font-medium text-center text-white focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-blue-100">Add
                                         to Cart</button>
-                            </td>
                         </form>
-                            
+                            </td>
                         </tr>
                         {% endif %}
                         {% endfor %}
@@ -112,19 +106,20 @@
 
 
 <script>
-    var selectedDay = document.getElementById('Day').value;
-
     function setMenuIdAndDay(menuId, day) {
         var dayDropdown = document.getElementById('Day');
-        if (dayDropdown.value === dayDropdown.options[0].value) {
-            // Set selectedDay to the value of the first option
+        var selectedDay = dayDropdown.value;
+        if (!selectedDay) {
             selectedDay = dayDropdown.options[0].value;
         }
         document.getElementById('menu_id').value = menuId;
         document.getElementById('day').value = selectedDay;
-        // Now, submit the form
-        document.forms[0].submit();
+
+
+        // Submit the form
+        cartForm.submit();
     }
 </script>
+
 
 {% endblock content %}
