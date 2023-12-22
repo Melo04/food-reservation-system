@@ -141,6 +141,11 @@ class CART_ITEM(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
     PARENT_ID = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     MENU_ID = db.Column(db.Integer, db.ForeignKey('food_menu.id'), nullable=False)
+    STUDENT_ID = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
+    ORDER_PER_DAY = db.Column(db.String(20), nullable=False)
+
+
+
 
     def __repr__(self):
         return f"CART_ITEM('{self.PARENT_ID},'{self.MENU_ID}')"

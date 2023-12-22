@@ -1,8 +1,8 @@
 from functools import wraps
 from flask import render_template, url_for, flash, redirect, request, current_app
 from website import app, db, bcrypt, mail
-from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, RequestResetForm, ResetPasswordForm, AdminUpdateProfileForm, AdminUpdateMenuForm, ItemForm, UpdateItemForm, MenuForm, UpdateMenuForm
-from website.models import USER, FOOD_ITEM, FOOD_MENU, STUDENT, PARENT, FOOD_ORDER, TRANSACTION, RELOAD
+from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, RequestResetForm, ResetPasswordForm, AdminUpdateProfileForm, AdminUpdateMenuForm, ItemForm, UpdateItemForm, MenuForm, UpdateMenuForm, CartForm
+from website.models import USER, FOOD_ITEM, FOOD_MENU, STUDENT, PARENT, FOOD_ORDER, TRANSACTION, RELOAD, CART_ITEM
 from flask_login import login_user, current_user, logout_user
 from flask_mail import Message
 import secrets
@@ -52,13 +52,42 @@ def parent_dashboard():
 @app.route("/foodmenu", methods=['GET', 'POST'])
 @login_required(role="parent")
 def parent_menu():
+    form = CartForm()
     menus = FOOD_MENU.query.all()
-    return render_template('parent/foodmenu.html', menus=menus)
+    students = STUDENT.query.all()
+    return render_template('parent/foodmenu.html', menus=menus, students = students, form=form)
 
 @app.route("/cart", methods=['GET', 'POST'])
 @login_required(role="parent")
 def parent_cart():
-    return render_template('parent/cart.html')
+    form = CartForm()
+    menus = FOOD_MENU.query.all()
+    form.parent_id.data = current_user.id
+    parent_id = form.parent_id.data
+
+    if request.method == 'POST':
+        menu_id = request.form.get('menu_id')
+        day = request.form.get('day')
+        student_id = request.form.get('StudentID')
+        # parent_id = request.form.get('parent_id')
+        
+        print("Selected Day:", day)
+        print("Menu ID received:", menu_id)
+        print("Student ID received:", student_id)
+        print("Parent ID received:", parent_id)
+
+
+
+        add_item = CART_ITEM(PARENT_ID=parent_id, MENU_ID=menu_id,STUDENT_ID=student_id,ORDER_PER_DAY=day)
+        with app.app_context():
+            db.session.add(add_item)
+            db.session.commit()
+
+        flash('Item added to cart!', 'success')
+        return redirect(url_for('parent_cart'))
+    
+    cart_items = CART_ITEM.query.filter_by(PARENT_ID=parent_id).all()
+    return render_template('parent/cart.html', form=form, parent_id=parent_id, menu_id=request.form.get('menu_id'), carts=cart_items, menus=menus)
 
 @app.route("/reload", methods=['GET', 'POST'])
 @login_required(role="parent")
