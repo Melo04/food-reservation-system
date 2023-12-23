@@ -25,7 +25,6 @@
                 <table id="orderTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-4 py-4">ID</th>
                             <th scope="col" class="px-4 py-3">Order Day</th>
                             <th scope="col" class="px-4 py-3">Redemption</th>
                             <th scope="col" class="px-4 py-3">Menu Set</th>
@@ -41,19 +40,27 @@
                     <tbody>
                       {% for order in orders %}
                           <tr class="border-b dark:border-gray-700">
-                              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
-                              loop.index }}</th>
                               <td class="px-4 py-3">{{ order.ORDER_DAY }}</td>
-                              <td class="px-4 py-3">{{ order.REDEMPTION }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
                               <td class="px-4 py-3">
-                                  <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
+                                {% if not order.REDEMPTION%}
+                                    Not redeemed
+                                {%else%}
+                                    Redeemed
+                                {%endif%}
                               </td>
+                              {% for menu in menus %}
+                              {% if order.MENU_ID == menu.id%}
+                              <td class="px-4 py-3">{{ menu.SET }}</td>
+                              <td class="px-4 py-3">{{ menu.TYPE }}</td>
+                              <td class="px-4 py-3">{{ menu.DESCRIPTION }}</td>
+                              <td class="px-4 py-3">{{ menu.MAIN_COURSE.NAME }}</td>
+                              <td class="px-4 py-3">{{ menu.BEVERAGE.NAME }}</td>
+                              <td class="px-4 py-3">
+                                <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
+                              </td>
+                              {% endif %}
+                              {% endfor %}
+                            <td class="px-4 py-3">{{ order.STUDENT_ID }}</td>
                           </tr>
                       {% endfor %}
                     </tbody>
@@ -87,19 +94,17 @@
                 <table id="transactionTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-4 py-4">ID</th>
-                            <th scope="col" class="px-4 py-3">Date Time</th>
-                            <th scope="col" class="px-4 py-3">Amount</th>
+                            <th scope="col" class="px-4 py-4 text-center">ID</th>
+                            <th scope="col" class="px-4 py-3 text-center">Date Time</th>
+                            <th scope="col" class="px-4 py-3 text-center">Amount</th>
                         </tr>
                     </thead>
                     <tbody>
                       {% for transaction in transactions %}
                           <tr class="border-b dark:border-gray-700">
-                              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
-                              loop.index }}</th>
-                              <td class="px-4 py-3">{{ transaction.id }}</td>
-                              <td class="px-4 py-3">{{ transaction.DATE_TIME }}</td>
-                              <td class="px-4 py-3">{{ transaction.AMOUNT }}</td>
+                              <td class="px-4 py-3 text-center">{{ transaction.id }}</td>
+                              <td class="px-4 py-3 text-center">{{ transaction.DATE_TIME }}</td>
+                              <td class="px-4 py-3 text-center">{{ transaction.AMOUNT }}</td>
                           </tr>
                       {% endfor %}
                     </tbody>

@@ -45,10 +45,11 @@ def home():
 @app.route("/dashboard/parent", methods=['GET', 'POST'])
 @login_required(role="parent")
 def parent_dashboard():
+    menus = FOOD_MENU.query.all()
     orders = FOOD_ORDER.query.filter_by(PARENT_ID=current_user.id).all()
     transactions = TRANSACTION.query.filter_by(PARENT_ID=current_user.id).all()
     reloads = RELOAD.query.filter_by(PARENT_ID=current_user.id).all()
-    return render_template('parent/dashboard.html', orders=orders, transactions=transactions, reloads=reloads)
+    return render_template('parent/dashboard.html', orders=orders, transactions=transactions, reloads=reloads,menus=menus)
 
 @app.route("/foodmenu", methods=['GET', 'POST'])
 @login_required(role="parent")
