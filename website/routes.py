@@ -46,23 +46,26 @@ def home():
 @login_required(role="parent")
 def parent_dashboard():
     menus = FOOD_MENU.query.all()
+    users = USER.query.all()
     orders = FOOD_ORDER.query.filter_by(PARENT_ID=current_user.id).all()
     transactions = TRANSACTION.query.filter_by(PARENT_ID=current_user.id).all()
     reloads = RELOAD.query.filter_by(PARENT_ID=current_user.id).all()
-    return render_template('parent/dashboard.html', orders=orders, transactions=transactions, reloads=reloads,menus=menus)
+    return render_template('parent/dashboard.html', users=users,orders=orders, transactions=transactions, reloads=reloads,menus=menus)
 
 @app.route("/foodmenu", methods=['GET', 'POST'])
 @login_required(role="parent")
 def parent_menu():
     form = CartForm()
+    users = USER.query.all()
     menus = FOOD_MENU.query.all()
     students = STUDENT.query.all()
-    return render_template('parent/foodmenu.html', menus=menus, students = students, form=form)
+    return render_template('parent/foodmenu.html', users=users,menus=menus, students = students, form=form)
 
 @app.route("/cart", methods=['GET', 'POST'])
 @login_required(role="parent")
 def parent_cart():
     form = CartForm()
+    users = USER.query.all()
     menus = FOOD_MENU.query.all()
     form.parent_id.data = current_user.id
     parent_id = form.parent_id.data
@@ -93,7 +96,7 @@ def parent_cart():
     cart_items = CART_ITEM.query.filter_by(PARENT_ID=parent_id).all()
     prices = {menu.id: menu.PRICE for menu in menus}
     total_price = sum(prices[cart_item.MENU_ID] for cart_item in cart_items)
-    return render_template('parent/cart.html', form=form, parent_id=parent_id, menu_id=request.form.get('menu_id'), carts=cart_items, menus=menus,total_price=total_price,balance=balance)
+    return render_template('parent/cart.html', users=users,form=form, parent_id=parent_id, menu_id=request.form.get('menu_id'), carts=cart_items, menus=menus,total_price=total_price,balance=balance)
 
 @app.route('/cart/delete/<int:cart_id>', methods=['POST'])
 @login_required(role="parent")
@@ -114,7 +117,6 @@ def pay():
     parent_id = current_user.id
     menus = FOOD_MENU.query.all()
     cart_items = CART_ITEM.query.filter_by(PARENT_ID=parent_id).all()
-    transactionids = TRANSACTION.query.filter_by(PARENT_ID=parent_id).all()
     payment_time = datetime.now()
     
     prices = {menu.id: menu.PRICE for menu in menus}
@@ -123,26 +125,22 @@ def pay():
     balancedecimal = PARENT.query.filter_by(id=parent_id).with_entities(PARENT.EWALLET_BALANCE).all()
     balanceonedp= float(balancedecimal[0][0])
     print("cart_items:", cart_items)
-   
 
-    if not cart_items or not transactionids:
-    # Handle the case when either of the lists is empty
+    if not cart_items:
         flash('No items in the cart.', 'error')
     if balanceonedp >= total_price:
         PARENT.EWALLET_BALANCE -= total_price
         db.session.commit()
-        print('in')
         for cart_item in cart_items:
             paid = TRANSACTION(
                 PARENT_ID=cart_item.PARENT_ID,
                 AMOUNT=total_price,
                 DATE_TIME=payment_time
             )
-            print('paid')
-            db.session.add(paid)
-            db.session.commit()
-            print("transactionids:", transactionids)
-            for transactionid in transactionids:
+        db.session.add(paid)
+        db.session.commit()
+        transactionid = TRANSACTION.query.filter_by(PARENT_ID=parent_id).order_by(TRANSACTION.DATE_TIME.desc()).first()
+        for cart_item in cart_items:
                 foodorder = FOOD_ORDER(
                     ORDER_DAY=cart_item.ORDER_PER_DAY,
                     REDEMPTION=False,
@@ -151,10 +149,9 @@ def pay():
                     STUDENT_ID=cart_item.STUDENT_ID,
                     TRANSACTION_ID=transactionid.id
                     )
-                print('food')    
-            db.session.delete(cart_item)
-            db.session.add(foodorder)
-            db.session.commit()
+                db.session.add(foodorder)    
+                db.session.delete(cart_item)
+        db.session.commit()
         flash('Payment successful!', 'success')
     else:
         flash('Insufficient balance. Please reload your e-wallet.', 'error')

@@ -11,7 +11,7 @@
                         <tr>
                             <th scope="col" class="px-4 py-3">No.</th>
                             <th scope="col" class="px-4 py-3">Order Day</th>
-                            <th scope="col" class="px-4 py-3">Student ID</th>
+                            <th scope="col" class="px-4 py-3">Student Name</th>
                             <th scope="col" class="px-4 py-3">Menu ID</th>
                             <th scope="col" class="px-4 py-3">Menu Set</th>
                             <th scope="col" class="px-4 py-3">Type</th>
@@ -25,10 +25,10 @@
                     </thead>
                     <tbody>
                         <tr class="border-b dark:border-gray-700">
-                        <!-- {{ form.csrf_token }}
+                            <!-- {{ form.csrf_token }}
                         {{ form.hidden_tag() }} -->
-                        {% for cart in carts %}
-                        <!-- <form method="post" action="{{ url_for('parent_cart') }}" id="DeleteCartForm_{{ loop.index }}"> -->
+                            {% for cart in carts %}
+                            <!-- <form method="post" action="{{ url_for('parent_cart') }}" id="DeleteCartForm_{{ loop.index }}"> -->
                         <tr class="border-b dark:border-gray-700">
                             <th scope="row" data-cart-id="{{ cart.id }}"
                                 class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
@@ -37,8 +37,14 @@
                                     value="{{ cart.id }}_{{ loop.index }}">
                             </th>
                             <td class="px-4 py-3">{{ cart.ORDER_PER_DAY }}</td>
-                            <td class="px-4 py-3">{{ cart.STUDENT_ID }}</td>
-                            <td class="px-4 py-3">{{ cart.MENU_ID }}</td>                            
+                            {% for user in users %}
+                            {% if cart.STUDENT_ID == user.id%}
+                            <td class="px-4 py-3">{{ user.FIRST_NAME }}</td>
+                            <input type="hidden" name="cart.Studentid" value="{{ user.id }}" >
+                            {% endif %}
+                            {% endfor %}
+
+                            <td class="px-4 py-3">{{ cart.MENU_ID }}</td>
                             {% for menu in menus %}
                             {% if cart.MENU_ID == menu.id%}
 
@@ -55,7 +61,7 @@
                             {% endfor %}
                             <td class="px-4 py-3">
                                 <form action="{{ url_for('deleteCart', cart_id=cart.id)}}" method="post">
-                                    <button type="submit" 
+                                    <button type="submit"
                                         class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
                                         Delete</button>
                                 </form>
@@ -63,7 +69,7 @@
                         </tr>
                         {% endfor %}
                         </tr>
-                    </tbody>   
+                    </tbody>
                     <tfoot>
                         <tr class="border-b dark:border-gray-700">
                             <td class="px-4 py-3 font-bold text-end" colspan="8">E-Wallet Balance: </td>
@@ -72,17 +78,17 @@
                             <td class="px-4 py-3 font-bold text-end">{{total_price}}</td>
                             <td class="px-4 py-3 text-end" colspan="2">
                                 <form action="{{ url_for('pay')}}" method="post">
-                                <button type="submit"
-                                    class="py-2 px-5 text-sm font-medium text-center text-white focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-blue-100">
-                                    Pay</button>
+                                    <button type="submit"
+                                        class="py-2 px-5 text-sm font-medium text-center text-white focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-blue-100">
+                                        Pay</button>
                                 </form>
                             </td>
                         </tr>
-                    </tfoot>                 
+                    </tfoot>
                 </table>
-                
+
             </div>
-           
+
         </div>
     </div>
 </section>

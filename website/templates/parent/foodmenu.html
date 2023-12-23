@@ -39,7 +39,7 @@
                             <th scope="col" class="px-4 py-3">Main Course</th>
                             <th scope="col" class="px-4 py-3">Beverage</th>
                             <th scope="col" class="px-4 py-3">Image</th>
-                            <th scope="col" class="px-4 py-3">Student ID</th>
+                            <th scope="col" class="px-4 py-3">Student Name</th>
                             <th scope="col" class="px-4 py-3">Action</th>
                         </tr>
                     </thead>
@@ -80,15 +80,17 @@
                                 <td class="px-4 py-3 ">
                                     <select id="StudentID" name="StudentID">
                                         {% for student in students %}
-                                        {% if parent1_id == id or parent2_id ==id%}
-                                        <option value="{{ student.id }}">{{ student.id }}</option>
+                                        {% for user in users %}
+                                        {% if student.id == user.id%}
+                                        <option value="{{ student.id }}">{{ user.FIRST_NAME }}</option>
                                         {% endif %}
                                         {% endfor %}
+                                        {% endfor %}
+
                                     </select>
                                 </td>
                                 <td class="px-4 py-3">
-                                    <button type="submit"
-                                    onclick="setMenuIdAndDay('{{ menu.id }}', '{{ loop.index }}')"
+                                    <button type="submit" onclick="setMenuIdAndDay('{{ menu.id }}', '{{ loop.index }}')"
                                         class="py-2 px-5 text-sm font-medium text-center text-white focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-blue-100">
                                         Add
                                     </button>
@@ -107,19 +109,19 @@
 
 <script>
     function setMenuIdAndDay(menuId, rowIndex) {
-    var dayDropdown = document.getElementById('Day_' + rowIndex);
-    var selectedDay = dayDropdown.value;
-    if (!selectedDay) {
-        selectedDay = dayDropdown.options[0].value;
+        var dayDropdown = document.getElementById('Day_' + rowIndex);
+        var selectedDay = dayDropdown.value;
+        if (!selectedDay) {
+            selectedDay = dayDropdown.options[0].value;
+        }
+        console.log('Menu ID: ', menuId);
+        console.log('Selected Day: ', selectedDay);
+
+        document.getElementById('menu_id_' + rowIndex).value = menuId;
+        document.getElementById('Day_' + rowIndex).value = selectedDay;
+
+        document.getElementById('cartForm_' + rowIndex).submit();
     }
-    console.log('Menu ID: ', menuId);
-    console.log('Selected Day: ', selectedDay);
-
-    document.getElementById('menu_id_' + rowIndex).value = menuId;
-    document.getElementById('Day_' + rowIndex).value = selectedDay;
-
-    document.getElementById('cartForm_' + rowIndex).submit();
-}
 </script>
 
 
