@@ -64,6 +64,10 @@ def parent_cart():
     menus = FOOD_MENU.query.all()
     form.parent_id.data = current_user.id
     parent_id = form.parent_id.data
+    balancedecimal = PARENT.query.filter_by(id=parent_id).with_entities(PARENT.EWALLET_BALANCE).all()
+    balanceonedp= float(balancedecimal[0][0])
+    balancefloat = float(balanceonedp)
+    balance = "{:.2f}".format(balancefloat)
 
     import re
     if request.method == 'POST':
@@ -91,7 +95,7 @@ def parent_cart():
     cart_items = CART_ITEM.query.filter_by(PARENT_ID=parent_id).all()
     prices = {menu.id: menu.PRICE for menu in menus}
     total_price = sum(prices[cart_item.MENU_ID] for cart_item in cart_items)
-    return render_template('parent/cart.html', form=form, parent_id=parent_id, menu_id=request.form.get('menu_id'), carts=cart_items, menus=menus,total_price=total_price)
+    return render_template('parent/cart.html', form=form, parent_id=parent_id, menu_id=request.form.get('menu_id'), carts=cart_items, menus=menus,total_price=total_price,balance=balance)
 
 @app.route('/cart/delete/<int:cart_id>', methods=['POST'])
 @login_required(role="parent")
@@ -103,6 +107,35 @@ def deleteCart(cart_id):
         db.session.commit()
         flash('Menu deleted!', 'success')
         return redirect(url_for('parent_cart'))
+
+    return redirect(url_for('parent_cart'))
+
+@app.route('/cart/pay', methods=['POST'])
+@login_required(role="parent")
+def pay():
+    parent_id = current_user.id
+    menus = FOOD_MENU.query.all()
+    cart_items = CART_ITEM.query.filter_by(PARENT_ID=parent_id).all()
+    
+    prices = {menu.id: menu.PRICE for menu in menus}
+    total_price = sum(prices[cart_item.MENU_ID] for cart_item in cart_items)
+
+    balancedecimal = PARENT.query.filter_by(id=parent_id).with_entities(PARENT.EWALLET_BALANCE).all()
+    balanceonedp= float(balancedecimal[0][0])
+    balancefloat = float(balanceonedp)
+    balance = "{:.2f}".format(balancefloat)
+
+    if balanceonedp >= total_price:
+        PARENT.EWALLET_BALANCE -= total_price
+        db.session.commit()
+
+        for cart_item in cart_items:
+            db.session.delete(cart_item)
+        db.session.commit()
+
+        flash('Payment successful!', 'success')
+    else:
+        flash('Insufficient balance. Please reload your e-wallet.', 'error')
 
     return redirect(url_for('parent_cart'))
 
