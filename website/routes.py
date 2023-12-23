@@ -73,7 +73,6 @@ def parent_cart():
 
     import re
     if request.method == 'POST':
-        print("Form data:", request.form)
         for key, value in request.form.items():
             if key.startswith('menu_id_'):
                 match = re.match(r'menu_id_(\d+)', key)
@@ -82,16 +81,13 @@ def parent_cart():
                     menu_id = request.form.get(f'menu_id_{index}')
                     day = request.form.get(f'Day_{index}')
                     student_id = request.form.get('StudentID')
-                    print('Menu ID: ', menu_id)
-                    print('Day: ', day)
-                    print('Student ID: ', student_id)
 
                     if menu_id and day and student_id:
                         add_item = CART_ITEM(PARENT_ID=parent_id, MENU_ID=menu_id, STUDENT_ID=student_id, ORDER_PER_DAY=day)
                         with app.app_context():
                             db.session.add(add_item)
                             db.session.commit()
-                    flash('Items added to cart!', 'success')
+                            flash('Items added to cart!', 'success')
                     return redirect(url_for('parent_cart'))
     
     cart_items = CART_ITEM.query.filter_by(PARENT_ID=parent_id).all()
@@ -126,18 +122,26 @@ def pay():
 
     balancedecimal = PARENT.query.filter_by(id=parent_id).with_entities(PARENT.EWALLET_BALANCE).all()
     balanceonedp= float(balancedecimal[0][0])
+    print("cart_items:", cart_items)
+   
 
+    if not cart_items or not transactionids:
+    # Handle the case when either of the lists is empty
+        flash('No items in the cart.', 'error')
     if balanceonedp >= total_price:
         PARENT.EWALLET_BALANCE -= total_price
         db.session.commit()
-    
-        for cart_item, transactionid in zip(cart_items, transactionids):
+        print('in')
+        for cart_item in cart_items:
             paid = TRANSACTION(
                 PARENT_ID=cart_item.PARENT_ID,
                 AMOUNT=total_price,
                 DATE_TIME=payment_time
             )
+            print('paid')
             db.session.add(paid)
+            db.session.commit()
+            print("transactionids:", transactionids)
             for transactionid in transactionids:
                 foodorder = FOOD_ORDER(
                     ORDER_DAY=cart_item.ORDER_PER_DAY,
@@ -147,10 +151,10 @@ def pay():
                     STUDENT_ID=cart_item.STUDENT_ID,
                     TRANSACTION_ID=transactionid.id
                     )
-                
+                print('food')    
             db.session.delete(cart_item)
-        db.session.add(foodorder)
-        db.session.commit()
+            db.session.add(foodorder)
+            db.session.commit()
         flash('Payment successful!', 'success')
     else:
         flash('Insufficient balance. Please reload your e-wallet.', 'error')
