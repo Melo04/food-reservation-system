@@ -146,8 +146,9 @@ def pay():
                     STUDENT_ID=cart_item.STUDENT_ID,
                     TRANSACTION_ID=transactionid.id
                     )
-                db.session.add(foodorder)
+                
             db.session.delete(cart_item)
+        db.session.add(foodorder)
         db.session.commit()
         flash('Payment successful!', 'success')
     else:
