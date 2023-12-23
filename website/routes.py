@@ -92,6 +92,19 @@ def parent_cart():
     cart_items = CART_ITEM.query.filter_by(PARENT_ID=parent_id).all()
     return render_template('parent/cart.html', form=form, parent_id=parent_id, menu_id=request.form.get('menu_id'), carts=cart_items, menus=menus)
 
+@app.route('/cart/delete/<int:cart_id>', methods=['POST'])
+@login_required(role="parent")
+def deleteCart(cart_id):
+    deleteCart = CART_ITEM.query.get_or_404(cart_id)
+
+    if request.method == 'POST':
+        db.session.delete(deleteCart)
+        db.session.commit()
+        flash('Menu deleted!', 'success')
+        return redirect(url_for('parent_cart'))
+
+    return redirect(url_for('parent_cart'))
+
 @app.route("/reload", methods=['GET', 'POST'])
 @login_required(role="parent")
 def parent_reload():

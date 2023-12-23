@@ -156,7 +156,6 @@ class CartForm(FlaskForm):
     ])
     menu_id = HiddenField('Menu ID')
     parent_id = HiddenField('Parent ID')
-    # student_id = SelectField('Student ID', coerce=int)  # Adjust the type based on your data model
 
     submit = SubmitField('Add to Cart')
 
