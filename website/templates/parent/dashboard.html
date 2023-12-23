@@ -8,15 +8,20 @@
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
-                    <form>   
-                        <label for="order-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                    <form>
+                        <label for="order-search"
+                            class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                 </svg>
                             </div>
-                            <input type="search" id="order-search" class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Food Order ..." required>
+                            <input type="search" id="order-search"
+                                class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Search Food Order ..." required>
                         </div>
                     </form>
                 </div>
@@ -33,36 +38,39 @@
                             <th scope="col" class="px-4 py-3">Main Course</th>
                             <th scope="col" class="px-4 py-3">Beverage</th>
                             <th scope="col" class="px-4 py-3">Image</th>
-                            <th scope="col" class="px-4 py-3">Student ID</th>
-                            <th scope="col" class="px-4 py-3">Action</th>
+                            <th scope="col" class="px-4 py-3">Student Name</th>
                         </tr>
                     </thead>
                     <tbody>
-                      {% for order in orders %}
-                          <tr class="border-b dark:border-gray-700">
-                              <td class="px-4 py-3">{{ order.ORDER_DAY }}</td>
-                              <td class="px-4 py-3">
+                        {% for order in orders %}
+                        <tr class="border-b dark:border-gray-700">
+                            <td class="px-4 py-3">{{ order.ORDER_DAY }}</td>
+                            <td class="px-4 py-3">
                                 {% if not order.REDEMPTION%}
-                                    Not redeemed
+                                Not redeemed
                                 {%else%}
-                                    Redeemed
+                                Redeemed
                                 {%endif%}
-                              </td>
-                              {% for menu in menus %}
-                              {% if order.MENU_ID == menu.id%}
-                              <td class="px-4 py-3">{{ menu.SET }}</td>
-                              <td class="px-4 py-3">{{ menu.TYPE }}</td>
-                              <td class="px-4 py-3">{{ menu.DESCRIPTION }}</td>
-                              <td class="px-4 py-3">{{ menu.MAIN_COURSE.NAME }}</td>
-                              <td class="px-4 py-3">{{ menu.BEVERAGE.NAME }}</td>
-                              <td class="px-4 py-3">
+                            </td>
+                            {% for menu in menus %}
+                            {% if order.MENU_ID == menu.id%}
+                            <td class="px-4 py-3">{{ menu.SET }}</td>
+                            <td class="px-4 py-3">{{ menu.TYPE }}</td>
+                            <td class="px-4 py-3">{{ menu.DESCRIPTION }}</td>
+                            <td class="px-4 py-3">{{ menu.MAIN_COURSE.NAME }}</td>
+                            <td class="px-4 py-3">{{ menu.BEVERAGE.NAME }}</td>
+                            <td class="px-4 py-3">
                                 <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
-                              </td>
-                              {% endif %}
-                              {% endfor %}
-                            <td class="px-4 py-3">{{ order.STUDENT_ID }}</td>
-                          </tr>
-                      {% endfor %}
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                            {% for user in users %}
+                            {% if order.STUDENT_ID == user.id%}
+                            <td class="px-4 py-3 text-center">{{ user.FIRST_NAME }}</td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -77,15 +85,20 @@
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
-                    <form>   
-                        <label for="transaction-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                    <form>
+                        <label for="transaction-search"
+                            class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                 </svg>
                             </div>
-                            <input type="search" id="transaction-search" class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Transaction History ..." required>
+                            <input type="search" id="transaction-search"
+                                class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Search Transaction History ..." required>
                         </div>
                     </form>
                 </div>
@@ -100,13 +113,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                      {% for transaction in transactions %}
-                          <tr class="border-b dark:border-gray-700">
-                              <td class="px-4 py-3 text-center">{{ transaction.id }}</td>
-                              <td class="px-4 py-3 text-center">{{ transaction.DATE_TIME }}</td>
-                              <td class="px-4 py-3 text-center">{{ transaction.AMOUNT }}</td>
-                          </tr>
-                      {% endfor %}
+                        {% for transaction in transactions %}
+                        <tr class="border-b dark:border-gray-700">
+                            <td class="px-4 py-3 text-center">{{ transaction.id }}</td>
+                            <td class="px-4 py-3 text-center">{{ transaction.DATE_TIME }}</td>
+                            <td class="px-4 py-3 text-center">{{ transaction.AMOUNT }}</td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -121,15 +134,20 @@
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
-                    <form>   
-                        <label for="reload-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                    <form>
+                        <label for="reload-search"
+                            class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                 </svg>
                             </div>
-                            <input type="search" id="reload-search" class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Reload History ..." required>
+                            <input type="search" id="reload-search"
+                                class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Search Reload History ..." required>
                         </div>
                     </form>
                 </div>
@@ -144,15 +162,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                      {% for reload in reloads %}
-                          <tr class="border-b dark:border-gray-700">
-                              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
-                              loop.index }}</th>
-                              <td class="px-4 py-3">{{ reload.id }}</td>
-                              <td class="px-4 py-3">{{ reload.DATE_TIME }}</td>
-                              <td class="px-4 py-3">{{ reload.AMOUNT }}</td>
-                          </tr>
-                      {% endfor %}
+                        {% for reload in reloads %}
+                        <tr class="border-b dark:border-gray-700">
+                            <th scope="row"
+                                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                                loop.index }}</th>
+                            <td class="px-4 py-3">{{ reload.id }}</td>
+                            <td class="px-4 py-3">{{ reload.DATE_TIME }}</td>
+                            <td class="px-4 py-3">{{ reload.AMOUNT }}</td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -167,7 +186,7 @@
         const orderSearch = document.getElementById("order-search");
 
         const transactiontable = document.getElementById("transactionTable");
-        const transactionrows =transactiontable.getElementsByTagName("tr");
+        const transactionrows = transactiontable.getElementsByTagName("tr");
         const transactionSearch = document.getElementById("transaction-search");
 
         const reloadtable = document.getElementById("reloadTable");
@@ -220,7 +239,7 @@
                 }
             }
         });
-    
+
         reloadSearch.addEventListener("keyup", function () {
             const value = reloadSearch.value.toLowerCase();
 
@@ -243,8 +262,8 @@
                 }
             }
         });
-    
-      });
+
+    });
 </script>
 
 {% endblock content %}
