@@ -8,6 +8,7 @@ from flask_mail import Message
 import secrets
 import os
 from PIL import Image
+from datetime import datetime
 
 with app.app_context():
     db.create_all()
@@ -116,23 +117,38 @@ def pay():
     parent_id = current_user.id
     menus = FOOD_MENU.query.all()
     cart_items = CART_ITEM.query.filter_by(PARENT_ID=parent_id).all()
+    transactionids = TRANSACTION.query.filter_by(PARENT_ID=parent_id).all()
+    payment_time = datetime.now()
     
     prices = {menu.id: menu.PRICE for menu in menus}
     total_price = sum(prices[cart_item.MENU_ID] for cart_item in cart_items)
 
     balancedecimal = PARENT.query.filter_by(id=parent_id).with_entities(PARENT.EWALLET_BALANCE).all()
     balanceonedp= float(balancedecimal[0][0])
-    balancefloat = float(balanceonedp)
-    balance = "{:.2f}".format(balancefloat)
 
     if balanceonedp >= total_price:
         PARENT.EWALLET_BALANCE -= total_price
         db.session.commit()
-
-        for cart_item in cart_items:
+    
+        for cart_item, transactionid in zip(cart_items, transactionids):
+            paid = TRANSACTION(
+                PARENT_ID=cart_item.PARENT_ID,
+                AMOUNT=total_price,
+                DATE_TIME=payment_time
+            )
+            db.session.add(paid)
+            for transactionid in transactionids:
+                foodorder = FOOD_ORDER(
+                    ORDER_DAY=cart_item.ORDER_PER_DAY,
+                    REDEMPTION=False,
+                    MENU_ID=cart_item.MENU_ID,
+                    PARENT_ID=cart_item.PARENT_ID,
+                    STUDENT_ID=cart_item.STUDENT_ID,
+                    TRANSACTION_ID=transactionid.id
+                    )
+                db.session.add(foodorder)
             db.session.delete(cart_item)
         db.session.commit()
-
         flash('Payment successful!', 'success')
     else:
         flash('Insufficient balance. Please reload your e-wallet.', 'error')
