@@ -65,26 +65,30 @@ def parent_cart():
     form.parent_id.data = current_user.id
     parent_id = form.parent_id.data
 
+    import re
     if request.method == 'POST':
-        menu_id = request.form.get('menu_id')
-        day = request.form.get('day')
-        student_id = request.form.get('StudentID')
-        
-        print("Selected Day:", day)
-        print("Menu ID received:", menu_id)
-        print("Student ID received:", student_id)
-        print("Parent ID received:", parent_id)
+        print("Form data:", request.form)
+        for key, value in request.form.items():
+            if key.startswith('menu_id_'):
+                match = re.match(r'menu_id_(\d+)', key)
+                if match:
+                    index = match.group(1)
+                    menu_id = request.form.get(f'menu_id_{index}')
+                    day = request.form.get(f'Day_{index}')
+                    student_id = request.form.get('StudentID')
+                    print('Menu ID: ', menu_id)
+                    print('Day: ', day)
+                    print('Student ID: ', student_id)
 
+                    if menu_id and day and student_id:
+                        add_item = CART_ITEM(PARENT_ID=parent_id, MENU_ID=menu_id, STUDENT_ID=student_id, ORDER_PER_DAY=day)
+                        with app.app_context():
+                            db.session.add(add_item)
+                            db.session.commit()
 
+                    flash('Items added to cart!', 'success')
+                    return redirect(url_for('parent_cart'))
 
-        add_item = CART_ITEM(PARENT_ID=parent_id, MENU_ID=menu_id,STUDENT_ID=student_id,ORDER_PER_DAY=day)
-        with app.app_context():
-            db.session.add(add_item)
-            db.session.commit()
-
-        flash('Item added to cart!', 'success')
-        return redirect(url_for('parent_cart'))
-    
     cart_items = CART_ITEM.query.filter_by(PARENT_ID=parent_id).all()
     return render_template('parent/cart.html', form=form, parent_id=parent_id, menu_id=request.form.get('menu_id'), carts=cart_items, menus=menus)
 
