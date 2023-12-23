@@ -85,12 +85,13 @@ def parent_cart():
                         with app.app_context():
                             db.session.add(add_item)
                             db.session.commit()
-
                     flash('Items added to cart!', 'success')
                     return redirect(url_for('parent_cart'))
-
+    
     cart_items = CART_ITEM.query.filter_by(PARENT_ID=parent_id).all()
-    return render_template('parent/cart.html', form=form, parent_id=parent_id, menu_id=request.form.get('menu_id'), carts=cart_items, menus=menus)
+    prices = {menu.id: menu.PRICE for menu in menus}
+    total_price = sum(prices[cart_item.MENU_ID] for cart_item in cart_items)
+    return render_template('parent/cart.html', form=form, parent_id=parent_id, menu_id=request.form.get('menu_id'), carts=cart_items, menus=menus,total_price=total_price)
 
 @app.route('/cart/delete/<int:cart_id>', methods=['POST'])
 @login_required(role="parent")
