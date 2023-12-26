@@ -27,3 +27,6 @@ Updates
 
 8. 21/12/2023 Shi Yi
    - add image successfully (update image still cannot)
+
+9. 26/12/2023 Wen Ning
+   - implement payment gateway for ewallet reload
