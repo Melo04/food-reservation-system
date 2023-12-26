@@ -1,14 +1,17 @@
 from functools import wraps
-from flask import render_template, url_for, flash, redirect, request, current_app
+from flask import render_template, url_for, flash, redirect, request, current_app, session
 from website import app, db, bcrypt, mail
-from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, RequestResetForm, ResetPasswordForm, AdminUpdateProfileForm, AdminUpdateMenuForm, ItemForm, UpdateItemForm, MenuForm, UpdateMenuForm, CartForm
+from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, RequestResetForm, ResetPasswordForm, AdminUpdateProfileForm, AdminUpdateMenuForm, ItemForm, UpdateItemForm, MenuForm, UpdateMenuForm, CartForm, ReloadForm
 from website.models import USER, FOOD_ITEM, FOOD_MENU, STUDENT, PARENT, FOOD_ORDER, TRANSACTION, RELOAD, CART_ITEM
 from flask_login import login_user, current_user, logout_user
 from flask_mail import Message
+import stripe
 import secrets
 import os
 from PIL import Image
 from datetime import datetime
+import decimal
+
 
 with app.app_context():
     db.create_all()
@@ -36,6 +39,10 @@ def check_role(role="ANY"):
         elif current_user.ROLE == 'admin':
             return redirect(url_for('admin_dashboard'))
     return render_template('home.html')
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('error.html')
 
 @app.route("/")
 @app.route("/home")
@@ -117,19 +124,20 @@ def pay():
     parent_id = current_user.id
     menus = FOOD_MENU.query.all()
     cart_items = CART_ITEM.query.filter_by(PARENT_ID=parent_id).all()
-    payment_time = datetime.now()
+    payment_time = datetime.now().replace(microsecond=0)
     
     prices = {menu.id: menu.PRICE for menu in menus}
     total_price = sum(prices[cart_item.MENU_ID] for cart_item in cart_items)
 
-    balancedecimal = PARENT.query.filter_by(id=parent_id).with_entities(PARENT.EWALLET_BALANCE).all()
-    balanceonedp= float(balancedecimal[0][0])
+    current_parent = PARENT.query.filter_by(id=current_user.id).first()
+    decimal_price = decimal.Decimal(total_price)
+    
     print("cart_items:", cart_items)
 
     if not cart_items:
         flash('No items in the cart.', 'error')
-    if balanceonedp >= total_price:
-        PARENT.EWALLET_BALANCE -= total_price
+    if current_parent.EWALLET_BALANCE >= total_price:
+        current_parent.EWALLET_BALANCE -= decimal_price
         db.session.commit()
         for cart_item in cart_items:
             paid = TRANSACTION(
@@ -158,10 +166,132 @@ def pay():
 
     return redirect(url_for('parent_cart'))
 
+def clear_reload_session():
+    session.pop('reload_amount', None)
+    session.pop('reload_init_datetime', None)
+    session.pop('reload_session_id', None)
+    session.pop('reload_completion_datetime', None)
+
 @app.route("/reload", methods=['GET', 'POST'])
 @login_required(role="parent")
 def parent_reload():
-    return render_template('parent/reload.html')
+    current_parent = PARENT.query.filter_by(id=current_user.id).first()
+    balance = current_parent.EWALLET_BALANCE
+
+    clear_reload_session()
+    reloadForm = ReloadForm()
+
+    return render_template('parent/reload/reload.html', username=current_user.USERNAME, showBalance=True, balance=balance, reloadForm=reloadForm)
+
+@app.route("/reload/validate", methods=['GET', 'POST'])
+@login_required(role="parent")
+def reload_validate():
+    if request.method == 'GET':
+        return redirect('/404')
+
+    reloadForm = ReloadForm()
+    if reloadForm.validate_on_submit():
+        session['reload_amount'] = reloadForm.amount.data
+        session['reload_init_datetime'] = datetime.now().replace(microsecond=0)
+        return redirect(url_for('reload_confirm'), code=307)
+    else:
+        flash('Reload amount is minimum RM2 and maximum RM10,000', 'error')
+        return redirect(url_for('parent_reload'))
+
+
+@app.route("/reload/confirm", methods=['GET', 'POST'])
+@login_required(role="parent")
+def reload_confirm():
+    if request.method == 'GET' or not session.get('reload_init_datetime'):
+        return redirect(url_for('parent_reload'))
+
+    date_time = str(session['reload_init_datetime'])[:-6]
+    amount = "{:.2f}".format(session['reload_amount'])
+
+    return render_template("parent/reload/confirm.html", username=current_user.USERNAME, showDatetime=True, date_time=date_time, showAmount=True, amount=amount)
+
+@app.route('/reload/charge', methods=['GET', 'POST'])
+@login_required(role="parent")
+def reload_charge():
+    if request.method == 'GET' or not session.get('reload_init_datetime'):
+        return redirect(url_for('parent_reload'))
+    
+    amount = session['reload_amount'] * 100.0 # amount is in cents
+    checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    'price_data': {
+                        'product_data': {
+                            'name': 'LunchMate E-wallet Reload',
+                        },
+                        'unit_amount': int(amount), 
+                        'currency': 'myr',
+                    },
+                    'quantity': 1,
+                },
+            ],
+            payment_method_types=['card'],
+            mode='payment',
+            currency= 'myr',
+            success_url=request.host_url + url_for('reload_success_redirect', key=app.config['STRIPE_PUBLISHABLE_KEY']) + '?r=true',
+            cancel_url=request.host_url + url_for('reload_success_redirect', key=app.config['STRIPE_PUBLISHABLE_KEY']) + '?r=false',
+        )
+    session['reload_session_id'] = checkout_session.id
+
+    return redirect(checkout_session.url)
+
+
+@app.route('/reload/success/<string:key>', methods=['GET', 'POST'])
+@login_required(role="parent")
+def reload_success_redirect(key):
+    if key != app.config['STRIPE_PUBLISHABLE_KEY'] or not session.get('reload_session_id'):
+        return redirect('/404')
+    
+    session['reload_completion_datetime'] = datetime.now().replace(microsecond=0)
+    
+    if request.args['r'] == 'true':
+        success = True
+
+        # store reload history
+        reload = RELOAD(
+            PARENT_ID = current_user.id,
+            AMOUNT = session['reload_amount'],
+            DATE_TIME = session['reload_completion_datetime']
+        )
+        db.session.add(reload)    
+        db.session.commit()
+
+        # update parent e-wallet balance
+        current_parent = PARENT.query.filter_by(id=current_user.id).first()
+        decimal_amount = decimal.Decimal(session['reload_amount'])
+        current_parent.EWALLET_BALANCE += decimal_amount
+        db.session.commit()
+    else:
+        success = False
+        stripe.checkout.Session.expire(session['reload_session_id'])
+
+
+    return redirect(url_for('reload_success', r=str(success).lower()))
+
+
+@app.route('/reload/success', methods=['GET', 'POST'])
+@login_required(role="parent")
+def reload_success():
+    if not session.get('reload_completion_datetime'):
+        return redirect(url_for('parent_dashboard'))
+
+    amount = "{:.2f}".format(session['reload_amount'])
+    date_time = str(session['reload_completion_datetime'])[:-6]
+
+    if request.args['r'] == 'true':
+        success = True
+    else:
+        success = False
+
+    clear_reload_session()
+
+    return render_template('parent/reload/success.html', success=success, username=current_user.USERNAME, showDatetime=True, date_time=date_time, showAmount=True, amount=amount) # , {"Refresh": "2; url=" + url_for('views.pay.reload')} # for redirecting page
+
 
 @app.route("/dashboard/student", methods=['GET', 'POST'])
 @login_required(role="student")
@@ -343,6 +473,7 @@ def register():
 def login():
     check_role()
     if current_user.is_authenticated:
+        flash('User is already logged in', 'success')
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():

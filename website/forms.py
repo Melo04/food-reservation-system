@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, FloatField, TextAreaField, IntegerField, HiddenField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, FloatField, TextAreaField, IntegerField, HiddenField, DateTimeField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from website.models import USER
 from website import bcrypt
@@ -166,3 +166,16 @@ class OrderForm(FlaskForm):
     student_id = HiddenField('Student ID')
 
     submit = SubmitField('Add to Cart')
+
+class ReloadForm(FlaskForm):
+    amount = FloatField('Reload Amount', validators=[DataRequired()])
+
+    submit = SubmitField('Reload')
+
+    def validate_amount(self, amount):
+        min = 2.0
+        max = 10000.0
+        if amount.data < min:
+            raise ValidationError('Minimum reload amount is RM2')
+        elif  amount.data > max:
+            raise ValidationError('Reload amount cannot exceed RM10,000')

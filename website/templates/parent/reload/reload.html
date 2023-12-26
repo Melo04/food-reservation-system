@@ -1,0 +1,101 @@
+{% extends "parent/reload/layout.html" %}
+{% block title2 %}Reload{% endblock title2 %}
+
+{% block header %}
+<h3 class="text-xl font-bold dark:text-white text-center my-8">E-Wallet Reload</h3>
+{% endblock header %}
+
+{% block content2 %}
+    <form action="{{ url_for('reload_validate') }}" method="POST" onsubmit="return validateForm();">
+        {{ reloadForm.hidden_tag() }}
+        <div class="-mx-4 flex flex-wrap">
+            <div class="w-full px-4 md:w-1/2 lg:w-1/3">
+                <div class="mb-24 mt-12">
+                    <label class="mb-[10px] block text-base font-medium text-dark dark:text-white">
+                    Enter Reload Amount
+                    </label>
+
+                    <div class="flex items-center">
+                        <span class="h-full rounded-tl-md rounded-bl-md border border-r-0 border-stroke dark:border-dark-3 bg-gray-2 dark:bg-dark-2 py-[10px] px-4 text-base uppercase text-body-color dark:text-white">
+                        RM
+                        </span>
+                        {{ reloadForm.amount(value="00.00", class="no-spinner w-full bg-transparent rounded-br-md rounded-tr-md border border-stroke dark:border-dark-3 py-[10px] pr-3 pl-5 text-dark-6 outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-gray-2 dark:text-white",
+                        onkeydown="try{setCustomValidity('')}catch(e){}; constraintInput(event);", 
+                        onclick="try{setCustomValidity('')}catch(e){}; setCursorEnd();") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="-mx-4 flex flex-wrap">
+            <div class="w-full px-4 md:w-1/3 lg:w-1/3"></div>
+            <div class="w-full px-4 md:w-1/3 lg:w-1/3">
+                <div class="mb-12">
+                    {{ reloadForm.submit(class="w-full text-white bg-primary-600
+                    hover:bg-blue-700 focus:ring-4 focus:outline-none
+                    focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5
+                    text-center hover:cursor dark:bg-blue-600 dark:hover:bg-blue-700
+                    dark:focus:ring-blue-800") }}
+                </div>
+            </div>
+        </div>
+
+      <script>
+        let numInput = document.getElementsByName("amount")[0]
+    
+        function validateForm() {
+            // alert(numInput.value.length);
+            let validityState = numInput.validity;
+    
+            if (validityState.valueMissing) {
+                numInput.setCustomValidity("Enter a reload amount");
+                numInput.reportValidity();
+                return false;
+            } else if (numInput.value < 2) {
+                numInput.setCustomValidity("Minimum reload amount is RM2");
+                numInput.reportValidity();
+                return false;
+            } else if (numInput.value > 10000) {
+                numInput.setCustomValidity("Reload amount cannot exceed RM10,000");
+                numInput.reportValidity();
+                return false;
+            }
+            return true;
+        }
+    
+        function setCursorEnd() {
+            var temp = numInput.value; 
+            numInput.value = '';
+            numInput.value = temp;
+        }
+    
+        function constraintInput(event) {
+            const zero = 48, nine = 57;
+            const backspace = 8;
+    
+            let len = numInput.value.length;
+            let keyPressed = event.keyCode;
+    
+            if (keyPressed < zero || keyPressed > nine) {
+                if (keyPressed == backspace) {
+                    numInput.value = (numInput.value / 10).toFixed(3);
+                    numInput.value = numInput.value.padStart(6,"0");  
+                }
+                else {
+                    event.preventDefault();
+                }            
+            }
+            else {
+                if (len >= 8) {
+                    // numInput.setCustomValidity("Reload amount has exceeded the limit");
+                    event.preventDefault();
+                }
+                else {
+                    numInput.value = (numInput.value * 10).toFixed(1);
+                    numInput.value = numInput.value.padStart(4,"0");  
+                }      
+            }
+        }
+    </script>
+  </form>
+{% endblock content2 %}
