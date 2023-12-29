@@ -79,6 +79,7 @@
         </div>
       </nav>
 
+      <div class="min-h-screen">
       {% with messages = get_flashed_messages(with_categories=true) %} 
         {% if messages %} 
           {% for category, message in messages %}
@@ -109,11 +110,31 @@
         {% endif %} 
       {% endwith %} 
       {% block content %}{% endblock %}
+      </div>
+
+      <footer class="bg-white shadow dark:bg-gray-800">
+          <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
+            <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© <a href="https://flowbite.com/" class="hover:underline">LunchMate</a>
+          </span>
+          <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+              <li>
+                  <a href="/" class="hover:underline me-4 md:me-6">Home</a>
+              </li>
+              <li>
+                  <a href="/login" class="hover:underline me-4 md:me-6">Login</a>
+              </li>
+              <li>
+                  <a href="/profile" class="hover:underline me-4 md:me-6">Profile</a>
+              </li>
+          </ul>
+          </div>
+      </footer>
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
     <script
       type="text/javascript"
       src="{{ url_for('static', filename='index.js') }}"
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/datepicker.min.js"></script>
   </body>
 </html>

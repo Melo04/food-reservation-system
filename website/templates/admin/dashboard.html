@@ -73,7 +73,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                      {% for user in users %}
+                      {% for user in paginated_users %}
                         <tr class="border-b dark:border-gray-700">
                             <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ user.id }}</th>
                             <td class="px-4 py-3">{{ user.USERNAME }}</td>
@@ -133,7 +133,7 @@
                     {% if total_users < 5 %}
                     <span class="font-semibold text-gray-900 dark:text-white">{{ total_users }}</span>
                     {% else %}
-                    <span class="font-semibold text-gray-900 dark:text-white">{{ per_page }}</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ per_page + (page - 1) * per_page }}</span>
                     {% endif %}
                     of
                     <span class="font-semibold text-gray-900 dark:text-white">{{ total_users }}</span>
@@ -141,14 +141,14 @@
                 <ul class="inline-flex items-stretch -space-x-px">
                     <li>
                         {% if page > 1 %}
-                        <a href="{{ url_for('admin_dashboard', page=page - 1) }}" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        <a href="{{ url_for('admin_dashboard', page=page - 1) }}" class="flex items-center justify-center h-full py-1.5 px-1.5 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                             <span class="sr-only">Previous</span>
                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
                             </svg>
                         </a>
                         {% else %}
-                        <span class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-300 bg-white rounded-l-lg border border-gray-300">
+                        <span class="flex items-center justify-center h-full py-1.5 px-1.5 ml-0 text-gray-300 bg-white rounded-l-lg border border-gray-300">
                             <span class="sr-only">Previous</span>
                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -163,14 +163,14 @@
                     {% endfor %}
                     <li>
                         {% if page < (total_users // per_page) + 1 %}
-                        <a href="{{ url_for('admin_dashboard', page=page + 1) }}" id="prevButton" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        <a href="{{ url_for('admin_dashboard', page=page + 1) }}" id="prevButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                             <span class="sr-only">Next</span>
                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                             </svg>
                         </a>
                         {% else %}
-                        <span id="nextButton" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-300 bg-white rounded-r-lg border border-gray-300">
+                        <span id="nextButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-300 bg-white rounded-r-lg border border-gray-300">
                             <span class="sr-only">Next</span>
                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
@@ -251,7 +251,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                      {% for menu in menus %}
+                      {% for menu in paginated_menus %}
                         <tr class="border-b dark:border-gray-700">
                             <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
                             loop.index }}</th>
@@ -289,7 +289,7 @@
                     {% if total_menus < 5 %}
                     <span class="font-semibold text-gray-900 dark:text-white">{{ total_menus }}</span>
                     {% else %}
-                    <span class="font-semibold text-gray-900 dark:text-white">{{ per_page }}</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ per_page + (menupage - 1) * per_page }}</span>
                     {% endif %}
                     of
                     <span class="font-semibold text-gray-900 dark:text-white">{{ total_menus }}</span>
@@ -297,14 +297,14 @@
                 <ul class="inline-flex items-stretch -space-x-px">
                     <li>
                         {% if menupage > 1 %}
-                        <a href="{{ url_for('admin_dashboard', menupage=menupage - 1) }}" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        <a href="{{ url_for('admin_dashboard', menupage=menupage - 1) }}" class="flex items-center justify-center h-full py-1.5 px-1.5 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                             <span class="sr-only">Previous</span>
                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
                             </svg>
                         </a>
                         {% else %}
-                        <span class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-300 bg-white rounded-l-lg border border-gray-300">
+                        <span class="flex items-center justify-center h-full py-1.5 px-1.5 ml-0 text-gray-300 bg-white rounded-l-lg border border-gray-300">
                             <span class="sr-only">Previous</span>
                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -312,14 +312,14 @@
                         </span>
                         {% endif %}
                     </li>
-                    {% for p in range(1, (total_menus // per_page) + 2) %}
+                    {% for p in range(1, (total_menus // per_page) + 1) %}
                     <li>
                         <a href="{{ url_for('admin_dashboard', menupage=p) }}" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ p }}</a>
                     </li>
                     {% endfor %}
                     <li>
-                        {% if menupage < (total_menus // per_page) + 1 %}
-                        <a href="{{ url_for('admin_dashboard', page=menupage + 1) }}" id="prevMenuButton" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        {% if menupage < ((total_menus // per_page) + 1) %}
+                        <a href="{{ url_for('admin_dashboard', menupage=menupage + 1) }}" id="nextMenuButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                             <span class="sr-only">Next</span>
                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
@@ -347,39 +347,56 @@
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
-                    <form>   
-                        <label for="order-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                    <form>
+                        <label for="order-search"
+                            class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                 </svg>
                             </div>
-                            <input type="search" id="order-search" class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Food Order ..." required>
+                            <input type="search" id="order-search"
+                                class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Search Food Order ..." required>
                         </div>
                     </form>
                 </div>
                 <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                     <div class="flex items-center space-x-3 w-full md:w-auto">
-                        <button id="filterRedemptionDropdown" data-dropdown-toggle="filterRedemption" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
+                        <button id="filterOrderDropdownButton" data-dropdown-toggle="filterOrder" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
                             <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
                             </svg>
-                            Filter Redemption
+                            Filter Date Range
                             <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                 <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                             </svg>
                         </button>
-                        <div id="filterRedemption" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Order Redemption</h6>
-                            <ul class="space-y-2 text-sm" aria-labelledby="filterRedemptionDropdown">
+                        <div id="filterOrder" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Order Date Range</h6>
+                            <ul class="space-y-2 text-sm" aria-labelledby="filterOrderDropdownButton">
                                 <li class="flex items-center">
-                                    <input id="true" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                    <label for="true" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">True</label>
+                                    <input id="currentweek" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="currentweek" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Current Week</label>
                                 </li>
                                 <li class="flex items-center">
-                                    <input id="false" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                    <label for="false" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">False</label>
+                                    <input id="pastweek" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="pastweek" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Past week</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="2weeks" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="2weeks" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">2 weeks ago</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="1month" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="1month" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">1 month ago</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="90days" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="90days" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">90 days ago</label>
                                 </li>
                             </ul>
                         </div>
@@ -390,34 +407,55 @@
                 <table id="orderTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-4 py-4">ID</th>
+                            <th scope="col" class="px-4 py-3">ID</th>
                             <th scope="col" class="px-4 py-3">Order Day</th>
+                            <th scope="col" class="px-4 py-3">Order Date</th>
+                            <th scope="col" class="px-4 py-3">Parent Name</th>
+                            <th scope="col" class="px-4 py-3">Student Name</th>
                             <th scope="col" class="px-4 py-3">Redemption</th>
                             <th scope="col" class="px-4 py-3">Menu Set</th>
-                            <th scope="col" class="px-4 py-3">Type</th>
-                            <th scope="col" class="px-4 py-3">Description</th>
                             <th scope="col" class="px-4 py-3">Main Course</th>
                             <th scope="col" class="px-4 py-3">Beverage</th>
                             <th scope="col" class="px-4 py-3">Image</th>
-                            <th scope="col" class="px-4 py-3">Student ID</th>
-                            <th scope="col" class="px-4 py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                      {% for order in orders %}
-                          <tr class="border-b dark:border-gray-700">
-                              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
-                              loop.index }}</th>
-                              <td class="px-4 py-3">{{ order.ORDER_DAY }}</td>
-                              <td class="px-4 py-3">{{ order.REDEMPTION }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                          </tr>
-                      {% endfor %}
+                        {% for order in orders %}
+                        <tr class="border-b dark:border-gray-700">
+                            <td class="px-4 py-3">{{ order.id }}</td>
+                            <td class="px-4 py-3">{{ order.ORDER_DAY }}</td>
+                            {% for transaction in transactions %}
+                                {% if order.TRANSACTION_ID == transaction.id%}
+                                <td class="px-4 py-3">{{ transaction.DATE_TIME }}</td>
+                                {% endif %}
+                            {% endfor %}
+                            {% for user in users %}
+                                {% if order.PARENT_ID == user.id%}
+                                <td class="px-4 py-3 text-center">{{ user.FIRST_NAME }} {{ user.LAST_NAME }}</td>
+                                {% endif %}
+                                {% if order.STUDENT_ID == user.id%}
+                                <td class="px-4 py-3 text-center">{{ user.FIRST_NAME }} {{ user.LAST_NAME }}</td>
+                                {% endif %}
+                            {% endfor %}
+                            <td class="px-4 py-3">
+                                {% if not order.REDEMPTION%}
+                                    Not redeemed
+                                {%else%}
+                                    Redeemed
+                                {%endif%}
+                            </td>
+                            {% for menu in menus %}
+                            {% if order.MENU_ID == menu.id%}
+                            <td class="px-4 py-3">{{ menu.SET }}</td>
+                            <td class="px-4 py-3">{{ menu.MAIN_COURSE.NAME }}</td>
+                            <td class="px-4 py-3">{{ menu.BEVERAGE.NAME }}</td>
+                            <td class="px-4 py-3">
+                                <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -444,28 +482,66 @@
                         </div>
                     </form>
                 </div>
+                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                    <div class="flex items-center space-x-3 w-full md:w-auto">
+                        <button id="filterTransactionDropdownButton" data-dropdown-toggle="filterTransaction" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                            </svg>
+                            Filter Date Range
+                            <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </button>
+                        <div id="filterTransaction" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Transaction Date Range</h6>
+                            <ul class="space-y-2 text-sm" aria-labelledby="filterTransactionDropdownButton">
+                                <li class="flex items-center">
+                                    <input id="currentweek" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="currentweek" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Current Week</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="pastweek" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="pastweek" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Past week</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="2weeks" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="2weeks" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">2 weeks ago</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="1month" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="1month" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">1 month ago</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="90days" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="90days" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">90 days ago</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="overflow-x-auto">
                 <table id="transactionTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-4 py-4">ID</th>
-                            <th scope="col" class="px-4 py-4">Parent First Name</th>
-                            <th scope="col" class="px-4 py-4">Parent Last Name</th>
-                            <th scope="col" class="px-4 py-3">Amount</th>
-                            <th scope="col" class="px-4 py-3">Date Time</th>
+                            <th scope="col" class="px-4 py-4 text-center">ID</th>
+                            <th scope="col" class="px-4 py-4 text-center">Parent Name</th>
+                            <th scope="col" class="px-4 py-3 text-center">Amount</th>
+                            <th scope="col" class="px-4 py-3 text-center">Date Time</th>
                         </tr>
                     </thead>
                     <tbody>
                       {% for transaction in transactions %}
                           <tr class="border-b dark:border-gray-700">
-                              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
-                              loop.index }}</th>
-                              <td class="px-4 py-3">{{ transaction.id }}</td>
-                              <td class="px-4 py-3">{{ transaction.id }}</td>
-                              <td class="px-4 py-3">{{ transaction.id }}</td>
-                              <td class="px-4 py-3">{{ transaction.AMOUNT }}</td>
-                              <td class="px-4 py-3">{{ transaction.DATE_TIME }}</td>
+                            <td class="px-4 py-3 text-center">{{ transaction.id }}</td>
+                            {% for user in users %}
+                                {% if transaction.PARENT_ID == user.id%}
+                                    <td class="px-4 py-3 text-center">{{ user.FIRST_NAME }} {{ user.LAST_NAME }}</td>
+                                {% endif %}
+                            {% endfor %}
+                            <td class="px-4 py-3 text-center">{{ transaction.AMOUNT }}</td>
+                            <td class="px-4 py-3 text-center">{{ transaction.DATE_TIME }}</td>
                           </tr>
                       {% endfor %}
                     </tbody>
@@ -475,49 +551,87 @@
     </div>
 </section>
 
-<!-- Reload List -->
+<!-- Payout List -->
 <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
-        <h3 class="text-xl font-bold dark:text-white text-center my-8">Reload List</h3>
+        <h3 class="text-xl font-bold dark:text-white text-center my-8">Payout List</h3>
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
                     <form>   
-                        <label for="reload-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                        <label for="payout-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                 </svg>
                             </div>
-                            <input type="search" id="reload-search" class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Reload History ..." required>
+                            <input type="search" id="payout-search" class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Payout History ..." required>
                         </div>
                     </form>
                 </div>
+                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                    <div class="flex items-center space-x-3 w-full md:w-auto">
+                        <button id="filterPayoutDropdownButton" data-dropdown-toggle="filterPayout" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                            </svg>
+                            Filter Date Range
+                            <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                            </svg>
+                        </button>
+                        <div id="filterPayout" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Payout Date Range</h6>
+                            <ul class="space-y-2 text-sm" aria-labelledby="filterPayoutDropdownButton">
+                                <li class="flex items-center">
+                                    <input id="currentweek" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="currentweek" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Current Week</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="pastweek" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="pastweek" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Past week</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="2weeks" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="2weeks" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">2 weeks ago</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="1month" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="1month" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">1 month ago</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="90days" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="90days" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">90 days ago</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="overflow-x-auto">
-                <table id="reloadTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <table id="payoutTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-4 py-4">ID</th>
-                            <th scope="col" class="px-4 py-4">Admin First Name</th>
-                            <th scope="col" class="px-4 py-4">Admin Last Name</th>
-                            <th scope="col" class="px-4 py-3">Amount</th>
-                            <th scope="col" class="px-4 py-3">Date Time</th>
+                            <th scope="col" class="px-4 py-4 text-center">ID</th>
+                            <th scope="col" class="px-4 py-4 text-center">Admin Name</th>
+                            <th scope="col" class="px-4 py-3 text-center">Amount</th>
+                            <th scope="col" class="px-4 py-3 text-center">Date Time</th>
                         </tr>
                     </thead>
                     <tbody>
-                      {% for reload in reloads %}
-                          <tr class="border-b dark:border-gray-700">
-                              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
-                              loop.index }}</th>
-                              <td class="px-4 py-3">{{ reload.id }}</td>
-                              <td class="px-4 py-3">{{ reload.id }}</td>
-                              <td class="px-4 py-3">{{ reload.id }}</td>
-                              <td class="px-4 py-3">{{ reload.AMOUNT }}</td>
-                              <td class="px-4 py-3">{{ reload.DATE_TIME }}</td>
-                          </tr>
-                      {% endfor %}
+                        {% for payout in payouts %}
+                            <tr class="border-b dark:border-gray-700">
+                                <td class="px-4 py-3 text-center">{{ payout.id }}</td>
+                                {% for user in users %}
+                                    {% if payout.ADMIN_ID == user.id%}
+                                        <td class="px-4 py-3 text-center">{{ user.FIRST_NAME }} {{ user.LAST_NAME }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                                <td class="px-4 py-3 text-center">{{ payout.AMOUNT }}</td>
+                                <td class="px-4 py-3 text-center">{{ payout.DATE_TIME }}</td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -689,7 +803,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const page = parseInt("{{ page }}");
         // User Details Table
         const roleCheckboxes = document.querySelectorAll('#filterDropdown input[type="checkbox"]');
         const table = document.getElementById("usersTable");
@@ -700,112 +813,44 @@
         var previewButton = document.querySelectorAll('[data-modal-toggle="readUserModal"]');
         const prevButton = document.getElementById("prevButton");
         const nextButton = document.getElementById("nextButton");
-        const per_page = parseInt("{{ per_page }}");
-        const total_users = parseInt("{{ total_users }}");
         
         // Food Menu Table
         const visibilityCheckboxes = document.querySelectorAll('#filterVisibility input[type="checkbox"]');
         const menutable = document.getElementById("menuTable");
         const menurows = menutable.getElementsByTagName("tr");
         const menuSearch = document.getElementById("menu-search");
-        const prevMenuButton = document.getElementById("prevMenuButton");
-        const nextMenuButton = document.getElementById("nextMenuButton");
-        const menupage = parseInt("{{ menupage }}");
-        const total_menus = parseInt("{{ total_menus }}");
+        const prevMenuButton = document.getElementById("menuPrevButton");
+        const nextMenuButton = document.getElementById("menuNextButton");
         var updateMenuButton = document.querySelectorAll('[data-modal-toggle="updateMenuModal"]');
 
-        roleCheckboxes.forEach(function (checkbox) {
-            checkbox.addEventListener("change", function () {
-                let checkboxChecked = false;
-                roleCheckboxes.forEach(function (checkbox) {
-                    const role = checkbox.id;
-                    const isChecked = checkbox.checked;
- 
-                    if(isChecked) {
-                        checkboxChecked = true;
-                    }
-                    for (let i = 1; i < rows.length; i++) {
-                        const row = rows[i];
-                        if (row.cells[6].textContent.trim() === role) {
-                            row.style.display = isChecked ? "" : "none";
-                        }
-                    }
-                });
+        // Food Order Table
+        const orderCheckboxes = document.querySelectorAll('#filterOrder input[type="checkbox"]');
+        const ordertable = document.getElementById("orderTable");
+        const orderrows = ordertable.getElementsByTagName("tr");
+        const orderSearch = document.getElementById("order-search");
 
-                if(!checkboxChecked) {
-                    for (let i=1; i<rows.length; i++) {
-                        rows[i].style.display = "";
-                    }
-                }
-            });
-        });
+        // Transaction Table
+        const transactionCheckboxes = document.querySelectorAll('#filterTransaction input[type="checkbox"]');
+        const transactiontable = document.getElementById("transactionTable");
+        const transactionrows = transactiontable.getElementsByTagName("tr");
+        const transactionSearch = document.getElementById("transaction-search");
 
-        visibilityCheckboxes.forEach(function (checkbox) {
-            checkbox.addEventListener("change", function () {
-                let checkboxChecked = false;
-                visibilityCheckboxes.forEach(function (checkbox) {
-                    const visible = checkbox.id;
-                    const isChecked = checkbox.checked;
- 
-                    if(isChecked) {
-                        checkboxChecked = true;
-                    }
-                    for (let i = 1; i < menurows.length; i++) {
-                        const row = menurows[i];
-                        if (row.cells[7].textContent.trim() === visible) {
-                            row.style.display = isChecked ? "" : "none";
-                        }
-                    }
-                });
+        // Payout Table
+        const payoutCheckboxes = document.querySelectorAll('#filterPayout input[type="checkbox"]');
+        const payouttable = document.getElementById("payoutTable");
+        const payoutrows = payouttable.getElementsByTagName("tr");
+        const payoutSearch = document.getElementById("payout-search");
 
-                if(!checkboxChecked) {
-                    for (let i=1; i<menurows.length; i++) {
-                        menurows[i].style.display = "";
-                    }
-                }
-            });
-        });
-        
-        searchInput.addEventListener("keyup", function () {
-            const value = searchInput.value.toLowerCase();
-
-            for (let i = 1; i < rows.length; i++) {
-                const row = rows[i];
-                const username = row.cells[2].textContent.toLowerCase();
-                const email = row.cells[3].textContent.toLowerCase();
-                const name = row.cells[4].textContent.toLowerCase();
-                const phone = row.cells[5].textContent.toLowerCase();
-
-                if (username.includes(value) || email.includes(value) || name.includes(value) || phone.includes(value)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            }
-        });
-
-        menuSearch.addEventListener("keyup", function () {
-            const value = menuSearch.value.toLowerCase();
-
-            for (let i = 1; i < menurows.length; i++) {
-                const row = menurows[i];
-                let rowContainsValue = false;
-
-                for (let j = 1; j <= 7; j++) {
-                    const cellContent = row.cells[j].textContent.toLowerCase();
-                    if (cellContent.includes(value)) {
-                        rowContainsValue = true;
-                        break;
-                    }
-                }
-
-                if (rowContainsValue) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            }
-        });
+        searchListener(searchInput, rows, 9);
+        searchListener(menuSearch, menurows, 7);
+        searchListener(orderSearch, orderrows, 8);
+        searchListener(transactionSearch, transactionrows, 3);
+        searchListener(payoutSearch, payoutrows, 3);
+        handleFilter(roleCheckboxes, rows, 6);
+        handleFilter(visibilityCheckboxes, menurows, 7);
+        handleFilterDate(orderCheckboxes, orderrows, 2);
+        handleFilterDate(transactionCheckboxes, transactionrows, 3);
+        handleFilterDate(payoutCheckboxes, payoutrows, 3);
 
         updateButton.forEach(button => {
             button.addEventListener("click", () => {
@@ -847,34 +892,6 @@
                 readModal.querySelector('#phone').value = phone;        
                 readModal.querySelector('.photo-wrapper img').src = url_for('static', filename='profile_pics/' + image);
             });
-        });
-    
-        prevButton.addEventListener("click", function () {
-            const total_pages = Math.ceil(total_users / per_page);
-            if (page > 1) {
-                window.location.href = "/dashboard/admin?page=" + (page - 1);
-            }
-        });
-
-        nextButton.addEventListener("click", function () {
-            const total_pages = Math.ceil(total_users / per_page);
-            if (page < total_pages) {
-                window.location.href = "/dashboard/admin?page=" + (page + 1);
-            }
-        });
-
-        prevMenuButton.addEventListener("click", function () {
-            const total_pages = Math.ceil(total_menus / per_page);
-            if (menupage > 1) {
-                window.location.href = "/dashboard/admin?menupage=" + (menupage - 1);
-            }
-        });
-
-        nextMenuButton.addEventListener("click", function () {
-            const total_pages = Math.ceil(total_menus / per_page);
-            if (menupage < total_pages) {
-                window.location.href = "/dashboard/admin?menupage=" + (menupage + 1);
-            }
         });
     });
 </script>

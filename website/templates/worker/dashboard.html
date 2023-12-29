@@ -234,43 +234,56 @@
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
-                    <form>   
-                        <label for="order-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                    <form>
+                        <label for="order-search"
+                            class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                 </svg>
                             </div>
-                            <input type="search" id="order-search" class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Food Order ..." required>
+                            <input type="search" id="order-search"
+                                class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Search Food Order ..." required>
                         </div>
                     </form>
                 </div>
                 <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                     <div class="flex items-center space-x-3 w-full md:w-auto">
-                        <button id="filterRedemptionDropdown" data-dropdown-toggle="filterRedemption" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
+                        <button id="filterOrderDropdownButton" data-dropdown-toggle="filterOrder" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
                             <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
                             </svg>
-                            Last 7 days
+                            Filter Date Range
                             <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                 <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                             </svg>
                         </button>
-                        <div id="filterRedemption" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Order History</h6>
-                            <ul class="space-y-2 text-sm" aria-labelledby="filterRedemptionDropdown">
+                        <div id="filterOrder" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Order Date Range</h6>
+                            <ul class="space-y-2 text-sm" aria-labelledby="filterOrderDropdownButton">
                                 <li class="flex items-center">
-                                    <input id="sevendays" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                    <label for="sevendays" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Last 14 days</label>
+                                    <input id="currentweek" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="currentweek" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Current Week</label>
                                 </li>
                                 <li class="flex items-center">
-                                    <input id="thirtydays" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                    <label for="thirtydays" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Last 30 days</label>
+                                    <input id="pastweek" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="pastweek" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Past week</label>
                                 </li>
                                 <li class="flex items-center">
-                                    <input id="month" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                    <label for="month" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Last month</label>
+                                    <input id="2weeks" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="2weeks" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">2 weeks ago</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="1month" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="1month" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">1 month ago</label>
+                                </li>
+                                <li class="flex items-center">
+                                    <input id="90days" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="90days" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">90 days ago</label>
                                 </li>
                             </ul>
                         </div>
@@ -281,31 +294,58 @@
                 <table id="orderTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
+                            <th scope="col" class="px-4 py-3">ID</th>
                             <th scope="col" class="px-4 py-3">Order Day</th>
+                            <th scope="col" class="px-4 py-3">Order Date</th>
+                            <th scope="col" class="px-4 py-3">Parent Name</th>
+                            <th scope="col" class="px-4 py-3">Student Name</th>
                             <th scope="col" class="px-4 py-3">Redemption</th>
                             <th scope="col" class="px-4 py-3">Menu Set</th>
-                            <th scope="col" class="px-4 py-3">Type</th>
-                            <th scope="col" class="px-4 py-3">Description</th>
                             <th scope="col" class="px-4 py-3">Main Course</th>
                             <th scope="col" class="px-4 py-3">Beverage</th>
                             <th scope="col" class="px-4 py-3">Image</th>
-                            <th scope="col" class="px-4 py-3">Student ID</th>
                             <th scope="col" class="px-4 py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                      {% for order in orders %}
-                          <tr class="border-b dark:border-gray-700">
-                              <td class="px-4 py-3">{{ order.ORDER_DAY }}</td>
-                              <td class="px-4 py-3">{{ order.REDEMPTION }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                              <td class="px-4 py-3">{{ order.MENU_ID }}</td>
-                          </tr>
-                      {% endfor %}
+                        {% for order in orders %}
+                        <tr class="border-b dark:border-gray-700">
+                            <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                            loop.index }}</th>
+                            <td class="px-4 py-3">{{ order.ORDER_DAY }}</td>
+                            {% for transaction in transactions %}
+                                {% if order.TRANSACTION_ID == transaction.id%}
+                                <td class="px-4 py-3">{{ transaction.DATE_TIME }}</td>
+                                {% endif %}
+                            {% endfor %}
+                            {% for user in users %}
+                                {% if order.PARENT_ID == user.id%}
+                                <td class="px-4 py-3 text-center">{{ user.FIRST_NAME }} {{ user.LAST_NAME }}</td>
+                                {% endif %}
+                                {% if order.STUDENT_ID == user.id%}
+                                <td class="px-4 py-3 text-center">{{ user.FIRST_NAME }} {{ user.LAST_NAME }}</td>
+                                {% endif %}
+                            {% endfor %}
+                            <td class="px-4 py-3">
+                                {% if not order.REDEMPTION%}
+                                    Not redeemed
+                                {%else%}
+                                    Redeemed
+                                {%endif%}
+                            </td>
+                            {% for menu in foodmenu %}
+                            {% if order.MENU_ID == menu.id%}
+                            <td class="px-4 py-3">{{ menu.SET }}</td>
+                            <td class="px-4 py-3">{{ menu.MAIN_COURSE.NAME }}</td>
+                            <td class="px-4 py-3">{{ menu.BEVERAGE.NAME }}</td>
+                            <td class="px-4 py-3">
+                                <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                            <td class="px-4 py-3"></td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -727,86 +767,27 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const typeCheckboxes = document.querySelectorAll('#filterType input[type="checkbox"]');
         const itemSearch = document.getElementById("item-search");
-        const menuSearch = document.getElementById("menu-search");
         const itemtable = document.getElementById("itemTable");
         const itemrows = itemtable.getElementsByTagName("tr");
+        const typeCheckboxes = document.querySelectorAll('#filterType input[type="checkbox"]');
+        var updateItemButton = document.querySelectorAll('[data-modal-toggle="updateItemModal"]');
+
+        const menuSearch = document.getElementById("menu-search");
         const menutable = document.getElementById("menuTable");
         const menurows = menutable.getElementsByTagName("tr");
-        var updateItemButton = document.querySelectorAll('[data-modal-toggle="updateItemModal"]');
         var updateMenuButton = document.querySelectorAll('[data-modal-toggle="updateMenuModal"]');
 
-        typeCheckboxes.forEach(function (checkbox) {
-            checkbox.addEventListener("change", function () {
-                let checkboxChecked = false;
-                typeCheckboxes.forEach(function (checkbox) {
-                    const type = checkbox.id;
-                    const isChecked = checkbox.checked;
- 
-                    if(isChecked) {
-                        checkboxChecked = true;
-                    }
-                    for (let i = 1; i < itemrows.length; i++) {
-                        const row = itemrows[i];
-                        if (row.cells[2].textContent.trim() === type) {
-                            row.style.display = isChecked ? "" : "none";
-                        }
-                    }
-                });
+        const orderSearch = document.getElementById("order-search");
+        const ordertable = document.getElementById("orderTable");
+        const orderrows = ordertable.getElementsByTagName("tr");
+        const orderCheckboxes = document.querySelectorAll('#filterOrder input[type="checkbox"]');
 
-                if(!checkboxChecked) {
-                    for (let i=1; i<itemrows.length; i++) {
-                        itemrows[i].style.display = "";
-                    }
-                }
-            });
-        });
-
-        itemSearch.addEventListener("keyup", function () {
-            const value = itemSearch.value.toLowerCase();
-            for (let i = 1; i < itemrows.length; i++) {
-                const row = itemrows[i];
-                let rowContainsValue = false;
-
-                for (let j = 1; j <= 4; j++) {
-                    const cellContent = row.cells[j].textContent.toLowerCase();
-                    if (cellContent.includes(value)) {
-                        rowContainsValue = true;
-                        break;
-                    }
-                }
-
-                if (rowContainsValue) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            }
-        });
-
-        menuSearch.addEventListener("keyup", function () {
-            const value = menuSearch.value.toLowerCase();
-
-            for (let i = 1; i < menurows.length; i++) {
-                const row = menurows[i];
-                let rowContainsValue = false;
-
-                for (let j = 1; j <= 7; j++) {
-                    const cellContent = row.cells[j].textContent.toLowerCase();
-                    if (cellContent.includes(value)) {
-                        rowContainsValue = true;
-                        break;
-                    }
-                }
-
-                if (rowContainsValue) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            }
-        });
+        searchListener(itemSearch, itemrows, 4);
+        searchListener(menuSearch, menurows, 7);
+        searchListener(orderSearch, orderrows, 8);
+        handleFilter(typeCheckboxes, itemrows, 2);
+        handleFilterDate(orderCheckboxes, orderrows, 2);
 
         updateItemButton.forEach(button => {
             button.addEventListener("click", () => {

@@ -3,6 +3,7 @@ from website import db, login_manager, app
 from flask_login import UserMixin
 # from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import URLSafeTimedSerializer as Serializer
+from sqlalchemy import event
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -34,7 +35,19 @@ class USER(db.Model, UserMixin):
 
     def __repr__(self):
         return f"USER('{self.USERNAME}', '{self.EMAIL}', '{self.FIRST_NAME}', '{self.LAST_NAME}', '{self.PHONE}', '{self.IMAGE}', '{self.ROLE}')"
-    
+
+def insert_user_role(mapper, connection, target):
+    if target.ROLE == 'parent':
+        connection.execute(PARENT.__table__.insert(), {'id': target.id, 'EWALLET_BALANCE': 0})
+    elif target.ROLE == 'student':
+        connection.execute(STUDENT.__table__.insert(), {'id': target.id, 'STATUS': 'active', 'PARENT1_ID': 0, 'PARENT2_ID': 0})
+    elif target.ROLE == 'worker':
+        connection.execute(WORKER.__table__.insert(), {'id': target.id})
+    elif target.ROLE == 'admin':
+        connection.execute(ADMIN.__table__.insert(), {'id': target.id})
+
+event.listen(USER, 'after_insert', insert_user_role)
+
 class STUDENT(USER):
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
     STATUS = db.Column(db.String(20), nullable=False)
@@ -143,9 +156,6 @@ class CART_ITEM(db.Model):
     MENU_ID = db.Column(db.Integer, db.ForeignKey('food_menu.id'), nullable=False)
     STUDENT_ID = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
     ORDER_PER_DAY = db.Column(db.String(20), nullable=False)
-
-
-
 
     def __repr__(self):
         return f"CART_ITEM('{self.PARENT_ID},'{self.MENU_ID}')"

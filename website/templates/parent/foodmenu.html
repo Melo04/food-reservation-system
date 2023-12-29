@@ -58,8 +58,8 @@
                                 </th>
 
                                 <td scope="px-4 py-3">
-
-                                    <select id="Day_{{ loop.index }}" name="Day_{{ loop.index }}">
+                                  
+                                    <select id="Day_{{ loop.index }}" name="Day_{{ loop.index }}" class="text-white bg-blue-700 hover:bg-blue-800 font-sm rounded-lg text-sm px-1 py-1.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700">
                                         <option value="Monday">Monday</option>
                                         <option value="Tuesday">Tuesday</option>
                                         <option value="Wednesday">Wednesday</option>
@@ -78,7 +78,7 @@
                                     <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
                                 </td>
                                 <td class="px-4 py-3 ">
-                                    <select id="StudentID" name="StudentID">
+                                    <select id="StudentID" name="StudentID" class="text-white bg-blue-700 hover:bg-blue-800 font-sm rounded-lg text-sm px-1 py-1.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700">
                                         {% for student in students %}
                                         {% for user in users %}
                                         {% if student.id == user.id%}
@@ -114,16 +114,19 @@
         if (!selectedDay) {
             selectedDay = dayDropdown.options[0].value;
         }
-        console.log('Menu ID: ', menuId);
-        console.log('Selected Day: ', selectedDay);
 
         document.getElementById('menu_id_' + rowIndex).value = menuId;
         document.getElementById('Day_' + rowIndex).value = selectedDay;
 
         document.getElementById('cartForm_' + rowIndex).submit();
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const menuSearch = document.getElementById("menu-search");
+        const menutable = document.getElementById("menuTable");
+        const menurows = menutable.getElementsByTagName("tr");
+        searchListener(menuSearch, menurows, 7);
+    });
 </script>
-
-
 
 {% endblock content %}

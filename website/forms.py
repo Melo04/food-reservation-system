@@ -164,12 +164,22 @@ class OrderForm(FlaskForm):
     menu_id = HiddenField('Menu ID')
     parent_id = HiddenField('Parent ID')
     student_id = HiddenField('Student ID')
-
     submit = SubmitField('Add to Cart')
+
+class FoodOrderForm(FlaskForm):
+    day = StringField('Order Day',
+                           validators=[DataRequired(), Length(min=2, max=20)])
+    redemption = StringField('Redemption',
+                           validators=[DataRequired()])
+    set = StringField('Menu Set',
+                        validators=[DataRequired()])
+    type = StringField('Type', validators=[DataRequired(), Length(min=2, max=20)])
+    description = StringField('Description')
+    main_course = StringField('Main Course', validators=[DataRequired(), Length(min=2, max=20)])
+    beverage = StringField('Beverage')
 
 class ReloadForm(FlaskForm):
     amount = FloatField('Reload Amount', validators=[DataRequired()])
-
     submit = SubmitField('Reload')
 
     def validate_amount(self, amount):

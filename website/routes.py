@@ -1,8 +1,8 @@
 from functools import wraps
 from flask import render_template, url_for, flash, redirect, request, current_app, session
 from website import app, db, bcrypt, mail
-from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, RequestResetForm, ResetPasswordForm, AdminUpdateProfileForm, AdminUpdateMenuForm, ItemForm, UpdateItemForm, MenuForm, UpdateMenuForm, CartForm, ReloadForm
-from website.models import USER, FOOD_ITEM, FOOD_MENU, STUDENT, PARENT, FOOD_ORDER, TRANSACTION, RELOAD, CART_ITEM
+from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, RequestResetForm, ResetPasswordForm, AdminUpdateProfileForm, AdminUpdateMenuForm, ItemForm, UpdateItemForm, MenuForm, UpdateMenuForm, CartForm, ReloadForm, FoodOrderForm
+from website.models import USER, FOOD_ITEM, FOOD_MENU, STUDENT, PARENT, FOOD_ORDER, TRANSACTION, RELOAD, CART_ITEM, PAYOUT
 from flask_login import login_user, current_user, logout_user
 from flask_mail import Message
 import stripe
@@ -11,6 +11,9 @@ import os
 from PIL import Image
 from datetime import datetime
 import decimal
+import qrcode
+from io import BytesIO
+from base64 import b64encode
 
 
 with app.app_context():
@@ -296,8 +299,22 @@ def reload_success():
 @app.route("/dashboard/student", methods=['GET', 'POST'])
 @login_required(role="student")
 def student_dashboard():
-    orders = FOOD_ORDER.query.filter_by(PARENT_ID=current_user.id).all()
-    return render_template('student/dashboard.html', orders=orders)
+    orders = FOOD_ORDER.query.filter_by(STUDENT_ID=current_user.id).all()
+    menus = FOOD_MENU.query.all()
+    transactions = TRANSACTION.query.all()
+    orderform = FoodOrderForm()
+
+    today_order = FOOD_ORDER.query.filter_by(STUDENT_ID=current_user.id, ORDER_DAY=datetime.today().strftime('%A')).first()
+    base64_img = None
+    if today_order:
+        memory = BytesIO()
+        data = today_order
+        img = qrcode.make(data)
+        img.save(memory, "PNG")
+        memory.seek(0)
+        base64_img = "data:image/png;base64," + \
+            b64encode(memory.getvalue()).decode('ascii')
+    return render_template('student/dashboard.html', orders=orders, menus=menus, transactions=transactions, orderform=orderform, data=base64_img, today_order=today_order)
 
 @app.route("/dashboard/worker", methods=['GET', 'POST'])
 @login_required(role="worker")
@@ -305,6 +322,8 @@ def worker_dashboard():
     fooditem = FOOD_ITEM.query.all()
     foodmenu = FOOD_MENU.query.all()
     orders = FOOD_ORDER.query.all()
+    transactions = TRANSACTION.query.all()
+    users = USER.query.all()
 
     itemform = ItemForm(prefix="itemform")
     itemupdateform = UpdateItemForm(prefix="itemupdateform")
@@ -378,7 +397,7 @@ def worker_dashboard():
         flash(f'Menu {menu.SET} has been updated','success')
         return redirect(url_for('worker_dashboard'))
     
-    return render_template('worker/dashboard.html', fooditem=fooditem, foodmenu=foodmenu, orders=orders, itemform=itemform, itemupdateform=itemupdateform, menuform=menuform, menuupdateform=menuupdateform)
+    return render_template('worker/dashboard.html', fooditem=fooditem, foodmenu=foodmenu, orders=orders, transactions=transactions, users=users, itemform=itemform, itemupdateform=itemupdateform, menuform=menuform, menuupdateform=menuupdateform)
 
 def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
@@ -415,7 +434,7 @@ def admin_dashboard():
     menus = FOOD_MENU.query.all()
     menupage = request.args.get('menupage', 1, type=int)
     start_menu_index = (menupage - 1) * per_page
-    end_menu_index = start_index + per_page
+    end_menu_index = start_menu_index + per_page
     paginated_menus = menus[start_menu_index:end_menu_index]
     students = STUDENT.query.all()
 
@@ -444,8 +463,8 @@ def admin_dashboard():
     profileform = UpdateProfileForm()
     orders = FOOD_ORDER.query.all()
     transactions = TRANSACTION.query.all()
-    reloads = RELOAD.query.all()
-    return render_template('admin/dashboard.html', form=form, profileform=profileform, students=students, menuform=menuform, menus=paginated_menus, users=paginated_users, page=page, menupage=menupage, per_page=per_page, total_menus=len(menus), total_users=len(users), title='Admin Dashboard', orders=orders, transactions=transactions, reloads=reloads)
+    payouts = PAYOUT.query.all()
+    return render_template('admin/dashboard.html', form=form, profileform=profileform, students=students, menuform=menuform, paginated_menus=paginated_menus, users=users, paginated_users=paginated_users, page=page, menupage=menupage, per_page=per_page, total_menus=len(menus), total_users=len(users), title='Admin Dashboard', orders=orders, transactions=transactions, payouts=payouts, menus=menus)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -499,6 +518,7 @@ def logout():
     return redirect(url_for('home'))
 
 @app.route("/profile", methods=['GET', 'POST'])
+@login_required(role="ANY")
 def profile():
     form = UpdateProfileForm()
     if form.validate_on_submit():
