@@ -19,8 +19,8 @@
         
         <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             {% if current_user.is_authenticated %}
-              <button type="button" class="text-white mr-2 hover:bg-slate-500 rounded-lg text-sm px-3 py-2 text-center">
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+              <button type="button" class="hidden sm:inline-block text-white mr-1 hover:bg-slate-500 rounded-lg text-sm px-3 py-2 text-center">
+                <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M15.133 10.632v-1.8a5.407 5.407 0 0 0-4.154-5.262.955.955 0 0 0 .021-.106V1.1a1 1 0 0 0-2 0v2.364a.944.944 0 0 0 .021.106 5.406 5.406 0 0 0-4.154 5.262v1.8C4.867 13.018 3 13.614 3 14.807 3 15.4 3 16 3.538 16h12.924C17 16 17 15.4 17 14.807c0-1.193-1.867-1.789-1.867-4.175Zm-13.267-.8a1 1 0 0 1-1-1 9.424 9.424 0 0 1 2.517-6.39A1.001 1.001 0 1 1 4.854 3.8a7.431 7.431 0 0 0-1.988 5.037 1 1 0 0 1-1 .995Zm16.268 0a1 1 0 0 1-1-1A7.431 7.431 0 0 0 15.146 3.8a1 1 0 0 1 1.471-1.354 9.425 9.425 0 0 1 2.517 6.391 1 1 0 0 1-1 .995ZM6.823 17a3.453 3.453 0 0 0 6.354 0H6.823Z"/>
                 </svg>
               </button>
@@ -43,35 +43,35 @@
         </div>
         {% if current_user.is_authenticated %}
         <div id="mobile-navbar" class="items-center hidden w-full md:flex md:w-auto md:-ml-16">
-          <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-4 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white md:dark:bg-gray-800 dark:border-gray-700">
+          <ul class="flex flex-col font-medium px-4 py-2 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-4 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white md:dark:bg-gray-800 dark:border-gray-700">
             {% if current_user.ROLE == 'parent' %}
             <li>
-              <a href="{{ url_for('parent_dashboard') }}" class="block py-2 px-3 md:py-2 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
+              <a href="{{ url_for('parent_dashboard') }}" class="block py-2 px-3 sm:py-2 my-1.5 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
             </li>
             <li>
-              <a href="{{ url_for('parent_menu') }}" class="block py-2 px-3 md:py-2 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Food Menu</a>
+              <a href="{{ url_for('parent_menu') }}" class="block py-2 px-3 md:py-2 md:px-4 my-1.5 sm:my-1 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Food Menu</a>
             </li>
             <li>
-              <a href="{{ url_for('parent_cart') }}" class="block py-2 px-3 md:py-2 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Cart</a>
+              <a href="{{ url_for('parent_cart') }}" class="block py-2 px-3 md:py-2 my-1.5 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Cart</a>
             </li>
             <li>
-              <a href="{{ url_for('parent_reload') }}" class="block py-2 px-3 md:py-2 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Reload</a>
+              <a href="{{ url_for('parent_reload') }}" class="block py-2 px-3 md:py-2 my-1.5 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Reload</a>
             </li>
             {% elif current_user.ROLE == 'student' %}
             <li>
-              <a href="{{ url_for('student_dashboard') }}" class="block py-2 px-3 md:py-2 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
+              <a href="{{ url_for('student_dashboard') }}" class="block py-2 px-3 md:py-2 my-1.5 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
             </li>
             {% elif current_user.ROLE == 'worker' %}
             <li>
-              <a href="{{ url_for('worker_dashboard') }}" class="block py-2 px-3 md:py-2 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
+              <a href="{{ url_for('worker_dashboard') }}" class="block py-2 px-3 md:py-2 my-1.5 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
             </li>
             {% elif current_user.ROLE == 'admin' %}
             <li>
-              <a href="{{ url_for('admin_dashboard') }}" class="block py-2 px-3 md:py-2 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
+              <a href="{{ url_for('admin_dashboard') }}" class="block py-2 px-3 md:py-2 my-1.5 sm:my-1 md:px-4 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Dashboard</a>
             </li>
             {% endif %}
             <li>
-              <a href="{{ url_for('profile') }}" class="block py-2 px-3 md:px-4 sm:my-1 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Profile</a>
+              <a href="{{ url_for('profile') }}" class="block py-2 px-3 md:px-4 my-1.5 sm:my-1 text-center text-blue-600 md:text-white lg:text-white rounded bg-blue-600 md:bg-transparent lg:bg-transparent hover:bg-gray-700 md:hover:bg-blue-600 md:hover:text-white dark:text-white">Profile</a>
             </li>
           </ul>
         </div>
