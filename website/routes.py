@@ -614,3 +614,7 @@ def deletemenu(id):
         return redirect(url_for('worker_dashboard'))
     flash(f'Cannot delete the menu','danger')
     return redirect(url_for('worker_dashboard'))
+    
+@app.route('/scanqr')
+def scanqr():
+    return render_template('worker/scanner.html')

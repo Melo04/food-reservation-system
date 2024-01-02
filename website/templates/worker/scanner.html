@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}QR Code Scanner{% endblock title %}
+{% block content %}
+
+<h1 class="text-xl font-bold dark:text-white text-white my-8">QR Code Scanner</h1>
+<div class="center-block" >
+    <video id="videoCam" autoplay></video>
+</div>
+
+<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let scanner = new Instascan.Scanner({ video: document.getElementById('videoCam') });
+        let scannedCodes=[];
+
+        Instascan.Camera.getCameras()
+            .then(function (cameras) {
+                if (cameras.length > 0) {
+                    scanner.start(cameras[0]);
+                } else {
+                    console.error('No cameras found.');
+                }
+            })
+            .catch(function (e) {
+                console.error(e);
+            });
+
+        scanner.addListener('scan', function (content) {
+            if (scannedCodes.includes(content)) {
+                alert('QR Code already scanned before.');
+            }
+            else{
+                alert('QR Code scanned successfully. '+content);
+                scannedCodes.push(content);
+            }
+        });
+    });
+</script>
+{% endblock content %}
