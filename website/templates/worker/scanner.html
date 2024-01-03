@@ -3,16 +3,20 @@
 {% block content %}
 
 <h1 class="text-xl font-bold dark:text-white text-white my-8">QR Code Scanner</h1>
-<div class="center-block" >
+<div class="center-block">
     <video id="videoCam" autoplay></video>
 </div>
+<br>
+
+<a href="{{ url_for('worker_dashboard') }}"
+    style="background-color: #007bff; color: black; padding: 10px 20px; border-radius: 5px; display: inline-block;">Back</a>
 
 <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         let scanner = new Instascan.Scanner({ video: document.getElementById('videoCam') });
-        let scannedCodes=[];
+        let scannedCodes = [];
 
         Instascan.Camera.getCameras()
             .then(function (cameras) {
@@ -30,11 +34,30 @@
             if (scannedCodes.includes(content)) {
                 alert('QR Code already scanned before.');
             }
-            else{
-                alert('QR Code scanned successfully. '+content);
+            else {
+                alert('QR Code scanned successfully. ' + content);
                 scannedCodes.push(content);
+
+                var orderID = content.split(',')[0];
+                //alert('Scanned Qrder ID' + orderID);
+                fetch('/update_redemption', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ order_id: orderID }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(JSON.stringify(data)); 
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+
             }
         });
+
     });
 </script>
 {% endblock content %}

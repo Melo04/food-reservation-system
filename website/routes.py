@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import render_template, url_for, flash, redirect, request, current_app, session
+from flask import jsonify, render_template, url_for, flash, redirect, request, current_app, session
 from website import app, db, bcrypt, mail
 from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, RequestResetForm, ResetPasswordForm, AdminUpdateProfileForm, AdminUpdateMenuForm, ItemForm, UpdateItemForm, MenuForm, UpdateMenuForm, CartForm, ReloadForm, FoodOrderForm
 from website.models import USER, FOOD_ITEM, FOOD_MENU, STUDENT, PARENT, FOOD_ORDER, TRANSACTION, RELOAD, CART_ITEM, PAYOUT
@@ -308,7 +308,7 @@ def student_dashboard():
     base64_img = None
     if today_order:
         memory = BytesIO()
-        data = today_order
+        data = f"{today_order.id}, Order Day:{today_order.ORDER_DAY}, Redemption:{today_order.REDEMPTION}, Menu ID:{today_order.MENU_ID}, Parent ID:{today_order.PARENT_ID}, Student ID:{today_order.STUDENT_ID}, Transaction ID:{today_order.TRANSACTION_ID}"
         img = qrcode.make(data)
         img.save(memory, "PNG")
         memory.seek(0)
@@ -618,3 +618,17 @@ def deletemenu(id):
 @app.route('/scanqr')
 def scanqr():
     return render_template('worker/scanner.html')
+
+@app.route('/update_redemption', methods=['POST'])
+def update_redemption():
+    data = request.get_json()
+    order_id = data.get('order_id')
+    print(order_id)
+    food_order = FOOD_ORDER.query.filter_by(id=order_id).first()
+    if food_order:
+        food_order.REDEMPTION =True
+        db.session.commit()
+        return jsonify({'message': 'Redemption updated successfully'})
+    else:
+        return jsonify({'error': 'Food order not found'}), 404
+    
