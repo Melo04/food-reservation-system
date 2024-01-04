@@ -2,7 +2,7 @@
 {% block title %}Dashboard{% endblock title %}
 {% block content %}
 <!-- User List -->
-<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+<section id="user" class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
         <h3 class="text-xl font-bold dark:text-white text-center my-8">User List</h3>
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -67,8 +67,8 @@
                             <th scope="col" class="px-4 py-3">Phone No.</th>
                             <th scope="col" class="px-4 py-3">Role</th>
                             <th scope="col" class="px-4 py-3">Status</th>
-                            <th scope="col" class="px-4 py-3">Parent 1 ID</th>
-                            <th scope="col" class="px-4 py-3">Parent 2 ID</th>
+                            <th scope="col" class="px-4 py-3">Parent 1</th>
+                            <th scope="col" class="px-4 py-3">Parent 2</th>
                             <th scope="col" class="px-4 py-3">Action</th>
                         </tr>
                     </thead>
@@ -85,9 +85,24 @@
                             {% if user.ROLE == 'student' %}
                                 {% for student in students %}
                                         {% if student.id == user.id %}
-                                            <td class="px-4 py-3">{{ student.STATUS }}</td>
-                                            <td class="px-4 py-3">{{ student.PARENT1_ID }}</td>
-                                            <td class="px-4 py-3">{{ student.PARENT2_ID }}</td>
+                                            <td class="px-4 py-3">
+                                                <div class="flex items-center">
+                                                    {% if student.STATUS == 'active' %}
+                                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-600"></div>
+                                                    {% else %}
+                                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-red-600"></div>
+                                                    {% endif %}
+                                                    {{ student.STATUS }}
+                                                </div>
+                                            </td>
+                                            {% for user in users %}
+                                                {% if user.id == student.PARENT1_ID %}
+                                                <td class="px-4 py-3">{{ user.FIRST_NAME }} {{ user.LAST_NAME }}</td>
+                                                {% endif %}
+                                                {% if user.id == student.PARENT2_ID %}
+                                                <td class="px-4 py-3">{{ user.FIRST_NAME }} {{ user.LAST_NAME }}</td>
+                                                {% endif %}
+                                            {% endfor %}
                                         {% endif %}
                                 {% endfor %}
                             {% else %}
@@ -185,7 +200,7 @@
 </section>
 
 <!-- Food Menu List -->
-<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+<section id="menu" class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
         <h3 class="text-xl font-bold dark:text-white text-center my-8">Food Menu List</h3>
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -261,7 +276,18 @@
                             <td class="px-4 py-3 truncate">{{ menu.DESCRIPTION }}</td>
                             <td class="px-4 py-3">{{ menu.MAIN_COURSE.NAME }}</td>
                             <td class="px-4 py-3">{{ menu.BEVERAGE.NAME }}</td>
-                            <td class="px-4 py-3">{{ menu.VISIBILITY }}</td>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center">
+                                    {% if menu.VISIBILITY == 'public' %}
+                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-600"></div>
+                                    {% elif menu.VISIBILITY == 'private' %}
+                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-red-600"></div>
+                                    {% else %}
+                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-yellow-600"></div>
+                                    {% endif %}
+                                    {{ menu.VISIBILITY }}
+                                </div>
+                            </td>
                             <td class="px-4 py-3">
                                 <img class="w-20 h-20" src="{{ url_for('static', filename='menu_pics/' + menu.IMAGE) }}" alt="{{ menu.SET }} image">
                             </td>
@@ -284,20 +310,20 @@
             <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                     Showing
-                    <span class="font-semibold text-gray-900 dark:text-white">{{ (menupage - 1) * per_page + 1 }}</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ (menu_page - 1) * per_page + 1 }}</span>
                     to
                     {% if total_menus < 5 %}
                     <span class="font-semibold text-gray-900 dark:text-white">{{ total_menus }}</span>
                     {% else %}
-                    <span class="font-semibold text-gray-900 dark:text-white">{{ per_page + (menupage - 1) * per_page }}</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ per_page + (menu_page - 1) * per_page }}</span>
                     {% endif %}
                     of
                     <span class="font-semibold text-gray-900 dark:text-white">{{ total_menus }}</span>
                 </span>
                 <ul class="inline-flex items-stretch -space-x-px">
                     <li>
-                        {% if menupage > 1 %}
-                        <a href="{{ url_for('admin_dashboard', menupage=menupage - 1) }}" class="flex items-center justify-center h-full py-1.5 px-1.5 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        {% if menu_page > 1 %}
+                        <a href="{{ url_for('admin_dashboard', menu_page=menu_page - 1) }}" class="flex items-center justify-center h-full py-1.5 px-1.5 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                             <span class="sr-only">Previous</span>
                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -314,19 +340,19 @@
                     </li>
                     {% for p in range(1, (total_menus // per_page) + 1) %}
                     <li>
-                        <a href="{{ url_for('admin_dashboard', menupage=p) }}" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ p }}</a>
+                        <a href="{{ url_for('admin_dashboard', menu_page=p) }}" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ p }}</a>
                     </li>
                     {% endfor %}
                     <li>
-                        {% if menupage < ((total_menus // per_page) + 1) %}
-                        <a href="{{ url_for('admin_dashboard', menupage=menupage + 1) }}" id="nextMenuButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        {% if menu_page < ((total_menus // per_page) + 1) %}
+                        <a href="{{ url_for('admin_dashboard', menu_page=menu_page + 1) }}" id="prevButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                             <span class="sr-only">Next</span>
                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                             </svg>
                         </a>
                         {% else %}
-                        <span id="nextMenuButton" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-300 bg-white rounded-r-lg border border-gray-300">
+                        <span id="nextButton" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-300 bg-white rounded-r-lg border border-gray-300">
                             <span class="sr-only">Next</span>
                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
@@ -341,7 +367,7 @@
 </section>
 
 <!-- Food Order List -->
-<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+<section id="order" class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
         <h3 class="text-xl font-bold dark:text-white text-center my-8">Food Order List</h3>
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -438,11 +464,15 @@
                                 {% endif %}
                             {% endfor %}
                             <td class="px-4 py-3">
-                                {% if not order.REDEMPTION%}
-                                    Not redeemed
-                                {%else%}
-                                    Redeemed
-                                {%endif%}
+                                <div class="flex items-center">
+                                    {% if not order.REDEMPTION%}
+                                        <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-red-600"></div>
+                                        Not redeemed
+                                    {%else%}
+                                        <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-600"></div>
+                                        Redeemed
+                                    {%endif%}
+                                </div>
                             </td>
                             {% for menu in menus %}
                             {% if order.MENU_ID == menu.id%}
@@ -450,7 +480,7 @@
                             <td class="px-4 py-3">{{ menu.MAIN_COURSE.NAME }}</td>
                             <td class="px-4 py-3">{{ menu.BEVERAGE.NAME }}</td>
                             <td class="px-4 py-3">
-                                <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
+                               <img class="w-20 h-20" src="{{ url_for('static', filename='menu_pics/' + menu.IMAGE) }}" alt="{{ menu.SET }} image">
                             </td>
                             {% endif %}
                             {% endfor %}
@@ -464,7 +494,7 @@
 </section>
 
 <!-- Transaction List -->
-<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+<section id="transaction" class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
         <h3 class="text-xl font-bold dark:text-white text-center my-8">Transaction List</h3>
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -552,7 +582,7 @@
 </section>
 
 <!-- Payout List -->
-<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+<section id="payout" class="bg-gray-50 dark:bg-gray-900 mb-20 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
         <h3 class="text-xl font-bold dark:text-white text-center my-8">Payout List</h3>
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -571,6 +601,12 @@
                     </form>
                 </div>
                 <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                    <button type="button" data-modal-target="createPayoutModal" data-modal-toggle="createPayoutModal" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                        <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                        </svg>
+                        Add Payout
+                    </button>
                     <div class="flex items-center space-x-3 w-full md:w-auto">
                         <button id="filterPayoutDropdownButton" data-dropdown-toggle="filterPayout" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
                             <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
@@ -613,23 +649,73 @@
                 <table id="payoutTable" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-4 py-4 text-center">ID</th>
-                            <th scope="col" class="px-4 py-4 text-center">Admin Name</th>
-                            <th scope="col" class="px-4 py-3 text-center">Amount</th>
+                            <th scope="col" class="px-4 py-4">ID</th>
+                            <th scope="col" class="px-4 py-4">Admin Name</th>
+                            <th scope="col" class="px-4 py-3">Reference</th>
+                            <th scope="col" class="px-4 py-3">Amount</th>
                             <th scope="col" class="px-4 py-3 text-center">Date Time</th>
+                            <th scope="col" class="px-4 py-3">Receipt</th>
+                            <th scope="col" class="px-4 py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for payout in payouts %}
                             <tr class="border-b dark:border-gray-700">
-                                <td class="px-4 py-3 text-center">{{ payout.id }}</td>
+                                <td class="px-4 py-3">{{ payout.id }}</td>
                                 {% for user in users %}
                                     {% if payout.ADMIN_ID == user.id%}
-                                        <td class="px-4 py-3 text-center">{{ user.FIRST_NAME }} {{ user.LAST_NAME }}</td>
+                                        <td class="px-4 py-3">{{ user.FIRST_NAME }} {{ user.LAST_NAME }}</td>
                                     {% endif %}
                                 {% endfor %}
-                                <td class="px-4 py-3 text-center">{{ payout.AMOUNT }}</td>
+                                <td class="px-4 py-3">{{ payout.REFERENCE }}</td>
+                                <td class="px-4 py-3">{{ payout.AMOUNT }}</td>
                                 <td class="px-4 py-3 text-center">{{ payout.DATE_TIME }}</td>
+                                <td class="px-4 py-3">
+                                    <button type="button" data-payout-image="{{ url_for('static', filename='payout_pics/' + payout.IMAGE) }}" class="downloadButton py-2 px-6 flex items-center justify-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-green-700 focus:ring-green-200 dark:bg-green-600 dark:text-white dark:border-green-600 dark:hover:text-green-600 hover:bg-transparent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/></svg>
+                                        Download
+                                    </button>
+                                </td>
+                                <td class="px-4 py-3 font-medium">
+                                    <div class="flex items-center space-x-7">
+                                    <button type="button" data-modal-target="updatePayoutModal" data-modal-toggle="updatePayoutModal" data-payout-id="{{ payout.id }}" data-payout-reference="{{ payout.REFERENCE }}" data-payout-amount="{{ payout.AMOUNT }}" data-payout-image="{{ payout.IMAGE }}" class="py-2 px-6 flex items-center justify-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                            <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                                        </svg>
+                                        Edit
+                                    </button>
+                                    <button type="button" data-modal-target="{{payout.id}}-deletePayoutModal" data-modal-toggle="{{payout.id}}-deletePayoutModal" class="py-2 px-6 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-red-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-red-200 dark:bg-red-600 dark:text-white dark:border-red-600 dark:hover:text-red-600 dark:hover:bg-transparent">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        </svg>
+                                        Delete
+                                    </button>
+                                    <div id="{{payout.id}}-deletePayoutModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                        <div class="relative p-4 w-full max-w-md max-h-full">
+                                            <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                                                <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="{{payout.id}}-deletePayoutModal">
+                                                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                    </svg>
+                                                    <span class="sr-only">Close modal</span>
+                                                </button>
+                                                <svg class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                </svg>
+                                                <p class="mb-4 text-gray-500 dark:text-gray-300">Are you sure you want to delete this item?</p>
+                                                <div class="flex justify-center items-center space-x-4">
+                                                    <button data-modal-toggle="{{payout.id}}-deletePayoutModal" type="button" class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
+                                                    <form action="{{ url_for('deletepayout', id=payout.id) }}" method="post">
+                                                        <button type="submit" class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">Yes, I'm sure</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -801,6 +887,134 @@
     </div>
 </div>
 
+<!-- Add Payout modal -->
+<div id="createPayoutModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+            <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Add Payout</h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-target="createPayoutModal" data-modal-toggle="createPayoutModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data">
+                {{ payoutform.hidden_tag() }}
+                <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                    <div>
+                        {{ payoutform.reference.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white")}}
+                        {% if payoutform.reference.errors %}
+                        {{ payoutform.reference(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in payoutform.reference.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ payoutform.reference(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ payoutform.amount.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white")}}
+                        {% if payoutform.amount.errors %}
+                        {{ payoutform.amount(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in payoutform.amount.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ payoutform.amount(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ payoutform.picture.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {{ payoutform.picture(class="block mb-2 bg-blue-700 text-sm font-medium text-gray-900 dark:text-white") }} 
+                        {% if payoutform.picture.errors %}
+                            {% for error in payoutform.picture.errors %}
+                            <span class="text-red-600 mt-2">{{ error }}</span><br />
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    {{ payoutform.submit(class="cursor-pointer text-white inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Update Payout modal -->
+<div id="updatePayoutModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+            <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Update Payout</h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="updatePayoutModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <form action="" method="post">
+                {{ updatepayoutform.hidden_tag() }}
+                <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                    <div>
+                        {{ updatepayoutform.id.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }} 
+                        {{ updatepayoutform.id(class="bg-gray-100 border-none text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-900 dark:text-white", readonly="readonly") }}
+                    </div>
+                    <div>
+                        {{ updatepayoutform.amount.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white")}}
+                        {% if updatepayoutform.amount.errors %}
+                        {{ updatepayoutform.amount(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in updatepayoutform.amount.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ updatepayoutform.amount(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ updatepayoutform.reference.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white")}}
+                        {% if updatepayoutform.reference.errors %}
+                        {{ updatepayoutform.reference(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in updatepayoutform.reference.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ updatepayoutform.reference(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                    <div>
+                        {{ updatepayoutform.picture.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
+                        {% if updatepayoutform.picture.errors %}
+                        {{ updatepayoutform.picture(class="bg-gray-50 border-2 border-red-600
+                        text-red-600 sm:text-sm rounded-lg focus:ring-red-900
+                        focus:border-red-600 block w-full p-2.5") }}
+                        <div class="text-red-600 mt-2">
+                            {% for error in updatepayoutform.picture.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %} {{ updatepayoutform.picture(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500") }} {% endif %}
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    {{ updatepayoutform.submit(class="cursor-pointer py-2.5 px-5 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // User Details Table
@@ -840,7 +1054,9 @@
         const payouttable = document.getElementById("payoutTable");
         const payoutrows = payouttable.getElementsByTagName("tr");
         const payoutSearch = document.getElementById("payout-search");
-
+        const downloadButtons = document.querySelectorAll('.downloadButton');
+        var updatePayoutButton = document.querySelectorAll('[data-modal-toggle="updatePayoutModal"]');
+        
         searchListener(searchInput, rows, 9);
         searchListener(menuSearch, menurows, 7);
         searchListener(orderSearch, orderrows, 8);
@@ -851,6 +1067,22 @@
         handleFilterDate(orderCheckboxes, orderrows, 2);
         handleFilterDate(transactionCheckboxes, transactionrows, 3);
         handleFilterDate(payoutCheckboxes, payoutrows, 3);
+        
+        downloadButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const image = button.getAttribute("data-payout-image");
+                downloadImage(image);
+            });
+        });
+
+        function downloadImage(imageUrl) {
+            var link = document.createElement("a");
+            link.href = imageUrl;
+            link.download = "downloaded_image.jpg";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
 
         updateButton.forEach(button => {
             button.addEventListener("click", () => {
@@ -873,6 +1105,21 @@
                 updateModal.querySelector('#visibility').value = visibility;
             });
         });
+
+        updatePayoutButton.forEach(button => {
+            button.addEventListener("click", () => {
+                const id = button.getAttribute("data-payout-id");
+                const amount = button.getAttribute("data-payout-amount");
+                const reference = button.getAttribute("data-payout-reference");
+                const image = button.getAttribute("data-payout-image");
+
+                var updateModal = document.getElementById("updatePayoutModal");
+                updateModal.querySelector('#id').value = id;
+                updateModal.querySelector('#amount').value = amount;
+                updateModal.querySelector('#reference').value = reference;
+                updateModal.querySelector('.photo-wrapper img').src = url_for('static', filename='payouts/' + image);
+            });
+        })
 
         previewButton.forEach(button => {
             button.addEventListener("click", () => {

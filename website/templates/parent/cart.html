@@ -54,7 +54,7 @@
                             <td class="px-4 py-3">{{ menu.MAIN_COURSE.NAME }}</td>
                             <td class="px-4 py-3">{{ menu.BEVERAGE.NAME }}</td>
                             <td class="px-4 py-3">
-                                <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
+                                <img class="w-20 h-20" src="{{ url_for('static', filename='menu_pics/' + menu.IMAGE) }}" alt="{{ menu.SET }} image">
                             </td>
                             <td class="px-4 py-3">{{ menu.PRICE }}</td>
                             {% endif %}

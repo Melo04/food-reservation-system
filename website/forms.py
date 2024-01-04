@@ -68,19 +68,19 @@ class UpdateProfileForm(FlaskForm):
         if username.data != current_user.USERNAME:
             user = USER.query.filter_by(USERNAME=username.data).first()
             if user:
-                raise ValidationError('That username is taken. Please choose a different one.')
+                return ValidationError('That username is taken. Please choose a different one.')
 
     def validate_email(self, email):
         if email.data != current_user.EMAIL:
             user = USER.query.filter_by(EMAIL=email.data).first()
             if user:
-                raise ValidationError('That email is taken. Please choose a different one.')
+                return ValidationError('That email is taken. Please choose a different one.')
             
     def validate_phone(self, phone):
         if phone.data != current_user.PHONE:
             user = USER.query.filter_by(PHONE=phone.data).first()
             if user:
-                raise ValidationError('That phone is taken. Please choose a different one.')
+                return ValidationError('That phone is taken. Please choose a different one.')
 
 class AdminUpdateProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
@@ -91,6 +91,19 @@ class AdminUpdateMenuForm(FlaskForm):
     set = StringField('Menu', validators=[DataRequired()])
     visibility = SelectField('Visibility', choices=[('public', 'public'), ('private', 'private'), ('pending', 'pending')])
     submit = SubmitField('Update Menu')
+
+class PayoutForm(FlaskForm):
+    amount = FloatField('Amount', validators=[DataRequired()])
+    reference = StringField('Invoice Reference', validators=[DataRequired()])
+    picture = FileField('Upload Receipt', validators=[FileAllowed(['jpg', 'png', 'pdf'])])
+    submit = SubmitField('Add Payout',validators=[DataRequired()])
+
+class UpdatePayoutForm(FlaskForm):
+    id = IntegerField('Id', validators=[DataRequired()])
+    amount = FloatField('Amount', validators=[DataRequired()])
+    reference = StringField('Invoice Reference', validators=[DataRequired()])
+    picture = FileField('Upload Receipt', validators=[FileAllowed(['jpg', 'png', 'pdf'])])
+    submit = SubmitField('Update Payout',validators=[DataRequired()])
 
 class RequestResetForm(FlaskForm):
     email = StringField('Email',

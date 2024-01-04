@@ -2,7 +2,7 @@
 {% block title %}Dashboard{% endblock title %}
 {% block content %}
 <!-- Manage Food Item  -->
-<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+<section id="food_item" class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
         <a href="{{ url_for('scanqr') }}" style="background-color: #007bff; color: black; padding: 10px 20px; border-radius: 5px; display: inline-block;">QR Code Scanner</a>
         <h3 class="text-xl font-bold dark:text-white text-center my-8">Manage Food Item</h3>
@@ -123,7 +123,7 @@
 </section>
 
 <!-- Manage Food Menu  -->
-<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+<section id="food_menu" class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
         <h3 class="text-xl font-bold dark:text-white text-center my-8">Manage Food Menu</h3>
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -177,7 +177,18 @@
                             <td class="px-4 py-3 truncate">{{ menu.DESCRIPTION }}</td>
                             <td class="px-4 py-3">{{ menu.MAIN_COURSE.NAME }}</td>
                             <td class="px-4 py-3">{{ menu.BEVERAGE.NAME }}</td>
-                            <td class="px-4 py-3">{{ menu.VISIBILITY }}</td>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center">
+                                    {% if menu.VISIBILITY == 'public' %}
+                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-600"></div>
+                                    {% elif menu.VISIBILITY == 'private' %}
+                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-red-600"></div>
+                                    {% else %}
+                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-yellow-600"></div>
+                                    {% endif %}
+                                    {{ menu.VISIBILITY }}
+                                </div>
+                            </td>
                             <td class="px-4 py-3">
                                 <img class="w-20 h-20" src="{{ url_for('static', filename='menu_pics/' + menu.IMAGE) }}" alt="{{ menu.SET }} image">
                             </td>
@@ -229,7 +240,7 @@
 </section>
 
 <!-- Food Order List -->
-<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+<section id="food_order" class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
         <h3 class="text-xl font-bold dark:text-white text-center my-8">Food Order List</h3>
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -328,11 +339,15 @@
                                 {% endif %}
                             {% endfor %}
                             <td class="px-4 py-3">
-                                {% if not order.REDEMPTION%}
-                                    Not redeemed
-                                {%else%}
-                                    Redeemed
-                                {%endif%}
+                                <div class="flex items-center">
+                                    {% if not order.REDEMPTION%}
+                                        <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-red-600"></div>
+                                        Not redeemed
+                                    {%else%}
+                                        <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-600"></div>
+                                        Redeemed
+                                    {%endif%}
+                                </div>
                             </td>
                             {% for menu in foodmenu %}
                             {% if order.MENU_ID == menu.id%}
@@ -340,7 +355,7 @@
                             <td class="px-4 py-3">{{ menu.MAIN_COURSE.NAME }}</td>
                             <td class="px-4 py-3">{{ menu.BEVERAGE.NAME }}</td>
                             <td class="px-4 py-3">
-                                <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
+                                <img class="w-20 h-20" src="{{ url_for('static', filename='menu_pics/' + menu.IMAGE) }}" alt="{{ menu.SET }} image">
                             </td>
                             {% endif %}
                             {% endfor %}

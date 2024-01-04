@@ -2,7 +2,7 @@
 {% block title %}Dashboard{% endblock title %}
 {% block content %}
 <!-- Food Order -->
-<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+<section id="order" class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
         <h3 class="text-xl font-bold dark:text-white text-center my-8">Food Order</h3>
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -95,11 +95,15 @@
                             {% endif %}
                             {% endfor %}
                             <td class="px-4 py-3">
-                                {% if not order.REDEMPTION%}
-                                Not redeemed
-                                {%else%}
-                                Redeemed
-                                {%endif%}
+                                <div class="flex items-center">
+                                    {% if not order.REDEMPTION%}
+                                        <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-red-600"></div>
+                                        Not redeemed
+                                    {%else%}
+                                        <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-600"></div>
+                                        Redeemed
+                                    {%endif%}
+                                </div>
                             </td>
                             {% for menu in menus %}
                             {% if order.MENU_ID == menu.id%}
@@ -109,7 +113,7 @@
                             <td class="px-4 py-3">{{ menu.MAIN_COURSE.NAME }}</td>
                             <td class="px-4 py-3">{{ menu.BEVERAGE.NAME }}</td>
                             <td class="px-4 py-3">
-                                <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
+                                <img class="w-20 h-20" src="{{ url_for('static', filename='menu_pics/' + menu.IMAGE) }}" alt="{{ menu.SET }} image">
                             </td>
                             {% endif %}
                             {% endfor %}
@@ -123,7 +127,7 @@
 </section>
 
 <!-- Transaction -->
-<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+<section id="transaction" class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
         <h3 class="text-xl font-bold dark:text-white text-center my-8">Transaction</h3>
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -210,7 +214,7 @@
 </section>
 
 <!-- Reload -->
-<section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+<section id="reload" class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
         <h3 class="text-xl font-bold dark:text-white text-center my-8">Reload</h3>
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">

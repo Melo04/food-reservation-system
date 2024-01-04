@@ -145,10 +145,12 @@ class PAYOUT(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
     ADMIN_ID = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     AMOUNT = db.Column(db.Numeric(10, 2), nullable=False)
+    REFERENCE = db.Column(db.String(20), nullable=False)
+    IMAGE = db.Column(db.String(30), nullable=False)
     DATE_TIME = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"PAYOUT('{self.ADMIN_ID},'{self.AMOUNT}','{self.DATE_TIME}')"
+        return f"PAYOUT('{self.ADMIN_ID},'{self.AMOUNT}','{self.IMAGE}','{self.REFERENCE}','{self.DATE_TIME}')"
     
 class CART_ITEM(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)

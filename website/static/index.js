@@ -5,6 +5,31 @@ toggleButton.addEventListener("click", function () {
   mobileNavbar.classList.toggle("hidden");
 });
 
+// document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+//     anchor.addEventListener('click', function (e) {
+//         e.preventDefault();
+
+//         const targetId = this.getAttribute('href').substring(1);
+//         const targetElement = document.getElementById(targetId);
+
+//         if (targetElement) {
+//             targetElement.scrollIntoView({
+//                 behavior: 'smooth'
+//             });
+//         }
+//     });
+// });
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      document.querySelector(this.getAttribute("href")).scrollIntoView({
+        behavior: "smooth",
+      });
+    });
+  });
+});
 function handleFilterDate(checkboxes, rows, col) {
   checkboxes.forEach(function (checkbox) {
     checkbox.addEventListener("change", function () {

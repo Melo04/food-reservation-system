@@ -75,7 +75,7 @@
                                 <td class="px-4 py-3">{{ menu.MAIN_COURSE.NAME }}</td>
                                 <td class="px-4 py-3">{{ menu.BEVERAGE.NAME }}</td>
                                 <td class="px-4 py-3">
-                                    <img class="w-20 h-20" src="{{ menu.IMAGE }}" alt="{{ menu.SET }} image">
+                                    <img class="w-20 h-20" src="{{ url_for('static', filename='menu_pics/' + menu.IMAGE) }}" alt="{{ menu.SET }} image">
                                 </td>
                                 <td class="px-4 py-3 ">
                                     <select id="StudentID" name="StudentID" class="text-white bg-blue-700 hover:bg-blue-800 font-sm rounded-lg text-sm px-1 py-1.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700">

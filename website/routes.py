@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import jsonify, render_template, url_for, flash, redirect, request, current_app, session
 from website import app, db, bcrypt, mail
-from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, RequestResetForm, ResetPasswordForm, AdminUpdateProfileForm, AdminUpdateMenuForm, ItemForm, UpdateItemForm, MenuForm, UpdateMenuForm, CartForm, ReloadForm, FoodOrderForm
+from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, RequestResetForm, ResetPasswordForm, AdminUpdateProfileForm, AdminUpdateMenuForm, PayoutForm, UpdatePayoutForm, ItemForm, UpdateItemForm, MenuForm, UpdateMenuForm, CartForm, ReloadForm, FoodOrderForm
 from website.models import USER, FOOD_ITEM, FOOD_MENU, STUDENT, PARENT, FOOD_ORDER, TRANSACTION, RELOAD, CART_ITEM, PAYOUT
 from flask_login import login_user, current_user, logout_user
 from flask_mail import Message
@@ -361,22 +361,15 @@ def worker_dashboard():
     
     # Add Menu
     elif menuform.submit.data and menuform.validate_on_submit():
-        set = menuform.set.data
-        price = menuform.price.data
-        type = menuform.type.data
-        desc = menuform.desc.data
-        main_course_id=menuform.main_course.data
-        beverage_id=menuform.beverage.data
-        visibility=menuform.visibility.data
         if menuform.picture.data:
             image_file = save_menupic(menuform.picture.data)
         else:
             image_file = 'default.jpg'
-        addmenu = FOOD_MENU(SET=set, PRICE=price, TYPE=type, DESCRIPTION=desc, IMAGE=image_file, VISIBILITY=visibility, MAIN_COURSE_ID=main_course_id, BEVERAGE_ID=beverage_id)
+        addmenu = FOOD_MENU(SET=menuform.set.data, PRICE=menuform.price.data, TYPE=menuform.type.data, DESCRIPTION=menuform.desc.data, IMAGE=image_file, VISIBILITY=menuform.visibility.data, MAIN_COURSE_ID=menuform.main_course.data, BEVERAGE_ID=menuform.beverage.data)
         with app.app_context():
             db.session.add(addmenu)
             db.session.commit()
-        flash(f'The menu {set} has been added to your database', 'success')
+        flash(f'The menu {menuform.set.data} has been added to your database', 'success')
         return redirect(url_for('worker_dashboard'))
     
     # Update Menu
@@ -421,9 +414,21 @@ def save_menupic(form_picture):
     i.save(picture_path)
     return picture_fn
 
+def save_payout(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/payout_pics', picture_fn)
+    output_size = (125,125)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+    i.save(picture_path)
+    return picture_fn
+
 @app.route("/dashboard/admin", methods=['GET', 'POST'])
 @login_required(role="admin")
 def admin_dashboard():
+    payoutform = PayoutForm()
     per_page = 5
     users = USER.query.all()
     page = request.args.get('page', 1, type=int)
@@ -432,8 +437,8 @@ def admin_dashboard():
     paginated_users = users[start_index:end_index]
 
     menus = FOOD_MENU.query.all()
-    menupage = request.args.get('menupage', 1, type=int)
-    start_menu_index = (menupage - 1) * per_page
+    menu_page = request.args.get('menu_page', 1, type=int)
+    start_menu_index = (menu_page - 1) * per_page
     end_menu_index = start_menu_index + per_page
     paginated_menus = menus[start_menu_index:end_menu_index]
     students = STUDENT.query.all()
@@ -460,11 +465,45 @@ def admin_dashboard():
         flash(f'Menu {menu.SET} Visibility has been updated!', 'success')
         return redirect(url_for('admin_dashboard'))
     
+    # Add Payout
+    if payoutform.submit.data and payoutform.validate_on_submit():
+        print(payoutform.picture.data)
+        image_file = save_payout(payoutform.picture.data)
+        addpayout = PAYOUT(ADMIN_ID=current_user.id, AMOUNT=payoutform.amount.data, IMAGE=image_file, REFERENCE=payoutform.reference.data, DATE_TIME=datetime.now().replace(microsecond=0))
+        with app.app_context():
+            db.session.add(addpayout)
+            db.session.commit()
+        flash(f'Payout has been added successfully', 'success')
+        return redirect(url_for('admin_dashboard'))
+    
+     # Update Payout
+    updatepayoutform = UpdatePayoutForm(prefix="updatepayoutform")
+    if updatepayoutform.validate_on_submit():
+        payout = PAYOUT.query.filter_by(id=updatepayoutform.id.data).first()
+        payout.AMOUNT = updatepayoutform.amount.data
+        payout.REFERENCE = updatepayoutform.reference.data
+        if updatepayoutform.picture.data:
+            picture_file = save_payout(updatepayoutform.picture.data)
+            payout.IMAGE = picture_file
+        db.session.commit()
+        flash('Payout has been updated successfully!', 'success')
+        return redirect(url_for('admin_dashboard'))
+    
     profileform = UpdateProfileForm()
     orders = FOOD_ORDER.query.all()
     transactions = TRANSACTION.query.all()
     payouts = PAYOUT.query.all()
-    return render_template('admin/dashboard.html', form=form, profileform=profileform, students=students, menuform=menuform, paginated_menus=paginated_menus, users=users, paginated_users=paginated_users, page=page, menupage=menupage, per_page=per_page, total_menus=len(menus), total_users=len(users), title='Admin Dashboard', orders=orders, transactions=transactions, payouts=payouts, menus=menus)
+    return render_template('admin/dashboard.html', form=form, payoutform=payoutform, updatepayoutform=updatepayoutform, profileform=profileform, students=students, menuform=menuform, paginated_menus=paginated_menus, users=users, paginated_users=paginated_users, page=page, menu_page=menu_page, per_page=per_page, total_menus=len(menus), total_users=len(users), title='Admin Dashboard', orders=orders, transactions=transactions, payouts=payouts, menus=menus)
+
+@app.route('/dashboard/admin/deletepayout/<int:id>',methods=['POST'])
+def deletepayout(id):
+    payout=PAYOUT.query.get_or_404(id)
+    if request.method=='POST':
+        db.session.delete(payout)
+        db.session.commit()
+        flash(f'Payout recorded at {payout.DATE_TIME} was deleted successfully','success')
+        return redirect(url_for('admin_dashboard'))
+    return redirect(url_for('admin_dashboard'))
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -520,6 +559,7 @@ def logout():
 @app.route("/profile", methods=['GET', 'POST'])
 @login_required(role="ANY")
 def profile():
+    users = USER.query.all()
     form = UpdateProfileForm()
     if form.validate_on_submit():
         if form.picture.data:
@@ -532,6 +572,16 @@ def profile():
         current_user.PHONE = form.phone.data
         if current_user.ROLE == 'parent':
             current_user.EWALLET_BALANCE = form.ewallet_balance.data
+        for user in users:
+            if user.USERNAME == form.username.data and user.id != current_user.id:
+                flash('Username already exist', 'danger')
+                return redirect(url_for('profile'))
+            elif user.EMAIL == form.email.data and user.id != current_user.id:
+                flash('Email already exist', 'danger')
+                return redirect(url_for('profile'))
+            elif user.PHONE == form.phone.data and user.id != current_user.id:
+                flash('Phone number already exist', 'danger')
+                return redirect(url_for('profile'))
         db.session.commit()
         flash('Your profile has been updated!', 'success')
         return redirect(url_for('profile'))
