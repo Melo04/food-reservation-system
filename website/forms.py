@@ -6,33 +6,6 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 from website.models import USER
 from website import bcrypt
 
-class RegistrationForm(FlaskForm):
-    role = StringField('Role', validators=[DataRequired()])
-    username = StringField('Username',
-                           validators=[DataRequired(), Length(min=2, max=20)])
-    email = StringField('Email',
-                        validators=[DataRequired(), Email()])
-    firstname = StringField('First Name', validators=[DataRequired(), Length(min=2, max=20)])
-    lastname = StringField('Last Name')
-    phone = StringField('Phone', validators=[Length(min=2, max=20)])
-    password = PasswordField('Password', validators=[DataRequired()])
-    parent1_id = StringField('Parent1Id (for student)')
-    parent2_id = StringField('Parent2Id (for student)')
-    status = StringField('Status (for student)')
-    confirm_password = PasswordField('Confirm Password',
-                                     validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Sign Up')
-
-    def validate_username(self, username):
-        user = USER.query.filter_by(USERNAME=username.data).first()
-        if user:
-            raise ValidationError('That username is taken. Please choose a different one.')
-
-    def validate_email(self, email):
-        user = USER.query.filter_by(EMAIL=email.data).first()
-        if user:
-            raise ValidationError('That email is taken. Please choose a different one.')
-
 class LoginForm(FlaskForm):
     username = StringField('Username',
                         validators=[DataRequired(), Length(min=2, max=20)])

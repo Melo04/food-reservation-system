@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Chrome, Safari, Edge, Opera */
 input[type="number"].no-spinner::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {

@@ -118,7 +118,7 @@
                             </td>
                             <td class="px-4 py-3 font-medium">
                                 <div class="flex items-center space-x-7">
-                                    <button type="button" data-modal-target="viewOrderModal" data-modal-toggle="viewOrderModal" data-day="{{ order.ORDER_DAY }}" data-redemption="{{ order.REDEMPTION }}" data-set="{{ menu.SET }}" data-type="{{ menu.TYPE }}" data-desc="{{ menu.DESCRIPTION }}" data-main-course="{{ menu.MAIN_COURSE.NAME }}" data-beverage="{{ menu.BEVERAGE.NAME }}" class="py-2 px-6 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-green-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-green-700 focus:ring-green-200 dark:bg-green-600 dark:text-white dark:border-green-600 dark:hover:text-green-600 dark:hover:bg-transparent">
+                                    <button type="button" data-modal-target="viewOrderModal" data-modal-toggle="viewOrderModal" data-day="{{ order.ORDER_DAY }}" data-redemption="{{ order.REDEMPTION }}" data-set="{{ menu.SET }}" data-type="{{ menu.TYPE }}" data-desc="{{ menu.DESCRIPTION }}" data-main-course="{{ menu.MAIN_COURSE.NAME }}" data-beverage="{{ menu.BEVERAGE.NAME }}" class="py-2 px-6 flex items-center justify-center text-sm font-medium text-center text-white hover:text-green-500 focus:outline-none bg-green-500 rounded-lg border border-green-500 hover:bg-transparent dark:bg-green-500 dark:text-white dark:border-green-500 dark:hover:text-green-500 dark:hover:bg-transparent">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                             <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                             <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
@@ -148,7 +148,7 @@
                 </svg>
                 <span class="sr-only">Close modal</span>
             </button>
-            <div id="qr" class="hidden p-4 mb-4 text-sm text-center text-green-800 rounded-lg bg-green-50 dark:bg-green-600 dark:text-white" role="alert">
+            <div id="qr" class="hidden p-4 mb-4 text-sm text-center text-white rounded-lg bg-green-400 dark:bg-green-500 dark:text-white" role="alert">
                 Display your QR Code below to redeem your food order today
             </div>
             {% if data %}

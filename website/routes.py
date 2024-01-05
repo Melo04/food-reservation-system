@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import jsonify, render_template, url_for, flash, redirect, request, current_app, session
 from website import app, db, bcrypt, mail
-from website.forms import RegistrationForm, LoginForm, UpdateProfileForm, RequestResetForm, ResetPasswordForm, AdminUpdateProfileForm, AdminUpdateMenuForm, PayoutForm, UpdatePayoutForm, ItemForm, UpdateItemForm, MenuForm, UpdateMenuForm, CartForm, ReloadForm, FoodOrderForm
+from website.forms import LoginForm, UpdateProfileForm, RequestResetForm, ResetPasswordForm, AdminUpdateProfileForm, AdminUpdateMenuForm, PayoutForm, UpdatePayoutForm, ItemForm, UpdateItemForm, MenuForm, UpdateMenuForm, CartForm, ReloadForm, FoodOrderForm
 from website.models import USER, FOOD_ITEM, FOOD_MENU, STUDENT, PARENT, FOOD_ORDER, TRANSACTION, RELOAD, CART_ITEM, PAYOUT
 from flask_login import login_user, current_user, logout_user
 from flask_mail import Message
@@ -504,28 +504,6 @@ def deletepayout(id):
         flash(f'Payout recorded at {payout.DATE_TIME} was deleted successfully','success')
         return redirect(url_for('admin_dashboard'))
     return redirect(url_for('admin_dashboard'))
-
-@app.route("/register", methods=['GET', 'POST'])
-def register():
-    check_role()
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8') 
-        if form.role.data == 'parent':
-            parent = PARENT(USERNAME=form.username.data, EMAIL=form.email.data, FIRST_NAME=form.firstname.data, LAST_NAME=form.lastname.data, PHONE=form.phone.data, ROLE=form.role.data, PASSWORD=hashed_password, EWALLET_BALANCE=0)
-            db.session.add(parent)
-            db.session.commit()
-        elif form.role.data == 'student':
-            student = STUDENT(USERNAME=form.username.data, EMAIL=form.email.data, FIRST_NAME=form.firstname.data, LAST_NAME=form.lastname.data, PHONE=form.phone.data, ROLE=form.role.data, PASSWORD=hashed_password, STATUS='active', PARENT1_ID=form.parent1_id.data, PARENT2_ID=form.parent2_id.data)
-            db.session.add(student)
-            db.session.commit()
-        else:
-            user = USER(USERNAME=form.username.data, EMAIL=form.email.data, FIRST_NAME=form.firstname.data, LAST_NAME=form.lastname.data, PHONE=form.phone.data, ROLE=form.role.data, PASSWORD=hashed_password)
-            db.session.add(user)
-            db.session.commit()
-        flash('Your account has been created! You are now able to log in', 'success')
-        return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():

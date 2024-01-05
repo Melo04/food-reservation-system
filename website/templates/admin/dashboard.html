@@ -88,7 +88,7 @@
                                             <td class="px-4 py-3">
                                                 <div class="flex items-center">
                                                     {% if student.STATUS == 'active' %}
-                                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-600"></div>
+                                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-500"></div>
                                                     {% else %}
                                                     <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-red-600"></div>
                                                     {% endif %}
@@ -112,7 +112,7 @@
                             {% endif %}
                             <td class="px-4 py-3 font-medium">
                                 <div class="flex items-center space-x-7">
-                                    <button type="button" data-modal-target="readUserModal" data-modal-toggle="readUserModal" data-user-id="{{ user.id }}" data-user-image="{{ user.IMAGE }}" data-user-username="{{ user.USERNAME }}" data-user-email="{{ user.EMAIL }}" data-user-firstname="{{ user.FIRST_NAME }}" data-user-lastname="{{ user.LAST_NAME }}" data-user-phone="{{ user.PHONE }}" data-user-role="{{ user.ROLE }}" class="py-2 px-6 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-green-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-green-700 focus:ring-green-200 dark:bg-green-600 dark:text-white dark:border-green-600 dark:hover:text-green-600 dark:hover:bg-transparent">
+                                    <button type="button" data-modal-target="readUserModal" data-modal-toggle="readUserModal" data-user-id="{{ user.id }}" data-user-image="{{ user.IMAGE }}" data-user-username="{{ user.USERNAME }}" data-user-email="{{ user.EMAIL }}" data-user-firstname="{{ user.FIRST_NAME }}" data-user-lastname="{{ user.LAST_NAME }}" data-user-phone="{{ user.PHONE }}" data-user-role="{{ user.ROLE }}" class="py-2 px-6 flex items-center justify-center text-sm font-medium text-center text-white hover:text-green-500 focus:outline-none bg-green-500 rounded-lg border border-green-500 hover:bg-transparent dark:bg-green-500 dark:text-white dark:border-green-500 dark:hover:text-green-500 dark:hover:bg-transparent">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                             <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                             <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
@@ -122,7 +122,7 @@
                                     {% if user.ROLE == 'student' %}
                                     {% for student in students %}
                                         {% if student.id == user.id %}
-                                        <button type="button" data-modal-target="updateUserModal" data-modal-toggle="updateUserModal" data-user-username="{{ user.USERNAME }}" data-user-status="{{ student.STATUS }}" class="py-2 px-6 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-blue-600 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent">
+                                        <button type="button" data-modal-target="updateUserModal" data-modal-toggle="updateUserModal" data-user-username="{{ user.USERNAME }}" data-user-status="{{ student.STATUS }}" class="py-2 px-6 flex items-center text-sm font-medium text-center text-white hover:text-blue-600 focus:outline-none bg-blue-600 rounded-lg border border-blue-600 hover:bg-transparent hover:text-primary-700 focus:ring-blue-600 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                 <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                                 <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
@@ -279,11 +279,11 @@
                             <td class="px-4 py-3">
                                 <div class="flex items-center">
                                     {% if menu.VISIBILITY == 'public' %}
-                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-600"></div>
+                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-500"></div>
                                     {% elif menu.VISIBILITY == 'private' %}
                                     <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-red-600"></div>
                                     {% else %}
-                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-yellow-600"></div>
+                                    <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-yellow-200"></div>
                                     {% endif %}
                                     {{ menu.VISIBILITY }}
                                 </div>
@@ -293,7 +293,7 @@
                             </td>
                             <td class="px-4 py-3 font-medium">
                                 <div class="flex items-center space-x-7">
-                                    <button type="button" data-modal-target="updateMenuModal" data-modal-toggle="updateMenuModal" data-menu-id="{{ menu.id }}" data-menu-set="{{ menu.SET }}" data-menu-visibility="{{ menu.VISIBILITY }}" class="py-2 px-6 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent">
+                                    <button type="button" data-modal-target="updateMenuModal" data-modal-toggle="updateMenuModal" data-menu-id="{{ menu.id }}" data-menu-set="{{ menu.SET }}" data-menu-visibility="{{ menu.VISIBILITY }}" class="py-2 px-6 flex items-center text-sm font-medium text-center text-white hover:text-blue-600 focus:outline-none bg-blue-600 rounded-lg border border-blue-600 hover:bg-transparent hover:text-primary-700 focus:ring-blue-600 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                             <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                             <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
@@ -469,7 +469,7 @@
                                         <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-red-600"></div>
                                         Not redeemed
                                     {%else%}
-                                        <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-600"></div>
+                                        <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-500"></div>
                                         Redeemed
                                     {%endif%}
                                 </div>
@@ -582,7 +582,7 @@
 </section>
 
 <!-- Payout List -->
-<section id="payout" class="bg-gray-50 dark:bg-gray-900 mb-20 p-3 sm:p-5 antialiased">
+<section id="payout" class="bg-gray-50 dark:bg-gray-900 sm:pb-20 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
         <h3 class="text-xl font-bold dark:text-white text-center my-8">Payout List</h3>
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -671,7 +671,7 @@
                                 <td class="px-4 py-3">{{ payout.AMOUNT }}</td>
                                 <td class="px-4 py-3 text-center">{{ payout.DATE_TIME }}</td>
                                 <td class="px-4 py-3">
-                                    <button type="button" data-payout-image="{{ url_for('static', filename='payout_pics/' + payout.IMAGE) }}" class="downloadButton py-2 px-6 flex items-center justify-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-green-700 focus:ring-green-200 dark:bg-green-600 dark:text-white dark:border-green-600 dark:hover:text-green-600 hover:bg-transparent">
+                                    <button type="button" data-payout-image="{{ url_for('static', filename='payout_pics/' + payout.IMAGE) }}" class="downloadButton py-2 px-6 flex items-center justify-center text-sm font-medium text-center text-white hover:text-green-500 focus:outline-none bg-green-500 rounded-lg border border-green-500 hover:bg-transparent dark:bg-green-500 dark:text-white dark:border-green-500 dark:hover:text-green-500 dark:hover:bg-transparent">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true">
                                         <path fill-rule="evenodd" d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/></svg>
                                         Download
@@ -679,14 +679,14 @@
                                 </td>
                                 <td class="px-4 py-3 font-medium">
                                     <div class="flex items-center space-x-7">
-                                    <button type="button" data-modal-target="updatePayoutModal" data-modal-toggle="updatePayoutModal" data-payout-id="{{ payout.id }}" data-payout-reference="{{ payout.REFERENCE }}" data-payout-amount="{{ payout.AMOUNT }}" data-payout-image="{{ payout.IMAGE }}" class="py-2 px-6 flex items-center justify-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent">
+                                    <button type="button" data-modal-target="updatePayoutModal" data-modal-toggle="updatePayoutModal" data-payout-id="{{ payout.id }}" data-payout-reference="{{ payout.REFERENCE }}" data-payout-amount="{{ payout.AMOUNT }}" data-payout-image="{{ payout.IMAGE }}" class="py-2 px-6 flex items-center text-sm font-medium text-center text-white hover:text-blue-600 focus:outline-none bg-blue-600 rounded-lg border border-blue-600 hover:bg-transparent hover:text-primary-700 focus:ring-blue-600 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                             <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                             <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
                                         </svg>
                                         Edit
                                     </button>
-                                    <button type="button" data-modal-target="{{payout.id}}-deletePayoutModal" data-modal-toggle="{{payout.id}}-deletePayoutModal" class="py-2 px-6 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-red-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:ring-red-200 dark:bg-red-600 dark:text-white dark:border-red-600 dark:hover:text-red-600 dark:hover:bg-transparent">
+                                    <button type="button" data-modal-target="{{payout.id}}-deletePayoutModal" data-modal-toggle="{{payout.id}}-deletePayoutModal" class="py-2 px-6 flex items-center text-sm font-medium text-center text-white hover:text-red-600 focus:outline-none bg-red-600 rounded-lg border border-red-600 hover:bg-transparent hover:text-primary-700 dark:bg-red-600 dark:text-white dark:border-red-600 dark:hover:text-red-600 dark:hover:bg-transparent">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                             <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                                         </svg>
@@ -762,7 +762,7 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    {{ form.submit(class="cursor-pointer text-blue-600 inline-flex items-center hover:text-white border border-blue-600 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-900") }}
+                    {{ form.submit(class="cursor-pointer text-white inline-flex items-center border border-blue-600 bg-blue-600 hover:bg-transparent hover:text-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-transparent dark:hover:text-blue-600") }}
                 </div>
             </form>
         </div>
@@ -880,7 +880,7 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    {{ menuform.submit(class="text-blue-600 inline-flex items-center hover:text-white border border-blue-600 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-900") }}
+                    {{ menuform.submit(class="cursor-pointer text-white inline-flex items-center border border-blue-600 bg-blue-600 hover:bg-transparent hover:text-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-transparent dark:hover:text-blue-600") }}
                 </div>
             </form>
         </div>
@@ -931,7 +931,7 @@
                     </div>
                     <div>
                         {{ payoutform.picture.label(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }}
-                        {{ payoutform.picture(class="block mb-2 bg-blue-700 text-sm font-medium text-gray-900 dark:text-white") }} 
+                        {{ payoutform.picture(class="block mb-2 text-sm font-medium text-gray-900 dark:text-white") }} 
                         {% if payoutform.picture.errors %}
                             {% for error in payoutform.picture.errors %}
                             <span class="text-red-600 mt-2">{{ error }}</span><br />
@@ -940,7 +940,7 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    {{ payoutform.submit(class="cursor-pointer text-white inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800") }}
+                    {{ payoutform.submit(class="cursor-pointer text-white inline-flex items-center border border-blue-600 bg-blue-600 hover:bg-transparent hover:text-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-transparent dark:hover:text-blue-600") }}
                 </div>
             </form>
         </div>
@@ -1008,7 +1008,7 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    {{ updatepayoutform.submit(class="cursor-pointer py-2.5 px-5 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-blue-600 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-blue-200 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent") }}
+                    {{ updatepayoutform.submit(class="cursor-pointer text-white inline-flex items-center border border-blue-600 bg-blue-600 hover:bg-transparent hover:text-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-transparent dark:hover:text-blue-600") }}
                 </div>
             </form>
         </div>
