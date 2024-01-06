@@ -29,6 +29,22 @@ def worker_dashboard():
     transactions = TRANSACTION.query.all()
     users = USER.query.all()
 
+    per_page = 5
+    food_item_page = request.args.get('food_item_page', 1, type=int)
+    start_item_index = (food_item_page - 1) * per_page
+    end_item_index = start_item_index + per_page
+    paginated_items = fooditem[start_item_index:end_item_index]
+
+    food_menu_page = request.args.get('food_menu_page', 1, type=int)
+    start_menu_index = (food_menu_page - 1) * per_page
+    end_menu_index = start_menu_index + per_page
+    paginated_menus = foodmenu[start_menu_index:end_menu_index]
+
+    order_page = request.args.get('order_page', 1, type=int)
+    start_order_index = (order_page - 1) * per_page
+    end_order_index = start_order_index + per_page
+    paginated_orders = orders[start_order_index:end_order_index]
+
     itemform = ItemForm(prefix="itemform")
     itemupdateform = UpdateItemForm(prefix="itemupdateform")
     menuform = MenuForm(prefix="menuform")
@@ -94,7 +110,7 @@ def worker_dashboard():
         flash(f'Menu {menu.SET} has been updated','success')
         return redirect(url_for('worker.worker_dashboard'))
     
-    return render_template('worker/dashboard.html', fooditem=fooditem, foodmenu=foodmenu, orders=orders, transactions=transactions, users=users, itemform=itemform, itemupdateform=itemupdateform, menuform=menuform, menuupdateform=menuupdateform)
+    return render_template('worker/dashboard.html', fooditem=fooditem, foodmenu=foodmenu, orders=orders, transactions=transactions, users=users, itemform=itemform, itemupdateform=itemupdateform, menuform=menuform, menuupdateform=menuupdateform, paginated_items=paginated_items, paginated_menus=paginated_menus, paginated_orders=paginated_orders, food_item_page=food_item_page, food_menu_page=food_menu_page, order_page=order_page, per_page=per_page, total_items=len(fooditem), total_menus=len(foodmenu), total_orders=len(orders))
 
 @worker.route('/dashboard/worker/deleteitem/<int:id>',methods=['POST'])
 def deleteitem(id):

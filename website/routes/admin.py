@@ -27,10 +27,10 @@ def admin_dashboard():
     payoutform = PayoutForm()
     per_page = 5
     users = USER.query.all()
-    page = request.args.get('page', 1, type=int)
-    start_index = (page - 1) * per_page
-    end_index = start_index + per_page
-    paginated_users = users[start_index:end_index]
+    user_page = request.args.get('user_page', 1, type=int)
+    start_user_index = (user_page - 1) * per_page
+    end_user_index = start_user_index + per_page
+    paginated_users = users[start_user_index:end_user_index]
 
     menus = FOOD_MENU.query.all()
     menu_page = request.args.get('menu_page', 1, type=int)
@@ -38,6 +38,24 @@ def admin_dashboard():
     end_menu_index = start_menu_index + per_page
     paginated_menus = menus[start_menu_index:end_menu_index]
     students = STUDENT.query.all()
+
+    orders = FOOD_ORDER.query.all()
+    order_page = request.args.get('order_page', 1, type=int)
+    start_order_index = (order_page - 1) * per_page
+    end_order_index = start_order_index + per_page
+    paginated_orders = orders[start_order_index:end_order_index]
+
+    transactions = TRANSACTION.query.all()
+    transaction_page = request.args.get('transaction_page', 1, type=int)
+    start_transaction_index = (transaction_page - 1) * per_page
+    end_transaction_index = start_transaction_index + per_page
+    paginated_transactions = transactions[start_transaction_index:end_transaction_index]
+
+    payouts = PAYOUT.query.all()
+    payout_page = request.args.get('payout_page', 1, type=int)
+    start_payout_index = (payout_page - 1) * per_page
+    end_payout_index = start_payout_index + per_page
+    paginated_payouts = payouts[start_payout_index:end_payout_index]
 
     # Update User Status
     form = AdminUpdateProfileForm()
@@ -86,10 +104,8 @@ def admin_dashboard():
         return redirect(url_for('admin.admin_dashboard'))
     
     profileform = UpdateProfileForm()
-    orders = FOOD_ORDER.query.all()
-    transactions = TRANSACTION.query.all()
-    payouts = PAYOUT.query.all()
-    return render_template('admin/dashboard.html', form=form, payoutform=payoutform, updatepayoutform=updatepayoutform, profileform=profileform, students=students, menuform=menuform, paginated_menus=paginated_menus, users=users, paginated_users=paginated_users, page=page, menu_page=menu_page, per_page=per_page, total_menus=len(menus), total_users=len(users), title='Admin Dashboard', orders=orders, transactions=transactions, payouts=payouts, menus=menus)
+    return render_template('admin/dashboard.html', form=form, payoutform=payoutform, updatepayoutform=updatepayoutform, profileform=profileform, students=students, menuform=menuform, paginated_menus=paginated_menus, users=users, paginated_users=paginated_users, paginated_orders=paginated_orders, paginated_transactions=paginated_transactions, paginated_payouts=paginated_payouts, user_page=user_page, menu_page=menu_page, order_page=order_page, transaction_page=transaction_page, payout_page=payout_page,
+                            per_page=per_page, total_menus=len(menus), total_users=len(users), total_orders=len(orders), total_transactions=len(transactions), total_payouts=len(payouts), title='Admin Dashboard', orders=orders, transactions=transactions, payouts=payouts, menus=menus)
 
 @admin.route('/dashboard/admin/deletepayout/<int:id>',methods=['POST'])
 def deletepayout(id):

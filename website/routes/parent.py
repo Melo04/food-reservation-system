@@ -17,7 +17,24 @@ def parent_dashboard():
     orders = FOOD_ORDER.query.filter_by(PARENT_ID=current_user.id).all()
     transactions = TRANSACTION.query.filter_by(PARENT_ID=current_user.id).all()
     reloads = RELOAD.query.filter_by(PARENT_ID=current_user.id).all()
-    return render_template('parent/dashboard.html', users=users,orders=orders, transactions=transactions, reloads=reloads,menus=menus)
+
+    per_page = 5
+    order_page = request.args.get('order_page', 1, type=int)
+    start_order_index = (order_page - 1) * per_page
+    end_order_index = start_order_index + per_page
+    paginated_orders = orders[start_order_index:end_order_index]
+
+    transaction_page = request.args.get('transaction_page', 1, type=int)
+    start_transaction_index = (transaction_page - 1) * per_page
+    end_transaction_index = start_transaction_index + per_page
+    paginated_transactions = transactions[start_transaction_index:end_transaction_index]
+
+    reload_page = request.args.get('reload_page', 1, type=int)
+    start_reload_index = (reload_page - 1) * per_page
+    end_reload_index = start_reload_index + per_page
+    paginated_reloads = reloads[start_reload_index:end_reload_index]
+
+    return render_template('parent/dashboard.html', users=users,orders=orders, transactions=transactions, reloads=reloads,menus=menus, per_page=per_page, paginated_orders=paginated_orders, paginated_transactions=paginated_transactions, paginated_reloads=paginated_reloads, order_page=order_page, transaction_page=transaction_page, reload_page=reload_page, total_orders=len(orders), total_transactions=len(transactions), total_reloads=len(reloads))
 
 @parent.route("/foodmenu", methods=['GET', 'POST'])
 @login_required(role="parent")

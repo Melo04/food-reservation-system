@@ -143,20 +143,20 @@
             <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                     Showing
-                    <span class="font-semibold text-gray-900 dark:text-white">{{ (page - 1) * per_page + 1 }}</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ (user_page - 1) * per_page + 1 }}</span>
                     to
                     {% if total_users < 5 %}
                     <span class="font-semibold text-gray-900 dark:text-white">{{ total_users }}</span>
                     {% else %}
-                    <span class="font-semibold text-gray-900 dark:text-white">{{ per_page + (page - 1) * per_page }}</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ per_page + (user_page - 1) * per_page }}</span>
                     {% endif %}
                     of
                     <span class="font-semibold text-gray-900 dark:text-white">{{ total_users }}</span>
                 </span>
                 <ul class="inline-flex items-stretch -space-x-px">
                     <li>
-                        {% if page > 1 %}
-                        <a href="{{ url_for('admin.admin_dashboard', page=page - 1) }}" class="flex items-center justify-center h-full py-1.5 px-1.5 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        {% if user_page > 1 %}
+                        <a href="{{ url_for('admin.admin_dashboard', user_page=user_page - 1) }}" class="flex items-center justify-center h-full py-1.5 px-1.5 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                             <span class="sr-only">Previous</span>
                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -171,14 +171,14 @@
                         </span>
                         {% endif %}
                     </li>
-                    {% for p in range(1, (total_users // per_page) + 2) %}
+                    {% for p in range(0, (total_users / per_page)|round(method='ceil')|int) %}
                     <li>
-                        <a href="{{ url_for('admin.admin_dashboard', page=p) }}" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ p }}</a>
+                        <a href="{{ url_for('admin.admin_dashboard', user_page=p+1) }}" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ p+1 }}</a>
                     </li>
                     {% endfor %}
                     <li>
-                        {% if page < (total_users // per_page) + 1 %}
-                        <a href="{{ url_for('admin.admin_dashboard', page=page + 1) }}" id="prevButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        {% if user_page < (total_users / per_page)|round(method='ceil')|int %}
+                        <a href="{{ url_for('admin.admin_dashboard', user_page=user_page + 1) }}" id="prevButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                             <span class="sr-only">Next</span>
                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
@@ -268,8 +268,7 @@
                     <tbody>
                       {% for menu in paginated_menus %}
                         <tr class="border-b dark:border-gray-700">
-                            <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
-                            loop.index }}</th>
+                            <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ menu.id }}</th>
                             <td class="px-4 py-3">{{ menu.SET }}</td>
                             <td class="px-4 py-3">{{ menu.PRICE }}</td>
                             <td class="px-4 py-3">{{ menu.TYPE }}</td>
@@ -338,13 +337,13 @@
                         </span>
                         {% endif %}
                     </li>
-                    {% for p in range(1, (total_menus // per_page) + 1) %}
+                    {% for p in range(0, (total_menus / per_page)|round(method='ceil')|int) %}
                     <li>
-                        <a href="{{ url_for('admin.admin_dashboard', menu_page=p) }}" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ p }}</a>
+                        <a href="{{ url_for('admin.admin_dashboard', menu_page=p+1) }}" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ p+1 }}</a>
                     </li>
                     {% endfor %}
                     <li>
-                        {% if menu_page < ((total_menus // per_page) + 1) %}
+                        {% if menu_page < (total_menus / per_page)|round(method='ceil')|int %}
                         <a href="{{ url_for('admin.admin_dashboard', menu_page=menu_page + 1) }}" id="prevButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                             <span class="sr-only">Next</span>
                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -352,7 +351,7 @@
                             </svg>
                         </a>
                         {% else %}
-                        <span id="nextButton" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-300 bg-white rounded-r-lg border border-gray-300">
+                        <span id="nextButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-300 bg-white rounded-r-lg border border-gray-300">
                             <span class="sr-only">Next</span>
                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
@@ -446,7 +445,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for order in orders %}
+                        {% for order in paginated_orders %}
                         <tr class="border-b dark:border-gray-700">
                             <td class="px-4 py-3">{{ order.id }}</td>
                             <td class="px-4 py-3">{{ order.ORDER_DAY }}</td>
@@ -489,6 +488,61 @@
                     </tbody>
                 </table>
             </div>
+            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                    Showing
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ (order_page - 1) * per_page + 1 }}</span>
+                    to
+                    {% if total_orders < 5 %}
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ total_orders }}</span>
+                    {% else %}
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ per_page + (order_page - 1) * per_page }}</span>
+                    {% endif %}
+                    of
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ total_orders }}</span>
+                </span>
+                <ul class="inline-flex items-stretch -space-x-px">
+                    <li>
+                        {% if order_page > 1 %}
+                        <a href="{{ url_for('admin.admin_dashboard', order_page=order_page - 1) }}" class="flex items-center justify-center h-full py-1.5 px-1.5 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        {% else %}
+                        <span class="flex items-center justify-center h-full py-1.5 px-1.5 ml-0 text-gray-300 bg-white rounded-l-lg border border-gray-300">
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        {% endif %}
+                    </li>
+                    {% for p in range(0, (total_orders / per_page)|round(method='ceil')|int) %}
+                    <li>
+                        <a href="{{ url_for('admin.admin_dashboard', order_page=p+1) }}" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ p+1 }}</a>
+                    </li>
+                    {% endfor %}
+                    <li>
+                        {% if order_page < (total_orders / per_page)|round(method='ceil')|int %}
+                        <a href="{{ url_for('admin.admin_dashboard', order_page=order_page + 1) }}" id="prevButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span class="sr-only">Next</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        {% else %}
+                        <span id="nextButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-300 bg-white rounded-r-lg border border-gray-300">
+                            <span class="sr-only">Next</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </section>
@@ -562,7 +616,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                      {% for transaction in transactions %}
+                      {% for transaction in paginated_transactions %}
                           <tr class="border-b dark:border-gray-700">
                             <td class="px-4 py-3 text-center">{{ transaction.id }}</td>
                             {% for user in users %}
@@ -577,6 +631,61 @@
                     </tbody>
                 </table>
             </div>
+            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                    Showing
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ (transaction_page - 1) * per_page + 1 }}</span>
+                    to
+                    {% if total_orders < 5 %}
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ total_transactions }}</span>
+                    {% else %}
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ per_page + (transaction_page - 1) * per_page }}</span>
+                    {% endif %}
+                    of
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ total_transactions }}</span>
+                </span>
+                <ul class="inline-flex items-stretch -space-x-px">
+                    <li>
+                        {% if transaction_page > 1 %}
+                        <a href="{{ url_for('admin.admin_dashboard', transaction_page=transaction_page - 1) }}" class="flex items-center justify-center h-full py-1.5 px-1.5 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        {% else %}
+                        <span class="flex items-center justify-center h-full py-1.5 px-1.5 ml-0 text-gray-300 bg-white rounded-l-lg border border-gray-300">
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        {% endif %}
+                    </li>
+                    {% for p in range(0, (total_transactions / per_page)|round(method='ceil')|int) %}
+                    <li>
+                        <a href="{{ url_for('admin.admin_dashboard', transaction_page=p+1) }}" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ p+1 }}</a>
+                    </li>
+                    {% endfor %}
+                    <li>
+                        {% if transaction_page < (total_transactions / per_page)|round(method='ceil')|int %}
+                        <a href="{{ url_for('admin.admin_dashboard', transaction_page=transaction_page + 1) }}" id="prevButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span class="sr-only">Next</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        {% else %}
+                        <span id="nextButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-300 bg-white rounded-r-lg border border-gray-300">
+                            <span class="sr-only">Next</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </section>
@@ -659,7 +768,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for payout in payouts %}
+                        {% for payout in paginated_payouts %}
                             <tr class="border-b dark:border-gray-700">
                                 <td class="px-4 py-3">{{ payout.id }}</td>
                                 {% for user in users %}
@@ -721,6 +830,61 @@
                     </tbody>
                 </table>
             </div>
+            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                    Showing
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ (payout_page - 1) * per_page + 1 }}</span>
+                    to
+                    {% if total_payouts < 5 %}
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ total_payouts }}</span>
+                    {% else %}
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ per_page + (payout_page - 1) * per_page }}</span>
+                    {% endif %}
+                    of
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ total_payouts }}</span>
+                </span>
+                <ul class="inline-flex items-stretch -space-x-px">
+                    <li>
+                        {% if payout_page > 1 %}
+                        <a href="{{ url_for('admin.admin_dashboard', payout_page=payout_page - 1) }}" class="flex items-center justify-center h-full py-1.5 px-1.5 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        {% else %}
+                        <span class="flex items-center justify-center h-full py-1.5 px-1.5 ml-0 text-gray-300 bg-white rounded-l-lg border border-gray-300">
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        {% endif %}
+                    </li>
+                    {% for p in range(0, (total_payouts / per_page)|round(method='ceil')|int) %}
+                    <li>
+                        <a href="{{ url_for('admin.admin_dashboard', payout_page=p+1) }}" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ p+1 }}</a>
+                    </li>
+                    {% endfor %}
+                    <li>
+                        {% if payout_page < (total_payouts / per_page)|round(method='ceil')|int %}
+                        <a href="{{ url_for('admin.admin_dashboard', payout_page=payout_page + 1) }}" id="prevButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span class="sr-only">Next</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        {% else %}
+                        <span id="nextButton" class="flex items-center justify-center h-full py-1.5 px-1.5 leading-tight text-gray-300 bg-white rounded-r-lg border border-gray-300">
+                            <span class="sr-only">Next</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </section>
@@ -1055,7 +1219,7 @@
         searchListener(menuSearch, menurows, 7);
         searchListener(orderSearch, orderrows, 8);
         searchListener(transactionSearch, transactionrows, 3);
-        searchListener(payoutSearch, payoutrows, 3);
+        searchListener(payoutSearch, payoutrows, 4);
         handleFilter(roleCheckboxes, rows, 6);
         handleFilter(visibilityCheckboxes, menurows, 7);
         handleFilterDate(orderCheckboxes, orderrows, 2);

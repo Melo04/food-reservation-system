@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from flask_login import current_user
 from website.routes.main import login_required
 from website.models import *
@@ -17,6 +17,12 @@ def student_dashboard():
     transactions = TRANSACTION.query.all()
     orderform = FoodOrderForm()
 
+    per_page = 5
+    order_page = request.args.get('order_page', 1, type=int)
+    start_order_index = (order_page - 1) * per_page
+    end_order_index = start_order_index + per_page
+    paginated_orders = orders[start_order_index:end_order_index]
+
     today_order = FOOD_ORDER.query.filter_by(STUDENT_ID=current_user.id, ORDER_DAY=datetime.today().strftime('%A')).first()
     base64_img = None
     if today_order:
@@ -27,4 +33,4 @@ def student_dashboard():
         memory.seek(0)
         base64_img = "data:image/png;base64," + \
             b64encode(memory.getvalue()).decode('ascii')
-    return render_template('student/dashboard.html', orders=orders, menus=menus, transactions=transactions, orderform=orderform, data=base64_img, today_order=today_order)
+    return render_template('student/dashboard.html', orders=orders, menus=menus, transactions=transactions, orderform=orderform, data=base64_img, today_order=today_order, per_page=per_page, paginated_orders=paginated_orders, order_page=order_page, total_orders=len(orders))
