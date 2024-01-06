@@ -48,7 +48,7 @@
                         {{ form.hidden_tag() }}
                         {% for menu in menus %}
                         {% if menu.VISIBILITY == 'public' %}
-                        <form method="post" action="{{ url_for('parent_cart') }}" id="cartForm_{{ loop.index }}">
+                        <form method="post" action="{{ url_for('parent.parent_cart') }}" id="cartForm_{{ loop.index }}">
                             <tr class="border-b dark:border-gray-700">
                                 <th scope="row" data-menu-id="{{ menu.id }}"
                                     class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{

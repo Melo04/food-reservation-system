@@ -20,7 +20,7 @@ with app.app_context():
     db.create_all()
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'main.login'
 login_manager.login_message_category='info'
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
@@ -34,5 +34,14 @@ stripe.api_key = app.config['STRIPE_SECRET_KEY']
 
 mail = Mail(app)
 
+from website.routes.main import main
+from website.routes.parent import parent
+from website.routes.student import student
+from website.routes.worker import worker
+from website.routes.admin import admin
 
-from website import routes
+app.register_blueprint(main)
+app.register_blueprint(parent)
+app.register_blueprint(student)
+app.register_blueprint(worker)
+app.register_blueprint(admin)

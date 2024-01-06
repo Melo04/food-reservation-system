@@ -28,7 +28,7 @@
                             <!-- {{ form.csrf_token }}
                         {{ form.hidden_tag() }} -->
                             {% for cart in carts %}
-                            <!-- <form method="post" action="{{ url_for('parent_cart') }}" id="DeleteCartForm_{{ loop.index }}"> -->
+                            <!-- <form method="post" action="{{ url_for('parent.parent_cart') }}" id="DeleteCartForm_{{ loop.index }}"> -->
                         <tr class="border-b dark:border-gray-700">
                             <th scope="row" data-cart-id="{{ cart.id }}"
                                 class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
@@ -60,7 +60,7 @@
                             {% endif %}
                             {% endfor %}
                             <td class="px-4 py-3">
-                                <form action="{{ url_for('deleteCart', cart_id=cart.id)}}" method="post">
+                                <form action="{{ url_for('parent.deleteCart', cart_id=cart.id)}}" method="post">
                                     <button type="submit"
                                         class="py-2 px-5 text-sm font-medium text-center text-white bg-red-600 border border-red-600 rounded-lg hover:bg-transparent hover:text-red-600 focus:ring-4 focus:outline-none dark:bg-red-500 dark:hover:text-red-500 dark:hover:bg-transparent">
                                         Delete</button>
@@ -77,7 +77,7 @@
                             <td class="px-4 py-3 font-bold text-end">Total price: </td>
                             <td class="px-4 py-3 font-bold text-end">{{total_price}}</td>
                             <td class="px-4 py-3 text-end" colspan="2">
-                                <form action="{{ url_for('pay')}}" method="post">
+                                <form action="{{ url_for('parent.pay')}}" method="post">
                                     <button type="submit"
                                         class="py-2 px-6 flex items-center text-sm font-medium text-center text-white hover:text-blue-600 focus:outline-none bg-blue-600 rounded-lg border border-blue-600 hover:bg-transparent hover:text-primary-700 focus:ring-blue-600 dark:bg-blue-600 dark:text-white dark:border-blue-600 dark:hover:text-blue-600 dark:hover:bg-transparent">
                                         Pay</button>

@@ -6,7 +6,7 @@
 {% endblock header %}
 
 {% block content2 %}
-    <form action="{{ url_for('reload_validate') }}" method="POST" onsubmit="return validateForm();">
+    <form action="{{ url_for('parent.reload_validate') }}" method="POST" onsubmit="return validateForm();">
         {{ reloadForm.hidden_tag() }}
         <div class="-mx-4 flex flex-wrap">
             <div class="w-full px-4 md:w-1/2 lg:w-1/3">
