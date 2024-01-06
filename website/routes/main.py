@@ -171,3 +171,21 @@ def reset_token(token):
         flash('Your password has been updated! You are now able to log in', 'success')
         return redirect(url_for('main.login'))
     return render_template('reset_token.html', title='Reset Password', form=form)
+
+@main.route("/change_password", methods=['GET', 'POST'])
+@login_required(role="ANY")
+def change_password():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        if bcrypt.check_password_hash(current_user.PASSWORD, form.old_password.data):
+            if bcrypt.check_password_hash(current_user.PASSWORD, form.new_password.data):
+                flash('New password cannot be the same as old password', 'danger')
+            else:
+                hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
+                current_user.PASSWORD = hashed_password
+                db.session.commit()
+                flash('Your password has been updated!', 'success')
+                return redirect(url_for('main.profile'))
+        else:
+            flash('Incorrect old password', 'danger')
+    return render_template('change_password.html', title='Change Password', form=form)

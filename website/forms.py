@@ -94,6 +94,13 @@ class ResetPasswordForm(FlaskForm):
                                      validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
 
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField('Old Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password', validators=[DataRequired()])
+    confirm_new_password = PasswordField('Confirm New Password',
+                                     validators=[DataRequired(), EqualTo('new_password', message='Password does not match with new password')])
+    submit = SubmitField('Change Password')
+
 class ItemForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     type = SelectField('Type', choices=[('Main Course', 'Main Course'), ('Beverage', 'Beverage')])
