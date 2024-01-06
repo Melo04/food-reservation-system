@@ -24,7 +24,8 @@ def save_payout(form_picture):
 @admin.route("/dashboard/admin", methods=['GET', 'POST'])
 @login_required(role="admin")
 def admin_dashboard():
-    payoutform = PayoutForm()
+    payoutform = PayoutForm(prefix="payoutform")
+    updatepayoutform = UpdatePayoutForm(prefix="updatepayoutform")
     per_page = 5
     users = USER.query.all()
     user_page = request.args.get('user_page', 1, type=int)
@@ -80,8 +81,7 @@ def admin_dashboard():
         return redirect(url_for('admin.admin_dashboard'))
     
     # Add Payout
-    if payoutform.submit.data and payoutform.validate_on_submit():
-        print(payoutform.picture.data)
+    elif payoutform.submit.data and payoutform.validate_on_submit():
         image_file = save_payout(payoutform.picture.data)
         addpayout = PAYOUT(ADMIN_ID=current_user.id, AMOUNT=payoutform.amount.data, IMAGE=image_file, REFERENCE=payoutform.reference.data, DATE_TIME=datetime.now().replace(microsecond=0))
         with app.app_context():
@@ -90,15 +90,14 @@ def admin_dashboard():
         flash(f'Payout has been added successfully', 'success')
         return redirect(url_for('admin.admin_dashboard'))
     
-     # Update Payout
-    updatepayoutform = UpdatePayoutForm()
-    if updatepayoutform.validate_on_submit():
+    # Update Payout
+    elif updatepayoutform.submit.data and updatepayoutform.validate_on_submit():
         payout = PAYOUT.query.filter_by(id=updatepayoutform.id.data).first()
-        payout.AMOUNT = updatepayoutform.amount.data
-        payout.REFERENCE = updatepayoutform.reference.data
         if updatepayoutform.picture.data:
             picture_file = save_payout(updatepayoutform.picture.data)
             payout.IMAGE = picture_file
+        payout.AMOUNT = updatepayoutform.amount.data
+        payout.REFERENCE = updatepayoutform.reference.data
         db.session.commit()
         flash('Payout has been updated successfully!', 'success')
         return redirect(url_for('admin.admin_dashboard'))

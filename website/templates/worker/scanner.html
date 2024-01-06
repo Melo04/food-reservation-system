@@ -2,14 +2,17 @@
 {% block title %}QR Code Scanner{% endblock title %}
 {% block content %}
 
-<h1 class="text-xl font-bold dark:text-white text-white my-8">QR Code Scanner</h1>
-<div class="center-block">
-    <video id="videoCam" autoplay></video>
+<h1 class="text-xl font-bold dark:text-white text-center pt-14 pb-8">QR Code Scanner</h1>
+<div class="flex items-center justify-center flex-col">
+    <video id="videoCam" autoplay class="w-full max-w-lg mb-10"></video>
+    <div class="flex items-center justify-center w-4/12">
+        <a href="{{ url_for('worker.worker_dashboard') }}" class="w-full cursor-pointer text-white bg-blue-600
+        hover:bg-transparent hover:text-blue-600 focus:ring-4 focus:outline-none
+        focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5
+        text-center hover:cursor border border-blue-600 dark:bg-blue-600 dark:hover:bg-transparent dark:hover:text-blue-600">Back</a>
+    </div>
 </div>
 <br>
-
-<a href="{{ url_for('worker.worker_dashboard') }}"
-    style="background-color: #007bff; color: black; padding: 10px 20px; border-radius: 5px; display: inline-block;">Back</a>
 
 <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 
@@ -54,7 +57,6 @@
                     .catch(error => {
                         console.error('Error:', error);
                     });
-
             }
         });
 

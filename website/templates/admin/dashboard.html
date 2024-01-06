@@ -112,7 +112,7 @@
                             {% endif %}
                             <td class="px-4 py-3 font-medium">
                                 <div class="flex items-center space-x-7">
-                                    <button type="button" data-modal-target="readUserModal" data-modal-toggle="readUserModal" data-user-id="{{ user.id }}" data-user-image="{{ user.IMAGE }}" data-user-username="{{ user.USERNAME }}" data-user-email="{{ user.EMAIL }}" data-user-firstname="{{ user.FIRST_NAME }}" data-user-lastname="{{ user.LAST_NAME }}" data-user-phone="{{ user.PHONE }}" data-user-role="{{ user.ROLE }}" class="py-2 px-6 flex items-center justify-center text-sm font-medium text-center text-white hover:text-green-500 focus:outline-none bg-green-500 rounded-lg border border-green-500 hover:bg-transparent dark:bg-green-500 dark:text-white dark:border-green-500 dark:hover:text-green-500 dark:hover:bg-transparent">
+                                    <button type="button" data-modal-target="readUserModal" data-modal-toggle="readUserModal" data-user-id="{{ user.id }}" data-user-image="{{ url_for('static', filename='profile_pics/' + user.IMAGE) }}" data-user-username="{{ user.USERNAME }}" data-user-email="{{ user.EMAIL }}" data-user-firstname="{{ user.FIRST_NAME }}" data-user-lastname="{{ user.LAST_NAME }}" data-user-phone="{{ user.PHONE }}" data-user-role="{{ user.ROLE }}" class="py-2 px-6 flex items-center justify-center text-sm font-medium text-center text-white hover:text-green-500 focus:outline-none bg-green-500 rounded-lg border border-green-500 hover:bg-transparent dark:bg-green-500 dark:text-white dark:border-green-500 dark:hover:text-green-500 dark:hover:bg-transparent">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                             <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                             <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
@@ -946,15 +946,14 @@
                 </button>
             </div>
             <form
-            method="GET"
             action=""
             class="space-y-4 md:space-y-6"
             >
-            <div class="photo-wrapper p-2">
-                <img class="w-32 h-32 rounded-full mx-auto" src="{{ url_for('static', filename='profile_pics/' + 'default.png') }}" alt="profile picture">
-            </div>
-                {{ profileform.hidden_tag() }}
-                <fieldset class="form-group">
+            {{ profileform.hidden_tag() }}
+            <fieldset class="form-group">
+                <div class="photo-wrapper p-2">
+                    <img class="w-32 h-32 rounded-full mx-auto" src="" alt="profile picture">
+                </div>
                 <div class="mb-4">
                     {{ profileform.username.label(class="block mb-2 text-md font-medium
                     text-gray-900 dark:text-white") }}
@@ -1124,7 +1123,7 @@
                     <span class="sr-only">Close modal</span>
                 </button>
             </div>
-            <form action="" method="post">
+            <form action="" method="post" enctype="multipart/form-data">
                 {{ updatepayoutform.hidden_tag() }}
                 <div class="grid gap-4 mb-4 sm:grid-cols-2">
                     <div>
@@ -1272,11 +1271,11 @@
                 const image = button.getAttribute("data-payout-image");
                 
                 var updateModal = document.getElementById("updatePayoutModal");
-                console.log(updateModal);
-                updateModal.querySelector('#id').value = id;
-                updateModal.querySelector('#amount').value = amount;
-                updateModal.querySelector('#reference').value = reference;
-                updateModal.querySelector('.photo-wrapper img').src = url_for('static', filename='payout_pics/' + image);
+                updateModal.querySelector('#updatepayoutform-id').value = id;
+                updateModal.querySelector('#updatepayoutform-amount').value = amount;
+                updateModal.querySelector('#updatepayoutform-reference').value = reference;
+                var img = updateModal.querySelector('#updatepayoutform-picture');
+                img.setAttribute('src', image);
             });
         })
 
@@ -1296,7 +1295,8 @@
                 readModal.querySelector('#firstname').value = firstname;
                 readModal.querySelector('#lastname').value = lastname;
                 readModal.querySelector('#phone').value = phone;        
-                readModal.querySelector('.photo-wrapper img').src = url_for('static', filename='profile_pics/' + image);
+                var img = readModal.querySelector('.photo-wrapper img');
+                img.setAttribute('src', image);
             });
         });
     });

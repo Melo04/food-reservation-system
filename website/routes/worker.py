@@ -50,7 +50,7 @@ def worker_dashboard():
     menuform = MenuForm(prefix="menuform")
     menuform.main_course.choices = [(item.id, item.NAME) for item in FOOD_ITEM.query.filter_by(TYPE='Main Course').all()]
     menuform.beverage.choices = [(item.id, item.NAME) for item in FOOD_ITEM.query.filter_by(TYPE='Beverage').all()]
-    menuupdateform = UpdateMenuForm(request.form, prefix="menuupdateform")
+    menuupdateform = UpdateMenuForm(prefix="menuupdateform")
     menuupdateform.main_course.choices = [(item.id, item.NAME) for item in FOOD_ITEM.query.filter_by(TYPE='Main Course').all()]
     menuupdateform.beverage.choices = [(item.id, item.NAME) for item in FOOD_ITEM.query.filter_by(TYPE='Beverage').all()]
         
@@ -93,8 +93,11 @@ def worker_dashboard():
         return redirect(url_for('worker.worker_dashboard'))
     
     # Update Menu
-    elif menuupdateform.submit.data and request.method == 'POST':
+    if menuupdateform.submit.data and menuupdateform.validate_on_submit():
         menu = FOOD_MENU.query.filter_by(id=menuupdateform.id.data).first()
+        if menuupdateform.picture.data:
+            picture_file = save_menupic(menuupdateform.picture.data)
+            menu.IMAGE = picture_file
         menu.id = menuupdateform.id.data
         menu.SET = menuupdateform.set.data
         menu.PRICE = menuupdateform.price.data
@@ -103,9 +106,6 @@ def worker_dashboard():
         menu.MAIN_COURSE_ID = menuupdateform.main_course.data
         menu.BEVERAGE_ID = menuupdateform.beverage.data
         menu.VISIBILITY=menuupdateform.visibility.data
-        if menuupdateform.picture.data:
-            picture_file = save_menupic(menuupdateform.picture.data)
-            menu.IMAGE = picture_file
         db.session.commit()
         flash(f'Menu {menu.SET} has been updated','success')
         return redirect(url_for('worker.worker_dashboard'))
