@@ -5,28 +5,30 @@
 2. After that, type in ```py -3 -m venv .venv``` to create a virtual environment
 3. Type in ```.venv\Scripts\activate``` to activate the virtual environment
 4. Type in ```pip install -r requirements.txt``` to install all the required packages
-5. Type in ```flask run --debug``` to run the web app
-6. Type in ```touch .env``` to create a .env file
-7. In .env file, add the following lines
+5. Make sure that you have [Node.js](https://nodejs.org) installed on your local machine. If not, download it from [here](https://nodejs.org/en/download/).
+6. Type in ```npm install``` to install the required packages for tailwindcss
+7. Type in ```touch .env``` to create a .env file
+8. In .env file, add the following lines
 ```
 MAIL_USERNAME='abcd'
 MAIL_PASSWORD='abcd'
 STRIPE_PUBLISHABLE_KEY = pk_test_51OCfhxI9ysZrioEOxypihfuI4gL4H9QTfw1DaXMzI2U4gvr75904h6zhsjXx0QjqChZtaL60idisv9QOckZzmijW00PFlHe8DW
 STRIPE_SECRET_KEY = sk_test_51OCfhxI9ysZrioEOEOZ9WsjSie9zS2WkAnQgsTRlI9UfIabM7AMovAwSWY6Toz8IWXvXyJKc4g2dTs5Fcf6H63ZJ002lOFU2MP
 ```
+9. Type in ```flask run --debug``` to run the web app
 
 ## __Credentials__
 1. Parent <br>
-    id: parent1, parent2, parent3 <br>
+    Username: parent1, parent2 <br>
     Password: parent123
 2. Canteen Worker <br>
-    id: worker1, worker2, worker3 <br>
+    Username: worker1, worker2 <br>
     Password: worker123
 3. Student <br>
-   id: student1, student2, student3 <br>
-   Password: student123
+    Username: student1, student2 <br>
+    Password: student123
 4. Admin <br>
-   id: admin1, admin2, admin3 <br>
+    Username: admin1, admin2 <br>
     Password: admin123
 
 ## __Stripe Checkout__
