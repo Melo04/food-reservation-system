@@ -81,7 +81,17 @@ def admin_dashboard():
         return redirect(url_for('admin.admin_dashboard'))
     
     # Add Payout
-    elif payoutform.submit.data and payoutform.validate_on_submit():
+    if payoutform.submit.data and payoutform.validate_on_submit():
+        payout_error = PAYOUT.query.filter_by(REFERENCE=payoutform.reference.data).first()
+        if payout_error:
+            flash(f'Failed to add payout. This reference has already exists in your database.', 'danger')
+            return redirect(url_for('admin.admin_dashboard') + '#payout')
+        elif payoutform.amount.data < 0 or payoutform.amount.data == 0:
+            flash(f'Failed to add payout. Please enter a valid amount.', 'danger')
+            return redirect(url_for('admin.admin_dashboard') + '#payout')
+        elif  payoutform.picture.data.filename[-4:] not in ['jpg', 'png', 'jpeg']:
+            flash(f'Update failed. Invalid file type. Only jpg, png, and jpeg are allowed.', 'danger')
+            return redirect(url_for('admin.admin_dashboard') + '#payout')
         image_file = save_payout(payoutform.picture.data)
         addpayout = PAYOUT(ADMIN_ID=current_user.id, AMOUNT=payoutform.amount.data, IMAGE=image_file, REFERENCE=payoutform.reference.data, DATE_TIME=datetime.now().replace(microsecond=0))
         with app.app_context():
@@ -93,6 +103,16 @@ def admin_dashboard():
     # Update Payout
     elif updatepayoutform.submit.data and updatepayoutform.validate_on_submit():
         payout = PAYOUT.query.filter_by(id=updatepayoutform.id.data).first()
+        payout_error = PAYOUT.query.filter_by(REFERENCE=updatepayoutform.reference.data).first()
+        if payout_error and (payout.REFERENCE != updatepayoutform.reference.data):
+            flash(f'Update failed. This reference has already exists in your database.', 'danger')
+            return redirect(url_for('admin.admin_dashboard') + '#payout')
+        elif updatepayoutform.amount.data < 0 or updatepayoutform.amount.data == 0:
+            flash(f'Update failed. Please enter a valid amount.', 'danger')
+            return redirect(url_for('admin.admin_dashboard') + '#payout')
+        elif updatepayoutform.picture.data.filename[-4:] not in ['jpg', 'png', 'jpeg']:
+            flash(f'Update failed. Invalid file type. Only jpg, png, and jpeg are allowed.', 'danger')
+            return redirect(url_for('admin.admin_dashboard') + '#payout')
         if updatepayoutform.picture.data:
             picture_file = save_payout(updatepayoutform.picture.data)
             payout.IMAGE = picture_file

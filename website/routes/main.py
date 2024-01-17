@@ -102,13 +102,13 @@ def profile():
             current_user.EWALLET_BALANCE = form.ewallet_balance.data
         for user in users:
             if user.USERNAME == form.username.data and user.id != current_user.id:
-                flash('Username already exist', 'danger')
+                flash('That username is taken. Please enter a different username.', 'danger')
                 return redirect(url_for('main.profile'))
             elif user.EMAIL == form.email.data and user.id != current_user.id:
-                flash('Email already exist', 'danger')
+                flash('That email is taken. Please enter a different email.', 'danger')
                 return redirect(url_for('main.profile'))
             elif user.PHONE == form.phone.data and user.id != current_user.id:
-                flash('Phone number already exist', 'danger')
+                flash('That phone is taken. Please enter a different phone number.', 'danger')
                 return redirect(url_for('main.profile'))
         db.session.commit()
         flash('Your profile has been updated!', 'success')

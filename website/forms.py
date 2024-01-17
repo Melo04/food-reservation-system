@@ -37,24 +37,6 @@ class UpdateProfileForm(FlaskForm):
     parent_id = StringField('ParentId (if student)')
     submit = SubmitField('Update Profile')
 
-    def validate_username(self, username):
-        if username.data != current_user.USERNAME:
-            user = USER.query.filter_by(USERNAME=username.data).first()
-            if user:
-                return ValidationError('That username is taken. Please choose a different one.')
-
-    def validate_email(self, email):
-        if email.data != current_user.EMAIL:
-            user = USER.query.filter_by(EMAIL=email.data).first()
-            if user:
-                return ValidationError('That email is taken. Please choose a different one.')
-            
-    def validate_phone(self, phone):
-        if phone.data != current_user.PHONE:
-            user = USER.query.filter_by(PHONE=phone.data).first()
-            if user:
-                return ValidationError('That phone is taken. Please choose a different one.')
-
 class AdminUpdateProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     status = SelectField('Status', choices=[('active', 'active'), ('inactive', 'inactive')])
@@ -68,14 +50,14 @@ class AdminUpdateMenuForm(FlaskForm):
 class PayoutForm(FlaskForm):
     amount = FloatField('Amount', validators=[DataRequired()])
     reference = StringField('Invoice Reference', validators=[DataRequired()])
-    picture = FileField('Upload Receipt', validators=[FileAllowed(['jpg', 'png', 'pdf'])])
+    picture = FileField('Upload Receipt')
     submit = SubmitField('Add Payout',validators=[DataRequired()])
 
 class UpdatePayoutForm(FlaskForm):
     id = IntegerField('Id', validators=[DataRequired()])
     amount = FloatField('Amount', validators=[DataRequired()])
     reference = StringField('Invoice Reference', validators=[DataRequired()])
-    picture = FileField('Upload Receipt', validators=[FileAllowed(['jpg', 'png', 'pdf'])])
+    picture = FileField('Upload Receipt')
     submit = SubmitField('Update Payout',validators=[DataRequired()])
 
 class RequestResetForm(FlaskForm):
@@ -86,7 +68,7 @@ class RequestResetForm(FlaskForm):
     def validate_email(self, email):
         user = USER.query.filter_by(EMAIL=email.data).first()
         if user is None:
-            raise ValidationError('There is no account with that email. You must register first.')
+            raise ValidationError('There is no account with that email.')
         
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
@@ -124,7 +106,7 @@ class MenuForm(FlaskForm):
     visibility=SelectField('Visibility',choices=[('private','private'),('pending','set to public')])
     main_course = SelectField('Main Course', coerce=int, validators=[DataRequired()])
     beverage = SelectField('Beverage', coerce=int, validators=[DataRequired()])
-    picture = FileField('Menu Picture', validators=[FileAllowed(['jpg', 'png'])])
+    picture = FileField('Menu Picture')
     submit = SubmitField('Add Menu',validators=[DataRequired()])
 
 class UpdateMenuForm(FlaskForm):
@@ -136,7 +118,7 @@ class UpdateMenuForm(FlaskForm):
     visibility=SelectField('Visibility',choices=[('private','private'),('pending','set to public')])
     main_course = SelectField('Main Course', coerce=int, validators=[DataRequired()])
     beverage = SelectField('Beverage',coerce=int, validators=[DataRequired()])
-    picture = FileField('Update Menu Picture', validators=[FileAllowed(['jpg', 'png'])])
+    picture = FileField('Update Menu Picture')
     submit = SubmitField('Update Menu',validators=[DataRequired()])
 
 class CartForm(FlaskForm):

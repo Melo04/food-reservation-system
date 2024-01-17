@@ -60,6 +60,16 @@ def worker_dashboard():
         type = itemform.type.data
         quantity = itemform.quantity.data
         remarks = itemform.remarks.data
+        name_error = FOOD_ITEM.query.filter_by(NAME=name).first() 
+        if name_error:
+            flash(f'Failed to add Food Item. {name} already exists in your database', 'danger')
+            return redirect(url_for('worker.worker_dashboard') + '#food_item')
+        elif quantity < 2:
+            flash(f'Failed to add Food Item. Quantity cannot be less than 3', 'danger')
+            return redirect(url_for('worker.worker_dashboard') + '#food_item')
+        elif quantity > 10000:
+            flash(f'Failed to add Food Item. Quantity cannot be more than 10,000', 'danger')
+            return redirect(url_for('worker.worker_dashboard') + '#food_item')
         add_item = FOOD_ITEM(NAME=name, TYPE=type, QUANTITY=quantity,REMARKS=remarks)
         with app.app_context():
             db.session.add(add_item)
@@ -70,6 +80,16 @@ def worker_dashboard():
     # Update Food Item
     elif itemupdateform.submit.data and itemupdateform.validate_on_submit():
         item = FOOD_ITEM.query.filter_by(id=itemupdateform.id.data).first()
+        name_error = FOOD_ITEM.query.filter_by(NAME=itemupdateform.name.data).first()
+        if name_error and (item.NAME != itemupdateform.name.data): 
+            flash(f'Update failed. {itemupdateform.name.data} already exists in your database', 'danger')
+            return redirect(url_for('worker.worker_dashboard') + '#food_item')
+        elif itemupdateform.quantity.data < 2:
+            flash(f'Update failed. Quantity cannot be less than 3', 'danger')
+            return redirect(url_for('worker.worker_dashboard') + '#food_item')
+        elif itemupdateform.quantity.data > 10000:
+            flash(f'Updated failed. Quantity cannot be more than 10,000', 'danger')
+            return redirect(url_for('worker.worker_dashboard') + '#food_item')
         item.id = itemupdateform.id.data
         item.NAME = itemupdateform.name.data
         item.TYPE = itemupdateform.type.data
@@ -81,6 +101,16 @@ def worker_dashboard():
     
     # Add Menu
     elif menuform.submit.data and menuform.validate_on_submit():
+        menu_error = FOOD_MENU.query.filter_by(SET=menuform.set.data).first()
+        if menu_error:
+            flash(f'Failed to Add Menu. Menu Set {menuform.set.data} already exists in your database', 'danger')
+            return redirect(url_for('worker.worker_dashboard') + '#food_menu')
+        elif menuform.price.data < 0 or menuform.price.data == 0:
+            flash(f'Failed to Add Menu. Please enter a valid price', 'danger')
+            return redirect(url_for('worker.worker_dashboard') + '#food_menu')
+        elif menuform.picture.data.filename[-4:] not in ['.jpg', '.png', 'jpeg']:
+            flash('Failed to Add Menu. Invalid file type. Only jpg, jpeg and png extensions are allowed.', 'danger')
+            return redirect(url_for('worker.worker_dashboard') + '#food_menu')
         if menuform.picture.data:
             image_file = save_menupic(menuform.picture.data)
         else:
@@ -93,8 +123,18 @@ def worker_dashboard():
         return redirect(url_for('worker.worker_dashboard'))
     
     # Update Menu
-    if menuupdateform.submit.data and menuupdateform.validate_on_submit():
+    elif menuupdateform.submit.data and menuupdateform.validate_on_submit():
         menu = FOOD_MENU.query.filter_by(id=menuupdateform.id.data).first()
+        menu_error = FOOD_MENU.query.filter_by(SET=menuupdateform.set.data).first()
+        if menu_error and (menu.SET != menuupdateform.set.data):
+            flash(f'Update failed. Menu Set {menuupdateform.set.data} already exists in your database', 'danger')
+            return redirect(url_for('worker.worker_dashboard') + '#food_menu')
+        elif menuupdateform.price.data < 0 or menuupdateform.price.data == 0:
+            flash(f'Update failed. Please enter a valid price', 'danger')
+            return redirect(url_for('worker.worker_dashboard') + '#food_menu')
+        elif menuupdateform.picture.data.filename[-4:] not in ['jpg', 'png', 'jpeg']:
+            flash('Update failed. Invalid file type. Only jpg, jpeg and png extensions are allowed.', 'danger')
+            return redirect(url_for('worker.worker_dashboard') + '#food_menu')
         if menuupdateform.picture.data:
             picture_file = save_menupic(menuupdateform.picture.data)
             menu.IMAGE = picture_file
