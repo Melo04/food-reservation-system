@@ -134,7 +134,7 @@ def worker_dashboard():
             flash(f'Update failed. Please enter a valid price', 'danger')
             return redirect(url_for('worker.worker_dashboard') + '#food_menu')
         if menuupdateform.picture.data:
-            if menuupdateform.picture.data.filename[-4:] not in ['jpg', 'png', 'jpeg']:
+            if menuupdateform.picture.data.filename[-4:] not in ['.jpg', '.png', 'jpeg']:
                 flash('Update failed. Invalid file type. Only jpg, jpeg and png extensions are allowed.', 'danger')
                 return redirect(url_for('worker.worker_dashboard') + '#food_menu')
             else:
