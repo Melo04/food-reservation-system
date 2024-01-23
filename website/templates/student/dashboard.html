@@ -100,11 +100,15 @@
                                 {% endif %}
                             {% endfor %}
                             <td class="px-4 py-3">
-                                {% if not order.REDEMPTION%}
-                                Not redeemed
-                                {%else%}
-                                Redeemed
-                                {%endif%}
+                                <div class="flex items-center">
+                                    {% if not order.REDEMPTION%}
+                                        <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-red-600"></div>
+                                        Not redeemed
+                                    {%else%}
+                                        <div class="h-2.5 w-2.5 rounded-full inline-block mr-2 bg-green-500"></div>
+                                        Redeemed
+                                    {%endif%}
+                                </div>
                             </td>
                             {% for menu in menus %}
                             {% if order.MENU_ID == menu.id%}

@@ -91,7 +91,7 @@
                             {% endfor %}
                             {% for user in users %}
                             {% if order.STUDENT_ID == user.id%}
-                            <td class="px-4 py-3 text-center">{{ user.FIRST_NAME }}</td>
+                            <td class="px-4 py-3 text-center">{{ user.LAST_NAME }} {{ user.FIRST_NAME }}</td>
                             {% endif %}
                             {% endfor %}
                             <td class="px-4 py-3">

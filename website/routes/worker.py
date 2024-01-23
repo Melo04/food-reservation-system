@@ -25,9 +25,10 @@ def save_menupic(form_picture):
 def worker_dashboard():
     fooditem = FOOD_ITEM.query.all()
     foodmenu = FOOD_MENU.query.all()
-    orders = FOOD_ORDER.query.all()
+    foodorders = FOOD_ORDER.query.all()
     transactions = TRANSACTION.query.all()
     users = USER.query.all()
+    orders = sorted(foodorders, key=lambda x: x.transaction.DATE_TIME if x.transaction else None, reverse=True)
 
     per_page = 5
     food_item_page = request.args.get('food_item_page', 1, type=int)
@@ -132,12 +133,15 @@ def worker_dashboard():
         elif menuupdateform.price.data < 0 or menuupdateform.price.data == 0:
             flash(f'Update failed. Please enter a valid price', 'danger')
             return redirect(url_for('worker.worker_dashboard') + '#food_menu')
-        elif menuupdateform.picture.data.filename[-4:] not in ['jpg', 'png', 'jpeg']:
-            flash('Update failed. Invalid file type. Only jpg, jpeg and png extensions are allowed.', 'danger')
-            return redirect(url_for('worker.worker_dashboard') + '#food_menu')
         if menuupdateform.picture.data:
-            picture_file = save_menupic(menuupdateform.picture.data)
-            menu.IMAGE = picture_file
+            if menuupdateform.picture.data.filename[-4:] not in ['jpg', 'png', 'jpeg']:
+                flash('Update failed. Invalid file type. Only jpg, jpeg and png extensions are allowed.', 'danger')
+                return redirect(url_for('worker.worker_dashboard') + '#food_menu')
+            else:
+                picture_file = save_menupic(menuupdateform.picture.data)
+                menu.IMAGE = picture_file
+        else:
+            menu.IMAGE = menu.IMAGE
         menu.id = menuupdateform.id.data
         menu.SET = menuupdateform.set.data
         menu.PRICE = menuupdateform.price.data

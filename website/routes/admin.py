@@ -40,19 +40,22 @@ def admin_dashboard():
     paginated_menus = menus[start_menu_index:end_menu_index]
     students = STUDENT.query.all()
 
-    orders = FOOD_ORDER.query.all()
+    foodorders = FOOD_ORDER.query.all()
+    orders = sorted(foodorders, key=lambda x: x.transaction.DATE_TIME if x.transaction else None, reverse=True)
     order_page = request.args.get('order_page', 1, type=int)
     start_order_index = (order_page - 1) * per_page
     end_order_index = start_order_index + per_page
     paginated_orders = orders[start_order_index:end_order_index]
 
-    transactions = TRANSACTION.query.all()
+    trans = TRANSACTION.query.all()
+    transactions = sorted(trans, key=lambda x: x.DATE_TIME, reverse=True)
     transaction_page = request.args.get('transaction_page', 1, type=int)
     start_transaction_index = (transaction_page - 1) * per_page
     end_transaction_index = start_transaction_index + per_page
     paginated_transactions = transactions[start_transaction_index:end_transaction_index]
 
-    payouts = PAYOUT.query.all()
+    pay = PAYOUT.query.all()
+    payouts = sorted(pay, key=lambda x: x.DATE_TIME, reverse=True)
     payout_page = request.args.get('payout_page', 1, type=int)
     start_payout_index = (payout_page - 1) * per_page
     end_payout_index = start_payout_index + per_page
@@ -89,7 +92,7 @@ def admin_dashboard():
         elif payoutform.amount.data < 0 or payoutform.amount.data == 0:
             flash(f'Failed to add payout. Please enter a valid amount.', 'danger')
             return redirect(url_for('admin.admin_dashboard') + '#payout')
-        elif  payoutform.picture.data.filename[-4:] not in ['jpg', 'png', 'jpeg']:
+        elif  payoutform.picture.data.filename[-4:] not in ['.jpg', '.png', 'jpeg']:
             flash(f'Update failed. Invalid file type. Only jpg, png, and jpeg are allowed.', 'danger')
             return redirect(url_for('admin.admin_dashboard') + '#payout')
         image_file = save_payout(payoutform.picture.data)
@@ -110,12 +113,15 @@ def admin_dashboard():
         elif updatepayoutform.amount.data < 0 or updatepayoutform.amount.data == 0:
             flash(f'Update failed. Please enter a valid amount.', 'danger')
             return redirect(url_for('admin.admin_dashboard') + '#payout')
-        elif updatepayoutform.picture.data.filename[-4:] not in ['jpg', 'png', 'jpeg']:
-            flash(f'Update failed. Invalid file type. Only jpg, png, and jpeg are allowed.', 'danger')
-            return redirect(url_for('admin.admin_dashboard') + '#payout')
         if updatepayoutform.picture.data:
-            picture_file = save_payout(updatepayoutform.picture.data)
-            payout.IMAGE = picture_file
+            if updatepayoutform.picture.data.filename[-4:] not in ['.jpg', '.png', 'jpeg']:
+                flash(f'Update failed. Invalid file type. Only jpg, png, and jpeg are allowed.', 'danger')
+                return redirect(url_for('admin.admin_dashboard') + '#payout')
+            else:
+                picture_file = save_payout(updatepayoutform.picture.data)
+                payout.IMAGE = picture_file
+        else:
+            payout.IMAGE = payout.IMAGE
         payout.AMOUNT = updatepayoutform.amount.data
         payout.REFERENCE = updatepayoutform.reference.data
         db.session.commit()

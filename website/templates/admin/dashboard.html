@@ -459,7 +459,7 @@
                                 <td class="px-4 py-3 text-center">{{ user.FIRST_NAME }} {{ user.LAST_NAME }}</td>
                                 {% endif %}
                                 {% if order.STUDENT_ID == user.id%}
-                                <td class="px-4 py-3 text-center">{{ user.FIRST_NAME }} {{ user.LAST_NAME }}</td>
+                                <td class="px-4 py-3 text-center">{{ user.LAST_NAME }} {{ user.FIRST_NAME }}</td>
                                 {% endif %}
                             {% endfor %}
                             <td class="px-4 py-3">
@@ -1276,6 +1276,9 @@
                 updateModal.querySelector('#updatepayoutform-reference').value = reference;
                 var img = updateModal.querySelector('#updatepayoutform-picture');
                 img.setAttribute('src', image);
+                img.setAttribute('alt', image);
+                img.setAttribute('title', image);
+                img.setAttribute('filename', image);
             });
         })
 

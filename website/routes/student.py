@@ -12,10 +12,11 @@ student = Blueprint('student', __name__)
 @student.route("/dashboard/student", methods=['GET', 'POST'])
 @login_required(role="student")
 def student_dashboard():
-    orders = FOOD_ORDER.query.filter_by(STUDENT_ID=current_user.id).all()
+    foodorders = FOOD_ORDER.query.filter_by(STUDENT_ID=current_user.id).all()
     menus = FOOD_MENU.query.all()
     transactions = TRANSACTION.query.all()
     orderform = FoodOrderForm()
+    orders = sorted(foodorders, key=lambda x: x.transaction.DATE_TIME if x.transaction else None, reverse=True)
 
     per_page = 5
     order_page = request.args.get('order_page', 1, type=int)

@@ -14,9 +14,12 @@ parent = Blueprint('parent', __name__)
 def parent_dashboard():
     menus = FOOD_MENU.query.all()
     users = USER.query.all()
-    orders = FOOD_ORDER.query.filter_by(PARENT_ID=current_user.id).all()
-    transactions = TRANSACTION.query.filter_by(PARENT_ID=current_user.id).all()
-    reloads = RELOAD.query.filter_by(PARENT_ID=current_user.id).all()
+    trans = TRANSACTION.query.filter_by(PARENT_ID=current_user.id).all()
+    transactions = sorted(trans, key=lambda x: x.DATE_TIME, reverse=True)
+    loads = RELOAD.query.filter_by(PARENT_ID=current_user.id).all()
+    reloads = sorted(loads, key=lambda x: x.DATE_TIME, reverse=True)
+    foodorders = FOOD_ORDER.query.filter_by(PARENT_ID=current_user.id).all()
+    orders = sorted(foodorders, key=lambda x: x.transaction.DATE_TIME if x.transaction else None, reverse=True)
 
     per_page = 5
     order_page = request.args.get('order_page', 1, type=int)
