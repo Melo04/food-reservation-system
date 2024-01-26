@@ -59,7 +59,7 @@ def save_picture(form_picture):
 def login():
     check_role()
     if current_user.is_authenticated:
-        flash('User is already logged in', 'success')
+        flash('User is already logged in', 'danger')
         return redirect(url_for('main.home'))
     form = LoginForm()
     if form.validate_on_submit():
